@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "catalog": "Catalog",
+    "barRental": "Bar Rental",
+    "about": "About",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "account": "Account",
+    "cart": "Cart",
+    "admin": "Admin"
+  },
+  "home": {
+    "heroTitle": "The Premier Wine & Spirits Distributor",
+    "heroSubtitle": "Exclusive imports, fine local wines, and luxury spirits. Delivered straight to your door or curated for your next elite event.",
+    "shopCatalog": "Shop Catalog",
+    "bookBar": "Book Mobile Bar",
+    "securePayment": "Secure Cash on Delivery",
+    "loyalty": "Earn Cavacoins Loyalty"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is currently empty.",
+    "total": "Total",
+    "checkout": "Proceed to Checkout"
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "selectVariant": "Select Variant (Size/Volume)"
+  },
+  "common": {
+    "loading": "Loading...",
+    "notFound": "Not Found",
+    "back": "Back"
+  }
+}

@@ -1,0 +1,407 @@
+{
+  "categories": [
+    {
+      "id": "cat-wines",
+      "name": "Wines",
+      "slug": "wines",
+      "description": "Premium red, white, and rosé wines carefully curated from local and international vineyards.",
+      "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=600&auto=format&fit=crop",
+      "parentId": null,
+      "createdAt": "2026-06-17T12:00:00Z"
+    },
+    {
+      "id": "cat-beers",
+      "name": "Beers",
+      "slug": "beers",
+      "description": "Blonde, craft, premium, and non-alcoholic beers served ice-cold.",
+      "image": "https://images.unsplash.com/photo-1608270586620-248524c67de9?q=80&w=600&auto=format&fit=crop",
+      "parentId": null,
+      "createdAt": "2026-06-17T12:00:00Z"
+    },
+    {
+      "id": "cat-spirits",
+      "name": "Spirits",
+      "slug": "spirits",
+      "description": "Fine whiskies, smooth vodkas, botanical gins, premium rums, and high-grade tequilas.",
+      "image": "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?q=80&w=600&auto=format&fit=crop",
+      "parentId": null,
+      "createdAt": "2026-06-17T12:00:00Z"
+    },
+    {
+      "id": "cat-bar-acc",
+      "name": "Bar Accessories",
+      "slug": "bar-accessories",
+      "description": "Mixology tools, premium glassware, cocktail kits, and display setups.",
+      "image": "https://images.unsplash.com/photo-1574096079513-d8259312b785?q=80&w=600&auto=format&fit=crop",
+      "parentId": null,
+      "createdAt": "2026-06-17T12:00:00Z"
+    }
+  ],
+  "brands": [
+    {
+      "id": "brand-chateau",
+      "name": "Château Saint-Maur",
+      "slug": "chateau-saint-maur",
+      "logo": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=200&auto=format&fit=crop",
+      "description": "Prestigious Cru Classé rosé wines from the heart of Provence.",
+      "createdAt": "2026-06-17T12:00:00Z"
+    },
+    {
+      "id": "brand-jack",
+      "name": "Jack Daniel's",
+      "slug": "jack-daniels",
+      "logo": "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?q=80&w=200&auto=format&fit=crop",
+      "description": "Authentic Tennessee sour mash whiskey known around the globe.",
+      "createdAt": "2026-06-17T12:00:00Z"
+    },
+    {
+      "id": "brand-grey",
+      "name": "Grey Goose",
+      "slug": "grey-goose",
+      "logo": "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?q=80&w=200&auto=format&fit=crop",
+      "description": "The world's best-tasting premium French vodka.",
+      "createdAt": "2026-06-17T12:00:00Z"
+    },
+    {
+      "id": "brand-heineken",
+      "name": "Heineken",
+      "slug": "heineken",
+      "logo": "https://images.unsplash.com/photo-1608270586620-248524c67de9?q=80&w=200&auto=format&fit=crop",
+      "description": "World-famous premium Dutch lager brewed with natural ingredients.",
+      "createdAt": "2026-06-17T12:00:00Z"
+    },
+    {
+      "id": "brand-mixers",
+      "name": "BarPro",
+      "slug": "barpro",
+      "logo": "https://images.unsplash.com/photo-1574096079513-d8259312b785?q=80&w=200&auto=format&fit=crop",
+      "description": "Professional bar tools and high-durability glassware.",
+      "createdAt": "2026-06-17T12:00:00Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-chateau-rose",
+      "name": "Château Saint-Maur Cru Classé Rosé",
+      "slug": "chateau-saint-maur-rose",
+      "description": "A refined and luxurious Provence rosé. Expressive nose of white peach, apricot, and subtle red fruits with a crisp, mineral finish. Perfect for seafood dinners or elite gatherings.",
+      "images": [
+        "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=800&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1528825871115-3581a5387919?q=80&w=800&auto=format&fit=crop"
+      ],
+      "categoryId": "cat-wines",
+      "brandId": "brand-chateau",
+      "basePrice": 89,
+      "salePrice": 79.5,
+      "isFeatured": true,
+      "isActive": true,
+      "loyaltyPoints": 15,
+      "tags": [
+        "rose",
+        "wine",
+        "provence",
+        "cru-classe"
+      ],
+      "createdAt": "2026-06-17T12:00:00Z",
+      "updatedAt": "2026-06-17T12:00:00Z",
+      "variants": [
+        {
+          "id": "var-chateau-75cl",
+          "productId": "prod-chateau-rose",
+          "size": "75cl",
+          "price": 89,
+          "salePrice": 79.5,
+          "stock": 45,
+          "sku": "CSM-ROSE-75"
+        },
+        {
+          "id": "var-chateau-15l",
+          "productId": "prod-chateau-rose",
+          "size": "Magnum 1.5L",
+          "price": 180,
+          "salePrice": 165,
+          "stock": 12,
+          "sku": "CSM-ROSE-150"
+        }
+      ]
+    },
+    {
+      "id": "prod-jack-whisky",
+      "name": "Jack Daniel's Old No. 7 Tennessee Whiskey",
+      "slug": "jack-daniels-whisky",
+      "description": "Charcoal mellowed drop by drop through sugar maple charcoal, then matured in handcrafted barrels. Balance of sweet oak, caramel, and vanilla flavors.",
+      "images": [
+        "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?q=80&w=800&auto=format&fit=crop"
+      ],
+      "categoryId": "cat-spirits",
+      "brandId": "brand-jack",
+      "basePrice": 160,
+      "salePrice": 145,
+      "isFeatured": true,
+      "isActive": true,
+      "loyaltyPoints": 20,
+      "tags": [
+        "whiskey",
+        "tennessee",
+        "spirits",
+        "classic"
+      ],
+      "createdAt": "2026-06-17T12:00:00Z",
+      "updatedAt": "2026-06-17T12:00:00Z",
+      "variants": [
+        {
+          "id": "var-jack-70cl",
+          "productId": "prod-jack-whisky",
+          "size": "70cl",
+          "price": 160,
+          "salePrice": 145,
+          "stock": 30,
+          "sku": "JD-WHISKEY-70"
+        },
+        {
+          "id": "var-jack-1l",
+          "productId": "prod-jack-whisky",
+          "size": "1L",
+          "price": 210,
+          "salePrice": 195,
+          "stock": 15,
+          "sku": "JD-WHISKEY-100"
+        }
+      ]
+    },
+    {
+      "id": "prod-grey-vodka",
+      "name": "Grey Goose Premium Vodka",
+      "slug": "grey-goose-vodka",
+      "description": "An exceptionally smooth French vodka crafted from soft winter wheat and Gensac-la-Pallue spring water. Light floral aroma with a clean, round finish.",
+      "images": [
+        "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?q=80&w=800&auto=format&fit=crop"
+      ],
+      "categoryId": "cat-spirits",
+      "brandId": "brand-grey",
+      "basePrice": 190,
+      "salePrice": 175,
+      "isFeatured": true,
+      "isActive": true,
+      "loyaltyPoints": 25,
+      "tags": [
+        "vodka",
+        "french",
+        "spirits",
+        "premium"
+      ],
+      "createdAt": "2026-06-17T12:00:00Z",
+      "updatedAt": "2026-06-17T12:00:00Z",
+      "variants": [
+        {
+          "id": "var-grey-70cl",
+          "productId": "prod-grey-vodka",
+          "size": "70cl",
+          "price": 190,
+          "salePrice": 175,
+          "stock": 25,
+          "sku": "GG-VODKA-70"
+        },
+        {
+          "id": "var-grey-15l",
+          "productId": "prod-grey-vodka",
+          "size": "1.5L",
+          "price": 360,
+          "salePrice": 330,
+          "stock": 8,
+          "sku": "GG-VODKA-150"
+        }
+      ]
+    },
+    {
+      "id": "prod-heineken-lager",
+      "name": "Heineken Premium Lager",
+      "slug": "heineken-lager",
+      "description": "A standard-bearer of beers since 1873. Balanced notes of barley malt, hops, and water delivering a crisp, refreshing, slightly bitter taste.",
+      "images": [
+        "https://images.unsplash.com/photo-1600788886242-5c96aabe3757?q=80&w=800&auto=format&fit=crop"
+      ],
+      "categoryId": "cat-beers",
+      "brandId": "brand-heineken",
+      "basePrice": 9,
+      "salePrice": 8,
+      "isFeatured": false,
+      "isActive": true,
+      "loyaltyPoints": 1,
+      "tags": [
+        "beer",
+        "lager",
+        "heineken",
+        "refreshing"
+      ],
+      "createdAt": "2026-06-17T12:00:00Z",
+      "updatedAt": "2026-06-17T12:00:00Z",
+      "variants": [
+        {
+          "id": "var-heineken-33cl",
+          "productId": "prod-heineken-lager",
+          "size": "33cl Bottle",
+          "price": 9,
+          "salePrice": 8,
+          "stock": 350,
+          "sku": "HN-BEER-33"
+        },
+        {
+          "id": "var-heineken-pack24",
+          "productId": "prod-heineken-lager",
+          "size": "Pack of 24",
+          "price": 200,
+          "salePrice": 180,
+          "stock": 40,
+          "sku": "HN-BEER-P24"
+        }
+      ]
+    },
+    {
+      "id": "prod-shaker-set",
+      "name": "BarPro Mixology Shaker Set",
+      "slug": "cocktail-shaker-set",
+      "description": "Professional 5-piece bartender set. Includes a 750ml Boston shaker, double jigger, hawthorne strainer, bar spoon, and recipe booklet. Highly durable stainless steel.",
+      "images": [
+        "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800&auto=format&fit=crop"
+      ],
+      "categoryId": "cat-bar-acc",
+      "brandId": "brand-mixers",
+      "basePrice": 120,
+      "salePrice": null,
+      "isFeatured": true,
+      "isActive": true,
+      "loyaltyPoints": 12,
+      "tags": [
+        "shaker",
+        "barware",
+        "mixology",
+        "tools"
+      ],
+      "createdAt": "2026-06-17T12:00:00Z",
+      "updatedAt": "2026-06-17T12:00:00Z",
+      "variants": [
+        {
+          "id": "var-shaker-std",
+          "productId": "prod-shaker-set",
+          "size": "Standard Kit",
+          "price": 120,
+          "salePrice": null,
+          "stock": 18,
+          "sku": "BP-SHK-SET"
+        }
+      ]
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord-1781710314567",
+      "orderNumber": "GDZ-314566-318",
+      "customerName": "Essia Mahmoudi",
+      "email": "herbamedplus.contact@gmail.com",
+      "phone": "+21655483923",
+      "address": "Rue Ennadhour avenue Lycée secondaire Majel Bel Abbes",
+      "city": "Mejel Bel Abbes",
+      "notes": null,
+      "subtotal": 556.5,
+      "discount": 0,
+      "shipping": 0,
+      "total": 556.5,
+      "status": "PENDING",
+      "cashCollected": false,
+      "createdAt": "2026-06-17T15:31:54.567Z",
+      "updatedAt": "2026-06-17T15:31:54.568Z",
+      "items": [
+        {
+          "productId": "var-chateau-75cl",
+          "productName": "Château Saint-Maur Cru Classé Rosé (75cl)",
+          "variantId": null,
+          "variantSize": null,
+          "unitPrice": 79.5,
+          "qty": 7,
+          "total": 556.5
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "PENDING",
+          "note": "Order created successfully (mock database)",
+          "createdAt": "2026-06-17T15:31:54.568Z",
+          "createdBy": null
+        }
+      ]
+    },
+    {
+      "id": "ord-1",
+      "orderNumber": "GDZ-123456-001",
+      "customerName": "Skander Gandouz",
+      "email": "skander@example.com",
+      "phone": "+216 50 705 128",
+      "city": "La Goulette",
+      "address": "19 Avenue Franklin Roosevelt",
+      "notes": "Please deliver in the afternoon.",
+      "subtotal": 159,
+      "discount": 0,
+      "shipping": 7,
+      "total": 166,
+      "status": "PENDING",
+      "cashCollected": false,
+      "createdAt": "2026-06-17T10:30:00Z",
+      "updatedAt": "2026-06-17T10:30:00Z",
+      "items": [
+        {
+          "productId": "prod-chateau-rose",
+          "productName": "Château Saint-Maur Cru Classé Rosé",
+          "variantId": "var-chateau-75cl",
+          "variantSize": "75cl",
+          "unitPrice": 79.5,
+          "qty": 2,
+          "total": 159
+        }
+      ],
+      "statusHistory": [
+        {
+          "status": "PENDING",
+          "note": "Order submitted via guest checkout",
+          "createdAt": "2026-06-17T10:30:00Z",
+          "createdBy": null
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "key": "shipping_fee",
+      "value": "8.000"
+    },
+    {
+      "key": "free_shipping",
+      "value": "200.000"
+    },
+    {
+      "key": "loyalty_rate",
+      "value": "1"
+    },
+    {
+      "key": "whatsapp",
+      "value": "+21650705128"
+    },
+    {
+      "key": "store_name",
+      "value": "Gandouz Distribution"
+    }
+  ],
+  "discountCodes": [
+    {
+      "id": "promo-welcome",
+      "code": "WELCOME10",
+      "type": "PERCENTAGE",
+      "value": 10,
+      "minOrderValue": 50,
+      "maxUses": 100,
+      "usedCount": 5,
+      "isActive": true,
+      "expiresAt": "2027-12-31T23:59:59Z"
+    }
+  ]
+}

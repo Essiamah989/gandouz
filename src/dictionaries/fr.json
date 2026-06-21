@@ -1,0 +1,37 @@
+{
+  "nav": {
+    "catalog": "Catalogue",
+    "barRental": "Location de Bar",
+    "about": "À Propos",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "account": "Compte",
+    "cart": "Panier",
+    "admin": "Admin"
+  },
+  "home": {
+    "heroTitle": "Le Premier Distributeur de Vins & Spiritueux",
+    "heroSubtitle": "Importations exclusives, vins locaux raffinés et spiritueux de luxe. Livrés directement chez vous ou organisés pour votre prochain événement d'élite.",
+    "shopCatalog": "Voir le Catalogue",
+    "bookBar": "Réserver un Bar Mobile",
+    "securePayment": "Paiement Sécurisé à la Livraison",
+    "loyalty": "Gagnez des Points Cavacoins"
+  },
+  "cart": {
+    "title": "Votre Panier",
+    "empty": "Votre panier est actuellement vide.",
+    "total": "Total",
+    "checkout": "Passer à la Caisse"
+  },
+  "product": {
+    "addToCart": "Ajouter au Panier",
+    "inStock": "En Stock",
+    "outOfStock": "Rupture de Stock",
+    "selectVariant": "Sélectionner la Variante (Taille/Volume)"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "notFound": "Introuvable",
+    "back": "Retour"
+  }
+}
