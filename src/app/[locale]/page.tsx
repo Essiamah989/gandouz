@@ -235,7 +235,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     {p.loyaltyPoints > 0 && (
                       <span className="absolute bottom-3 left-3 bg-[#06091F]/90 text-[#F5D800] border border-[#F5D800]/30 text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 backdrop-blur-sm">
                         <Trophy className="w-2.5 h-2.5" />
-                        +{p.loyaltyPoints} Cavacoins
+                        +{p.loyaltyPoints} Cadopoints
                       </span>
                     )}
                   </div>
@@ -277,7 +277,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>
 
-      {/* ===== CAVACOINS LOYALTY BANNER ===== */}
+      {/* ===== CADOPOINTS LOYALTY BANNER ===== */}
       <section className="py-16 bg-[#06091F] text-white relative overflow-hidden" id="loyalty-banner">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-[#F5D800] rounded-full filter blur-[120px] animate-pulse" />
@@ -290,14 +290,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 PROGRAMME DE FIDÉLITÉ
               </span>
               <h2 className="text-4xl lg:text-5xl font-black mb-4 uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                Découvrez les <span className="text-[#F5D800]">Cavacoins</span>
+                Découvrez les <span className="text-[#F5D800]">Cadopoints</span>
               </h2>
               <p className="text-white/70 text-base max-w-2xl leading-relaxed mb-6">
-                Chaque achat vous rapporte des Cavacoins ! Cumulez des points sur chaque commande et échangez-les lors du paiement pour obtenir des réductions ou des accessoires. 1 Cavacoin équivaut à 1 TND de récompense de fidélité.
+                Chaque achat vous rapporte des Cadopoints ! Cumulez des points sur chaque commande et échangez-les lors du paiement pour obtenir des réductions ou des accessoires. 1 Cadopoint équivaut à 1 TND de récompense de fidélité.
               </p>
               <div className="flex items-center justify-center lg:justify-start gap-8 flex-wrap">
                 <div className="text-left">
-                  <span className="text-3xl font-black text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>1 CAVACOIN</span>
+                  <span className="text-3xl font-black text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>1 CADOPOINT</span>
                   <p className="text-xs text-white/50">par 1 TND Dépensé</p>
                 </div>
                 <div className="w-px h-10 bg-white/20 hidden sm:block" />
@@ -409,7 +409,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 role: "Hôte Privé"
               },
               {
-                text: "Les points Cavacoins changent la donne. J'ai déjà échangé des points contre un kit de shaker gratuit. Validation manuelle très fluide et livreurs sympathiques.",
+                text: "Les points Cadopoints changent la donne. J'ai déjà échangé des points contre un kit de shaker gratuit. Validation manuelle très fluide et livreurs sympathiques.",
                 name: "Ahmed Toumi",
                 role: "Barman Amateur"
               }

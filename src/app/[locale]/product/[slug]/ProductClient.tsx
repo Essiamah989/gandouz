@@ -119,7 +119,7 @@ export default function ProductClient({ product }: { product: any }) {
                 {product.loyaltyPoints > 0 && (
                   <span className="inline-flex items-center gap-1 bg-[#06091F] text-[#F5D800] border border-[#F5D800]/25 text-[10px] font-black px-3 py-1 rounded-full shadow-sm">
                     <Trophy className="w-3 h-3" />
-                    Earns +{product.loyaltyPoints} Cavacoins
+                    Earns +{product.loyaltyPoints} Cadopoints
                   </span>
                 )}
               </div>
@@ -207,7 +207,7 @@ export default function ProductClient({ product }: { product: any }) {
                 </div>
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
                   <Sparkles className="w-4 h-4 text-[#F5D800]" />
-                  <span className="text-[10px] font-bold text-gray-500">CAVACOIN CREDIT</span>
+                  <span className="text-[10px] font-bold text-gray-500">CADOPOINT CREDIT</span>
                 </div>
               </div>
             </div>

@@ -261,7 +261,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                         {p.loyaltyPoints > 0 && (
                           <span className="absolute bottom-3 left-3 bg-[#06091F]/90 text-[#F5D800] border border-[#F5D800]/25 text-[9px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 backdrop-blur-sm">
                             <Trophy className="w-2.5 h-2.5" />
-                            +{p.loyaltyPoints} Cavacoins
+                            +{p.loyaltyPoints} Cadopoints
                           </span>
                         )}
                       </div>

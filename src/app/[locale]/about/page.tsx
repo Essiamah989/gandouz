@@ -66,7 +66,7 @@ export default function AboutPage() {
             },
             {
               icon: Award,
-              title: "Cavacoin loyalty",
+              title: "Cadopoint loyalty",
               desc: "We reward our patrons on every checkout, returning cashback straight to their balance."
             }
           ].map((item, i) => (

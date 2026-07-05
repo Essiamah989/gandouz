@@ -3,7 +3,7 @@ import { HelpCircle, ArrowRight } from "lucide-react";
 
 export const metadata = {
   title: "Frequently Asked Questions — Cavista Store Clone",
-  description: "Common questions about our online ordering, delivery times, Cavacoins, and mobile bar rentals.",
+  description: "Common questions about our online ordering, delivery times, Cadopoints, and mobile bar rentals.",
 };
 
 const FAQS = [
@@ -16,8 +16,8 @@ const FAQS = [
     a: "No. Currently we only support Cash on Delivery (COD). This ensures you can inspect all beverage items and accessories for quality assurance before completing payment."
   },
   {
-    q: "What are Cavacoins and how do I earn them?",
-    a: "Cavacoins is our signature customer loyalty program. For every purchase you make, you earn loyalty points (Cavacoins) credited to your account. 1 Cavacoin equals 1 TND. You can redeem these points during checkout to claim discounts on future orders."
+    q: "What are Cadopoints and how do I earn them?",
+    a: "Cadopoints is our signature customer loyalty program. For every purchase you make, you earn loyalty points (Cadopoints) credited to your account. 1 Cadopoint equals 1 TND. You can redeem these points during checkout to claim discounts on future orders."
   },
   {
     q: "How do I request a mobile bar rental setup?",

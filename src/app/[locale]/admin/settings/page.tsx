@@ -144,12 +144,12 @@ export default function AdminSettingsPage() {
               <div className="flex items-center gap-2 mb-3">
                 <Star className="w-5 h-5 text-[#F5D800]" />
                 <h3 className="font-bold text-lg" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                  CAVACOINS LOYALTY PROGRAM
+                  CADOPOINTS LOYALTY PROGRAM
                 </h3>
               </div>
               <p className="text-white/70 text-sm leading-relaxed">
-                Customers earn <strong className="text-[#F5D800]">{settings.loyalty_rate || 1} Cavacoin(s)</strong> per TND spent on eligible orders.
-                Cavacoins can be redeemed for discounts on future purchases. Adjust the rate above to control earning speed.
+                Customers earn <strong className="text-[#F5D800]">{settings.loyalty_rate || 1} Cadopoint(s)</strong> per TND spent on eligible orders.
+                Cadopoints can be redeemed for discounts on future purchases. Adjust the rate above to control earning speed.
               </p>
               <div className="mt-4 grid grid-cols-3 gap-3">
                 {[

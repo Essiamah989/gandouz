@@ -22,7 +22,7 @@ export default function AccountClient({ user, orders, wishlist }: { user: any, o
               <p className="text-xs text-gray-500 mt-2 font-medium">{user?.phone}</p>
             </div>
 
-            {/* Cavacoins Loyalty */}
+            {/* Cadopoints Loyalty */}
             <div className="bg-[#06091F] text-white rounded-3xl p-6 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#F5D800]/5 rounded-full filter blur-xl" />
               <div className="flex items-center gap-2 text-[#F5D800] text-xs font-bold uppercase tracking-widest mb-4">
@@ -30,7 +30,7 @@ export default function AccountClient({ user, orders, wishlist }: { user: any, o
                 <span>Loyalty Balance</span>
               </div>
               <p className="text-5xl font-black tracking-tight text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                35 <span className="text-lg text-white font-medium">Cavacoins</span>
+                35 <span className="text-lg text-white font-medium">Cadopoints</span>
               </p>
               <p className="text-xs text-white/60 mt-2 leading-relaxed">
                 Equivalent to <strong>35.000 TND</strong> in cashback. Points will automatically activate upon your next checkout confirmation.
