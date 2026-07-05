@@ -272,8 +272,8 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-sm text-gray-500">
                     <span>Shipping</span>
-                    <span className={shipping === 0 ? "text-green-600" : ""}>
-                      {shipping === 0 ? "Free" : `${shipping.toLocaleString('fr-FR')} TND`}
+                    <span className="text-green-600">
+                      Free
                     </span>
                   </div>
                   <div className="flex justify-between font-bold text-[#06091F] text-base pt-2 border-t border-gray-100">

@@ -112,15 +112,8 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Shipping</span>
-                    <span className={`font-semibold ${shipping === 0 ? "text-green-600" : "text-[#06091F]"}`}>
-                      {shipping === 0 ? "Free" : `${shipping.toLocaleString('fr-FR')} TND`}
-                    </span>
+                    <span className="font-semibold text-green-600">Free</span>
                   </div>
-                  {shipping > 0 && (
-                    <p className="text-xs text-gray-400">
-                      Free shipping on orders over 200 TND
-                    </p>
-                  )}
                   <div className="border-t border-gray-100 pt-3 flex justify-between">
                     <span className="font-bold text-[#06091F]">Total</span>
                     <span className="font-bold text-[#06091F] text-lg">{total.toLocaleString('fr-FR')} TND</span>
