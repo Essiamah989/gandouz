@@ -75,13 +75,14 @@ export default function Navbar() {
           <LanguageSwitcher />
 
           {/* Search Icon */}
-          <button
+          <Link
+            href={`/${currentLocale}/products`}
             id="nav-search-btn"
             className="text-white/70 hover:text-[#F5D800] transition-colors p-1"
             aria-label="Search"
           >
             <Search className="w-5 h-5" />
-          </button>
+          </Link>
 
           {/* Cart */}
           <Link

@@ -7,9 +7,7 @@ import { useCartStore } from "@/lib/store/cart";
 import { Star, Trophy, ShoppingCart, ArrowLeft, ShieldCheck, Sparkles, Heart } from "lucide-react";
 
 export default function ProductClient({ product }: { product: any }) {
-  const [selectedVariant, setSelectedVariant] = useState<any>(
-    product?.variants && product.variants.length > 0 ? product.variants[0] : null
-  );
+
   const [selectedImage, setSelectedImage] = useState<string>(
     product?.images && product.images.length > 0 ? product.images[0] : ""
   );
@@ -31,20 +29,14 @@ export default function ProductClient({ product }: { product: any }) {
   }
 
   const baseDisplayPrice = product.salePrice !== null ? Number(product.salePrice) : Number(product.basePrice);
-  const currentPrice = selectedVariant
-    ? (selectedVariant.salePrice !== null ? Number(selectedVariant.salePrice) : Number(selectedVariant.price))
-    : baseDisplayPrice;
+  const currentPrice = baseDisplayPrice;
 
   const handleAddToCart = () => {
-    const itemName = selectedVariant 
-      ? `${product.name} (${selectedVariant.size})` 
-      : product.name;
+    const itemName = product.name;
 
     addItem({
-      id: selectedVariant ? selectedVariant.id : product.id,
+      id: product.id,
       productId: product.id,
-      variantId: selectedVariant ? selectedVariant.id : undefined,
-      variantSize: selectedVariant ? selectedVariant.size : undefined,
       name: itemName,
       price: currentPrice,
       quantity: qty,
@@ -131,34 +123,15 @@ export default function ProductClient({ product }: { product: any }) {
                 {product.description || "No description provided for this cellar item."}
               </p>
 
-              {product.variants && product.variants.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Select Variant (Size/Volume)</h3>
-                  <div className="flex gap-2 flex-wrap">
-                    {product.variants.map((v: any) => (
-                      <button
-                        key={v.id}
-                        onClick={() => setSelectedVariant(v)}
-                        className={`px-4 py-2.5 rounded-xl border text-xs font-bold uppercase transition-all ${
-                          selectedVariant?.id === v.id
-                            ? "bg-[#06091F] text-[#F5D800] border-transparent shadow-sm"
-                            : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
-                        }`}
-                      >
-                        {v.size} — {(v.salePrice || v.price).toLocaleString('fr-FR')} TND
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+
 
               <div className="mt-6 flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${
-                  (selectedVariant?.stock || product.stock) > 0 ? "bg-green-500" : "bg-red-500"
+                  product.stock > 0 ? "bg-green-500" : "bg-red-500"
                 }`} />
                 <span className="text-xs font-bold text-gray-500">
-                  {(selectedVariant?.stock || product.stock) > 0 
-                    ? `In Stock (${selectedVariant?.stock || product.stock} bottles left)` 
+                  {product.stock > 0 
+                    ? `In Stock (${product.stock} bottles left)` 
                     : "Out of Stock"}
                 </span>
               </div>
@@ -169,9 +142,9 @@ export default function ProductClient({ product }: { product: any }) {
                 <span className="text-3xl font-black text-[#06091F] tracking-tight">
                   {currentPrice.toLocaleString('fr-FR')} TND
                 </span>
-                {selectedVariant?.salePrice !== null && selectedVariant?.salePrice !== undefined && (
+                {product.salePrice !== null && product.salePrice !== undefined && (
                   <span className="text-sm text-gray-400 line-through">
-                    {Number(selectedVariant.price).toLocaleString('fr-FR')} TND
+                    {Number(product.basePrice).toLocaleString('fr-FR')} TND
                   </span>
                 )}
               </div>
@@ -195,7 +168,7 @@ export default function ProductClient({ product }: { product: any }) {
 
                 <button
                   onClick={handleAddToCart}
-                  disabled={(selectedVariant?.stock || product.stock) <= 0}
+                  disabled={product.stock <= 0}
                   className="btn-gold flex-1 flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed uppercase"
                 >
                   <ShoppingCart className="w-4 h-4" />

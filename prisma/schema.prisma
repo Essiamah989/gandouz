@@ -9,33 +9,33 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  clerkId       String    @unique
-  email         String    @unique
-  firstName     String?
-  lastName      String?
-  phone         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  addresses     Address[]
-  orders        Order[]
-  wishlist      WishlistItem[]
-  reviews       Review[]
-  loyaltyAcc    LoyaltyAccount?
+  addresses  Address[]
+  orders     Order[]
+  wishlist   WishlistItem[]
+  reviews    Review[]
+  loyaltyAcc LoyaltyAccount?
 }
 
 model Address {
-  id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  label       String    // "Home", "Office"
-  line1       String
-  line2       String?
-  city        String
-  postalCode  String?
-  isDefault   Boolean   @default(false)
-  createdAt   DateTime  @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String // "Home", "Office"
+  line1      String
+  line2      String?
+  city       String
+  postalCode String?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
 }
 
 model Category {
@@ -43,7 +43,7 @@ model Category {
   name        String     @unique
   slug        String     @unique
   description String?
-  image       String?    // Cloudinary/Static URL
+  image       String? // Cloudinary/Static URL
   parentId    String?
   parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
   children    Category[] @relation("CategoryTree")
@@ -55,54 +55,39 @@ model Brand {
   id          String    @id @default(cuid())
   name        String    @unique
   slug        String    @unique
-  logo        String?   // Cloudinary/Static URL
+  logo        String? // Cloudinary/Static URL
   description String?
   products    Product[]
   createdAt   DateTime  @default(now())
 }
 
 model Product {
-  id            String           @id @default(cuid())
+  id            String   @id @default(cuid())
   name          String
-  slug          String           @unique
+  slug          String   @unique
   description   String?
-  images        String[]         // array of URLs
+  images        String[] // array of URLs
   categoryId    String
-  category      Category         @relation(fields: [categoryId], references: [id])
+  category      Category @relation(fields: [categoryId], references: [id])
   brandId       String?
-  brand         Brand?           @relation(fields: [brandId], references: [id], onDelete: SetNull)
-  basePrice     Decimal          @db.Decimal(10, 3)
-  salePrice     Decimal?         @db.Decimal(10, 3)
-  isFeatured    Boolean          @default(false)
-  isActive      Boolean          @default(true)
-  loyaltyPoints Int              @default(0)
+  brand         Brand?   @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  basePrice     Decimal  @db.Decimal(10, 3)
+  salePrice     Decimal? @db.Decimal(10, 3)
+  isFeatured    Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  loyaltyPoints Int      @default(0)
   tags          String[]
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  stock         Int      @default(20)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  variants      ProductVariant[]
-  wishlist      WishlistItem[]
-  orderItems    OrderItem[]
-  reviews       Review[]
+  wishlist   WishlistItem[]
+  orderItems OrderItem[]
+  reviews    Review[]
 
   @@index([slug])
   @@index([categoryId])
   @@index([brandId])
-}
-
-model ProductVariant {
-  id          String      @id @default(cuid())
-  productId   String
-  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
-  size        String      // e.g. "0.75L", "1L", "Box of 6"
-  price       Decimal     @db.Decimal(10, 3)
-  salePrice   Decimal?    @db.Decimal(10, 3)
-  stock       Int         @default(0)
-  sku         String?     @unique
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  orderItems  OrderItem[]
 }
 
 enum OrderStatus {
@@ -116,25 +101,25 @@ enum OrderStatus {
 }
 
 model Order {
-  id              String               @id @default(cuid())
-  orderNumber     String               @unique
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
   userId          String?
-  user            User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user            User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   guestEmail      String?
-  status          OrderStatus          @default(PENDING)
-  subtotal        Decimal              @db.Decimal(10, 3)
-  discount        Decimal              @db.Decimal(10, 3) @default(0)
-  shipping        Decimal              @db.Decimal(10, 3) @default(0)
-  total           Decimal              @db.Decimal(10, 3)
+  status          OrderStatus @default(PENDING)
+  subtotal        Decimal     @db.Decimal(10, 3)
+  discount        Decimal     @default(0) @db.Decimal(10, 3)
+  shipping        Decimal     @default(0) @db.Decimal(10, 3)
+  total           Decimal     @db.Decimal(10, 3)
   notes           String?
   shippingAddress Json
-  cashCollected   Boolean              @default(false)
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
+  cashCollected   Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
-  items           OrderItem[]
-  statusHistory   OrderStatusHistory[]
-  loyaltyTx       LoyaltyTransaction?
+  items         OrderItem[]
+  statusHistory OrderStatusHistory[]
+  loyaltyTx     LoyaltyTransaction?
 
   @@index([userId])
   @@index([status])
@@ -142,18 +127,15 @@ model Order {
 }
 
 model OrderItem {
-  id          String          @id @default(cuid())
+  id          String  @id @default(cuid())
   orderId     String
-  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId   String
-  product     Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
-  variantId   String?
-  variant     ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productName String
-  variantSize String?
-  unitPrice   Decimal         @db.Decimal(10, 3)
+  unitPrice   Decimal @db.Decimal(10, 3)
   qty         Int
-  total       Decimal         @db.Decimal(10, 3)
+  total       Decimal @db.Decimal(10, 3)
 }
 
 model OrderStatusHistory {
@@ -163,17 +145,17 @@ model OrderStatusHistory {
   status    OrderStatus
   note      String?
   createdAt DateTime    @default(now())
-  createdBy String?     // Admin ID
+  createdBy String? // Admin ID
 }
 
 model LoyaltyAccount {
-  id        String               @id @default(cuid())
-  userId    String               @unique
-  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  balance   Int                  @default(0)
-  lifetime  Int                  @default(0)
-  createdAt DateTime             @default(now())
-  updatedAt DateTime             @updatedAt
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance   Int      @default(0)
+  lifetime  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   transactions LoyaltyTransaction[]
 }

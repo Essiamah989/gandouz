@@ -138,7 +138,7 @@ export async function getProducts(options: {
 
       const queryArgs: any = {
         where,
-        include: { variants: true, category: true, brand: true },
+        include: { category: true, brand: true },
         orderBy: { createdAt: "desc" }
       };
       if (limit !== undefined) {
@@ -205,7 +205,7 @@ export async function getProductBySlug(slug: string) {
     try {
       return await prisma.product.findUnique({
         where: { slug },
-        include: { variants: true, category: true, brand: true }
+        include: { category: true, brand: true }
       });
     } catch (e) {
       console.warn("DB query failed, falling back to mock:", e);
@@ -227,7 +227,7 @@ export async function getProductById(id: string) {
     try {
       return await prisma.product.findUnique({
         where: { id },
-        include: { variants: true, category: true, brand: true }
+        include: { category: true, brand: true }
       });
     } catch (e) {
       console.warn("DB query failed, falling back to mock:", e);
@@ -256,7 +256,7 @@ export async function createProduct(data: {
   isFeatured: boolean;
   loyaltyPoints?: number;
   tags?: string[];
-  variants: Array<{ size: string; price: number; salePrice?: number | null; stock: number; sku?: string }>;
+  stock: number;
 }) {
   if (isRealDbAvailable()) {
     try {
@@ -273,14 +273,8 @@ export async function createProduct(data: {
           isFeatured: data.isFeatured,
           loyaltyPoints: data.loyaltyPoints || 0,
           tags: data.tags || [],
-          variants: {
-            create: data.variants.map((v: any) => ({
-              ...v,
-              sku: v.sku || null
-            }))
-          }
-        },
-        include: { variants: true }
+          stock: data.stock || 20
+        }
       });
     } catch (e) {
       console.warn("DB insert failed, falling back to mock:", e);
@@ -289,11 +283,6 @@ export async function createProduct(data: {
 
   const db = readMockDb();
   const productId = `prod-${Date.now()}`;
-  const mockVariants = data.variants.map((v, index) => ({
-    id: `var-${productId}-${index}`,
-    productId,
-    ...v
-  }));
 
   const newProduct = {
     id: productId,
@@ -310,7 +299,7 @@ export async function createProduct(data: {
     tags: data.tags || [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    variants: mockVariants
+    stock: data.stock || 20
   };
 
   db.products.push(newProduct);
@@ -321,8 +310,6 @@ export async function createProduct(data: {
 export async function updateProduct(id: string, data: any) {
   if (isRealDbAvailable()) {
     try {
-      // For simplicity, delete and recreate variants or update individually
-      await prisma.productVariant.deleteMany({ where: { productId: id } });
       return await prisma.product.update({
         where: { id },
         data: {
@@ -338,17 +325,8 @@ export async function updateProduct(id: string, data: any) {
           isActive: data.isActive,
           loyaltyPoints: data.loyaltyPoints || 0,
           tags: data.tags || [],
-          variants: {
-            create: data.variants.map((v: any) => ({
-              size: v.size,
-              price: v.price,
-              salePrice: v.salePrice,
-              stock: v.stock,
-              sku: v.sku || null
-            }))
-          }
-        },
-        include: { variants: true }
+          stock: data.stock !== undefined ? data.stock : 20
+        }
       });
     } catch (e) {
       console.warn("DB update failed, falling back to mock:", e);
@@ -359,15 +337,6 @@ export async function updateProduct(id: string, data: any) {
   const index = db.products.findIndex((p: any) => p.id === id);
   if (index === -1) return null;
 
-  const mockVariants = data.variants.map((v: any, vIndex: number) => ({
-    id: v.id || `var-${id}-${vIndex}`,
-    productId: id,
-    size: v.size,
-    price: v.price,
-    salePrice: v.salePrice || null,
-    stock: v.stock,
-    sku: v.sku || `SKU-${id}-${vIndex}`
-  }));
 
   db.products[index] = {
     ...db.products[index],
@@ -384,7 +353,7 @@ export async function updateProduct(id: string, data: any) {
     loyaltyPoints: data.loyaltyPoints || 0,
     tags: data.tags || [],
     updatedAt: new Date().toISOString(),
-    variants: mockVariants
+    stock: data.stock !== undefined ? data.stock : 20
   };
 
   writeMockDb(db);
@@ -458,8 +427,6 @@ export async function createOrder(data: {
   items: Array<{
     productId: string;
     productName: string;
-    variantId?: string;
-    variantSize?: string;
     unitPrice: number;
     qty: number;
     total: number;
@@ -489,8 +456,6 @@ export async function createOrder(data: {
             create: data.items.map(item => ({
               productId: item.productId,
               productName: item.productName,
-              variantId: item.variantId,
-              variantSize: item.variantSize,
               unitPrice: item.unitPrice,
               qty: item.qty,
               total: item.total

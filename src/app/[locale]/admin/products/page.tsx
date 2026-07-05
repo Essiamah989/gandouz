@@ -3,13 +3,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Plus, Pencil, Trash2, Search, ChevronDown, ChevronUp, ImageOff, X, Check, AlertTriangle, Upload, ImagePlus, Loader2 } from "lucide-react";
 
-type Variant = { id?: string; size: string; price: number; salePrice?: number | null; stock: number; sku?: string };
 type Product = {
   id: string; name: string; slug: string; description?: string;
   images: string[]; categoryId: string; brandId?: string;
   basePrice: number; salePrice?: number | null;
   isFeatured: boolean; isActive: boolean; loyaltyPoints?: number;
-  tags?: string[]; variants: Variant[];
+  tags?: string[]; stock: number;
   category?: { name: string }; brand?: { name: string };
 };
 type Category = { id: string; name: string };
@@ -18,7 +17,7 @@ type Brand = { id: string; name: string };
 const EMPTY_PRODUCT: Omit<Product, "id" | "category" | "brand"> = {
   name: "", slug: "", description: "", images: [""], categoryId: "",
   brandId: "", basePrice: 0, salePrice: null, isFeatured: false, isActive: true,
-  loyaltyPoints: 0, tags: [], variants: [{ size: "", price: 0, stock: 0, sku: "" }],
+  loyaltyPoints: 0, tags: [], stock: 20,
 };
 
 function slugify(s: string) {
@@ -30,6 +29,8 @@ export default function AdminProductsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [search, setSearch] = useState("");
+  const [sortField, setSortField] = useState<string>("name");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<"closed" | "add" | "edit" | "delete">("closed");
   const [form, setForm] = useState<any>({ ...EMPTY_PRODUCT });
@@ -78,7 +79,7 @@ export default function AdminProductsPage() {
       isFeatured: p.isFeatured, isActive: p.isActive,
       loyaltyPoints: p.loyaltyPoints || 0,
       tags: (p.tags || []).join(", "),
-      variants: p.variants?.length ? p.variants : [{ size: "", price: 0, stock: 0, sku: "" }],
+      stock: p.stock ?? 20,
     });
     setEditId(p.id);
     setModal("edit");
@@ -127,12 +128,7 @@ export default function AdminProductsPage() {
       salePrice: form.salePrice === "" || form.salePrice == null ? null : Number(form.salePrice),
       basePrice: Number(form.basePrice),
       loyaltyPoints: Number(form.loyaltyPoints),
-      variants: form.variants.map((v: any) => ({
-        ...v,
-        price: Number(v.price),
-        salePrice: v.salePrice === "" || v.salePrice == null ? null : Number(v.salePrice),
-        stock: Number(v.stock),
-      })),
+      stock: Number(form.stock),
     };
 
     const url = editId ? `/api/admin/products/${editId}` : "/api/admin/products";
@@ -168,18 +164,28 @@ export default function AdminProductsPage() {
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
     (p.category?.name || "").toLowerCase().includes(search.toLowerCase())
-  );
+  ).sort((a, b) => {
+    let aVal: any = a[sortField as keyof Product];
+    let bVal: any = b[sortField as keyof Product];
+    if (sortField === "category") {
+      aVal = a.category?.name || "";
+      bVal = b.category?.name || "";
+    } else if (sortField === "price") {
+      aVal = Number(a.salePrice || a.basePrice);
+      bVal = Number(b.salePrice || b.basePrice);
+    } else if (sortField === "status") {
+      aVal = a.isActive ? 1 : 0;
+      bVal = b.isActive ? 1 : 0;
+    }
+    if (aVal < bVal) return sortDir === "asc" ? -1 : 1;
+    if (aVal > bVal) return sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
 
-  const updateVariant = (idx: number, field: string, val: any) => {
-    setForm((f: any) => {
-      const variants = [...f.variants];
-      variants[idx] = { ...variants[idx], [field]: val };
-      return { ...f, variants };
-    });
+  const handleSort = (field: string) => {
+    if (sortField === field) setSortDir(sortDir === "asc" ? "desc" : "asc");
+    else { setSortField(field); setSortDir("asc"); }
   };
-
-  const addVariant = () => setForm((f: any) => ({ ...f, variants: [...f.variants, { size: "", price: 0, stock: 0, sku: "" }] }));
-  const removeVariant = (idx: number) => setForm((f: any) => ({ ...f, variants: f.variants.filter((_: any, i: number) => i !== idx) }));
 
   return (
     <div className="min-h-screen">
@@ -233,11 +239,11 @@ export default function AdminProductsPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Product</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell">Category</th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Price</th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Variants</th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort("name")}>Product {sortField === "name" && (sortDir === "asc" ? "↑" : "↓")}</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden md:table-cell cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort("category")}>Category {sortField === "category" && (sortDir === "asc" ? "↑" : "↓")}</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort("price")}>Price {sortField === "price" && (sortDir === "asc" ? "↑" : "↓")}</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors hidden lg:table-cell" onClick={() => handleSort("stock")}>Stock {sortField === "stock" && (sortDir === "asc" ? "↑" : "↓")}</th>
+                  <th className="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort("status")}>Status {sortField === "status" && (sortDir === "asc" ? "↑" : "↓")}</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
@@ -274,14 +280,8 @@ export default function AdminProductsPage() {
                           <span className="font-bold text-[#06091F]">{Number(p.basePrice).toFixed(3)} TND</span>
                         )}
                       </td>
-                      <td className="px-4 py-4 text-center hidden lg:table-cell">
-                        <button
-                          onClick={() => setExpandedId(expandedId === p.id ? null : p.id)}
-                          className="flex items-center gap-1 mx-auto text-xs text-[#1C2E5E] font-medium hover:text-[#F5D800] transition-colors"
-                        >
-                          {p.variants?.length || 0} variants
-                          {expandedId === p.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                        </button>
+                      <td className="px-4 py-4 text-center hidden lg:table-cell font-medium text-gray-600">
+                        {p.stock}
                       </td>
                       <td className="px-4 py-4 text-center">
                         <div className="flex flex-col items-center gap-1.5">
@@ -295,12 +295,10 @@ export default function AdminProductsPage() {
                           </div>
                           
                           {(() => {
-                            if (!p.variants || p.variants.length === 0) return null;
-                            const totalStock = p.variants.reduce((sum, v) => sum + (v.stock || 0), 0);
-                            if (totalStock === 0) return (
+                            if (p.stock === 0) return (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700 border border-red-200 uppercase tracking-wider">Out of Stock</span>
                             );
-                            if (p.variants.some(v => (v.stock || 0) <= 5)) return (
+                            if (p.stock <= 5) return (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-orange-700 border border-orange-200 uppercase tracking-wider">Low Stock</span>
                             );
                             return null;
@@ -326,23 +324,7 @@ export default function AdminProductsPage() {
                         </div>
                       </td>
                     </tr>
-                    {expandedId === p.id && (
-                      <tr key={`${p.id}-exp`}>
-                        <td colSpan={6} className="px-6 pb-4 bg-gray-50/80">
-                          <div className="flex flex-wrap gap-2 mt-1">
-                            {p.variants?.map(v => (
-                              <span key={v.id || v.size} className={`border px-3 py-1.5 rounded-lg text-xs ${
-                                (v.stock || 0) === 0 ? "bg-red-50 border-red-200 text-red-700" : 
-                                (v.stock || 0) <= 5 ? "bg-orange-50 border-orange-200 text-orange-700" : 
-                                "bg-white border-gray-200 text-gray-600"
-                              }`}>
-                                <strong>{v.size}</strong> — {v.salePrice ? `${v.salePrice} TND` : `${v.price} TND`} · <span className="font-semibold">Stock: {v.stock}</span>
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    )}
+
                   </>
                 ))}
               </tbody>
@@ -506,46 +488,11 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              {/* Variants */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Variants</label>
-                  <button type="button" onClick={addVariant} className="text-xs font-semibold text-[#1C2E5E] hover:text-[#F5D800] flex items-center gap-1 transition-colors">
-                    <Plus className="w-3.5 h-3.5" /> Add Variant
-                  </button>
-                </div>
-                <div className="space-y-3">
-                  {form.variants.map((v: Variant, i: number) => (
-                    <div key={i} className="grid grid-cols-5 gap-2 items-end bg-gray-50 p-3 rounded-xl">
-                      <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Size</label>
-                        <input value={v.size} onChange={e => updateVariant(i, "size", e.target.value)} placeholder="75cl"
-                          className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-[#1C2E5E]/20" />
-                      </div>
-                      <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Price</label>
-                        <input type="number" step="0.01" value={v.price} onChange={e => updateVariant(i, "price", e.target.value)}
-                          className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-[#1C2E5E]/20" />
-                      </div>
-                      <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Sale Price</label>
-                        <input type="number" step="0.01" value={v.salePrice ?? ""} onChange={e => updateVariant(i, "salePrice", e.target.value)} placeholder="—"
-                          className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-[#1C2E5E]/20" />
-                      </div>
-                      <div>
-                        <label className="text-xs text-gray-500 mb-1 block">Stock</label>
-                        <input type="number" value={v.stock} onChange={e => updateVariant(i, "stock", e.target.value)}
-                          className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-[#1C2E5E]/20" />
-                      </div>
-                      <div className="flex items-end">
-                        {form.variants.length > 1 && (
-                          <button type="button" onClick={() => removeVariant(i)} className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors">
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100 mt-4">
+                <div>
+                  <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5 block">Stock Quantity *</label>
+                  <input type="number" min="0" required value={form.stock} onChange={e => setForm((f: any) => ({ ...f, stock: e.target.value }))}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2E5E]/20" />
                 </div>
               </div>
 
