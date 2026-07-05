@@ -138,7 +138,7 @@ export default function AdminDashboardPage() {
                         <span className={`inline-flex text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_COLOR[o.status] || "bg-gray-100 text-gray-600"}`}>
                           {o.status?.replace(/_/g, " ")}
                         </span>
-                        <p className="text-xs font-bold text-[#06091F] mt-0.5">{o.total?.toFixed(3)} TND</p>
+                        <p className="text-xs font-bold text-[#06091F] mt-0.5">{Number(o.total || 0).toFixed(3)} TND</p>
                       </div>
                     </Link>
                   ))}

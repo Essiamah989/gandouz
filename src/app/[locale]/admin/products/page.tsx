@@ -232,11 +232,11 @@ export default function AdminProductsPage() {
                       <td className="px-4 py-4 text-right">
                         {p.salePrice ? (
                           <div>
-                            <span className="font-bold text-[#06091F]">{p.salePrice.toFixed(3)} TND</span>
-                            <span className="block text-xs text-gray-400 line-through">{p.basePrice.toFixed(3)}</span>
+                            <span className="font-bold text-[#06091F]">{Number(p.salePrice).toFixed(3)} TND</span>
+                            <span className="block text-xs text-gray-400 line-through">{Number(p.basePrice).toFixed(3)}</span>
                           </div>
                         ) : (
-                          <span className="font-bold text-[#06091F]">{p.basePrice.toFixed(3)} TND</span>
+                          <span className="font-bold text-[#06091F]">{Number(p.basePrice).toFixed(3)} TND</span>
                         )}
                       </td>
                       <td className="px-4 py-4 text-center hidden lg:table-cell">

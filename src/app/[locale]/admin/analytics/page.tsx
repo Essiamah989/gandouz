@@ -176,7 +176,7 @@ export default function AdminAnalyticsPage() {
                       <tr key={o.id} className="hover:bg-gray-50/50">
                         <td className="px-6 py-4 font-semibold text-[#06091F]">#{o.orderNumber}</td>
                         <td className="px-4 py-4 text-gray-600 hidden md:table-cell">{o.customerName}</td>
-                        <td className="px-4 py-4 text-right font-bold text-[#06091F]">{(o.total || 0).toFixed(3)} TND</td>
+                        <td className="px-4 py-4 text-right font-bold text-[#06091F]">{Number(o.total || 0).toFixed(3)} TND</td>
                         <td className="px-4 py-4 text-center">
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${STATUS_COLORS[o.status] || "bg-gray-100 text-gray-600"}`}>
                             {(o.status || "UNKNOWN").replace(/_/g, " ")}

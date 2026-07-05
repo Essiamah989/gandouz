@@ -232,7 +232,7 @@ export default function AdminOrdersPage() {
                             <p className="text-xs text-gray-400">{order.phone} · {order.city}</p>
                           </div>
                           <div className="text-right shrink-0">
-                            <p className="font-bold text-[#06091F] text-sm">{order.total.toFixed(3)} TND</p>
+                            <p className="font-bold text-[#06091F] text-sm">{Number(order.total).toFixed(3)} TND</p>
                             <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</p>
                           </div>
                         </div>
@@ -302,7 +302,7 @@ export default function AdminOrdersPage() {
                             <span className="text-gray-500"> ×{getItemQty(item)}</span>
                           </span>
                           <span className="font-bold text-[#06091F] shrink-0">
-                            {(getItemPrice(item) * getItemQty(item)).toFixed(3)}
+                            {(Number(getItemPrice(item)) * Number(getItemQty(item))).toFixed(3)}
                           </span>
                         </div>
                       ))}
@@ -310,21 +310,21 @@ export default function AdminOrdersPage() {
                     <div className="border-t border-gray-100 mt-2 pt-2 space-y-1">
                       {selected.subtotal != null && (
                         <div className="flex justify-between text-xs text-gray-500">
-                          <span>Subtotal</span><span>{selected.subtotal.toFixed(3)} TND</span>
+                          <span>Subtotal</span><span>{Number(selected.subtotal).toFixed(3)} TND</span>
                         </div>
                       )}
                       {selected.discount != null && selected.discount > 0 && (
                         <div className="flex justify-between text-xs text-green-600">
-                          <span>Discount</span><span>-{selected.discount.toFixed(3)} TND</span>
+                          <span>Discount</span><span>-{Number(selected.discount).toFixed(3)} TND</span>
                         </div>
                       )}
                       {selected.shipping != null && (
                         <div className="flex justify-between text-xs text-gray-500">
-                          <span>Shipping</span><span>{selected.shipping.toFixed(3)} TND</span>
+                          <span>Shipping</span><span>{Number(selected.shipping).toFixed(3)} TND</span>
                         </div>
                       )}
                       <div className="flex justify-between font-bold text-[#06091F] text-sm pt-1">
-                        <span>Total</span><span>{selected.total.toFixed(3)} TND</span>
+                        <span>Total</span><span>{Number(selected.total).toFixed(3)} TND</span>
                       </div>
                     </div>
                   </div>
