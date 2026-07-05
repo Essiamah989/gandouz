@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import {
   Package, Search, Eye, Clock, CheckCircle, Truck, Star, XCircle,
   ChevronDown, Phone, Mail, Printer, DollarSign, CheckSquare,
@@ -53,6 +54,10 @@ function getItemQty(item: OrderItem)  { return item.qty || item.quantity || 1; }
 function getItemPrice(item: OrderItem){ return item.unitPrice || item.price || 0; }
 
 export default function AdminOrdersPage() {
+  const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as string) || "fr";
+
   const [orders, setOrders]             = useState<Order[]>([]);
   const [selected, setSelected]         = useState<Order | null>(null);
   const [search, setSearch]             = useState("");
@@ -71,6 +76,14 @@ export default function AdminOrdersPage() {
   };
 
   useEffect(() => { fetchOrders(); }, []);
+
+  useEffect(() => {
+    const handleAfterPrint = () => {
+      router.push(`/${locale}/products`);
+    };
+    window.addEventListener('afterprint', handleAfterPrint);
+    return () => window.removeEventListener('afterprint', handleAfterPrint);
+  }, [router, locale]);
 
   const filtered = orders.filter(o => {
     const matchSearch =
@@ -117,9 +130,9 @@ export default function AdminOrdersPage() {
   const nextStatus = selected ? STATUS_FLOW[selected.status] : undefined;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen print:min-h-0 print:bg-white">
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8">
+      <div className="bg-[#06091F] px-8 py-8 print:hidden">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Admin · Operations</p>
         <h1 className="text-4xl font-extrabold text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           ORDER MANAGEMENT
@@ -127,9 +140,9 @@ export default function AdminOrdersPage() {
         <p className="text-white/50 text-sm mt-1">{orders.length} total orders</p>
       </div>
 
-      <div className="px-8 py-6 space-y-6">
+      <div className="px-8 py-6 space-y-6 print:p-0 print:space-y-0 print:m-0">
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 print:hidden">
           {[
             { label: "Pending", value: stats.pending, color: "text-yellow-600", bg: "bg-yellow-50" },
             { label: "Validated", value: stats.validated, color: "text-blue-600", bg: "bg-blue-50" },
@@ -145,9 +158,9 @@ export default function AdminOrdersPage() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 print:block">
           {/* Orders List */}
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-2 print:hidden">
             {/* Filters */}
             <div className="flex gap-3 mb-4">
               <div className="relative flex-1">
@@ -232,16 +245,16 @@ export default function AdminOrdersPage() {
           </div>
 
           {/* Detail Panel */}
-          <div className="xl:col-span-1">
+          <div className="xl:col-span-1 print:w-full print:m-0 print:block">
             {selected ? (
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm sticky top-6 overflow-hidden">
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm sticky top-6 overflow-hidden print:static print:border-none print:shadow-none">
                 {/* Panel Header */}
                 <div className="bg-[#06091F] px-5 py-4 flex items-center justify-between">
                   <div>
-                    <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest">Order Details</p>
-                    <p className="text-white font-bold">#{selected.orderNumber}</p>
+                    <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest print:text-gray-800">Order Details</p>
+                    <p className="text-white font-bold print:text-black">#{selected.orderNumber}</p>
                   </div>
-                  <button onClick={() => setSelected(null)} className="text-white/50 hover:text-white text-xs transition-colors">
+                  <button onClick={() => setSelected(null)} className="text-white/50 hover:text-white text-xs transition-colors print:hidden">
                     ✕ Close
                   </button>
                 </div>
@@ -317,7 +330,7 @@ export default function AdminOrdersPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 print:hidden">
                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Actions</p>
 
                     {nextStatus && (
@@ -376,14 +389,14 @@ export default function AdminOrdersPage() {
                   {selected.statusHistory && selected.statusHistory.length > 0 && (
                     <div>
                       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">History</p>
-                      <div className="space-y-2 max-h-36 overflow-y-auto">
+                      <div className="space-y-2 max-h-36 overflow-y-auto print:max-h-none print:overflow-visible">
                         {[...selected.statusHistory].reverse().map((h, i) => (
                           <div key={i} className="flex items-start gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-[#F5D800] mt-1.5 shrink-0" />
                             <div>
                               <p className="text-xs font-semibold text-gray-700">{h.status}</p>
                               {h.note && <p className="text-xs text-gray-400">{h.note}</p>}
-                              <p className="text-xs text-gray-300">{new Date(h.createdAt).toLocaleString()}</p>
+                              <p className="text-xs text-gray-300">{new Date(h.createdAt).toLocaleString('fr-FR')}</p>
                             </div>
                           </div>
                         ))}

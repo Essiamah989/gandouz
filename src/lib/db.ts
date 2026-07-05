@@ -136,12 +136,15 @@ export async function getProducts(options: {
         ];
       }
 
-      return await prisma.product.findMany({
+      const queryArgs: any = {
         where,
         include: { variants: true, category: true, brand: true },
-        take: limit,
         orderBy: { createdAt: "desc" }
-      });
+      };
+      if (limit !== undefined) {
+        queryArgs.take = limit;
+      }
+      return await prisma.product.findMany(queryArgs);
     } catch (e) {
       console.warn("DB query failed, falling back to mock:", e);
     }

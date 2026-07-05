@@ -1,0 +1,5 @@
+{
+  "artifactType": "ARTIFACT_TYPE_OTHER",
+  "summary": "A comprehensive guide on how to set up a Supabase PostgreSQL database, configure Prisma with transaction pooling, push the schema to the database, and publish the website online.",
+  "updatedAt": "2026-06-21T18:45:02.922698400Z"
+}

@@ -284,11 +284,11 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                           <div className="flex flex-col">
                             {hasDiscount && (
                               <span className="text-[10px] text-gray-400 line-through">
-                                {Number(p.basePrice).toLocaleString()} TND
+                                {Number(p.basePrice).toLocaleString('fr-FR')} TND
                               </span>
                             )}
                             <span className="font-black text-[#06091F] text-sm">
-                              {Number(displayPrice).toLocaleString()} TND
+                              {Number(displayPrice).toLocaleString('fr-FR')} TND
                             </span>
                           </div>
                           <span className="text-[10px] text-[#06091F] bg-[#F5D800] group-hover:bg-[#06091F] group-hover:text-white px-3 py-1.5 rounded-md font-bold transition-all">

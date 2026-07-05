@@ -36,7 +36,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {/* Hero Text */}
             <div className="flex-1 text-center lg:text-left">
               <span className="inline-block bg-[#F5D800]/10 border border-[#F5D800]/30 text-[#F5D800] text-xs font-bold uppercase tracking-[0.25em] px-4 py-1.5 rounded-full mb-6">
-                ESTABLISHED IN LA GOULETTE
+                ÉTABLI À LA GOULETTE
               </span>
               <h1
                 className="text-6xl lg:text-8xl font-black text-white leading-[0.95] mb-6 tracking-tight uppercase"
@@ -99,18 +99,18 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {[
               {
                 icon: ShieldCheck,
-                title: "100% Original Products",
-                desc: "Direct-from-source verification for all premium brands.",
+                title: "Produits 100% Originaux",
+                desc: "Vérification directe à la source pour toutes les marques premium.",
               },
               {
                 icon: Truck,
-                title: "Swift Delivery",
-                desc: "Hand-delivered safely to your door within 24-48 hours.",
+                title: "Livraison Rapide",
+                desc: "Livré en main propre en toute sécurité sous 24 à 48 heures.",
               },
               {
                 icon: Clock,
-                title: "Secure Cash on Delivery",
-                desc: "No online card requirements. Inspect your items before paying.",
+                title: "Paiement à la Livraison Sécurisé",
+                desc: "Aucune carte requise en ligne. Inspectez vos articles avant de payer.",
               },
             ].map(({ icon: Icon, title, desc }, index) => (
               <div
@@ -141,9 +141,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               className="text-4xl lg:text-5xl font-black text-[#06091F] mt-4 uppercase"
               style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
             >
-              Curated Masterpieces
+              Chefs-d'œuvre Sélectionnés
             </h2>
-            <p className="text-gray-500 mt-2 max-w-lg mx-auto">Explore our diverse beverages and tools categories</p>
+            <p className="text-gray-500 mt-2 max-w-lg mx-auto">Explorez nos diverses catégories de boissons et d'accessoires</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -170,10 +170,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                     {cat.name}
                   </h3>
                   <p className="text-white/70 text-xs mt-1.5 line-clamp-2 leading-relaxed">
-                    {cat.description || "Browse our high-quality inventory."}
+                    {cat.description || "Parcourez notre inventaire de haute qualité."}
                   </p>
                   <div className="inline-flex items-center gap-1 text-[#F5D800] text-xs font-bold mt-4 uppercase tracking-wider group-hover:underline">
-                    View Products
+                    Voir les Produits
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
@@ -189,13 +189,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
             <div>
               <span className="text-xs font-bold text-[#F5D800] uppercase tracking-[0.3em] bg-[#06091F] px-3.5 py-1 rounded-full">
-                HOT DEALS
+                BONNES AFFAIRES
               </span>
               <h2
                 className="text-4xl lg:text-5xl font-black text-[#06091F] mt-4 uppercase"
                 style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
               >
-                Featured Cellar Products
+                Produits en Vedette
               </h2>
             </div>
             <Link
@@ -203,7 +203,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               id="featured-see-all"
               className="inline-flex items-center gap-2 text-sm font-bold text-[#1C2E5E] hover:text-[#F5D800] transition-colors uppercase tracking-wider"
             >
-              See All Items <ArrowRight className="w-4 h-4" />
+              Voir Tous les Articles <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -242,7 +242,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
                       <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">
-                        {p.brand?.name || "Premium Quality"}
+                        {p.brand?.name || "Qualité Premium"}
                       </p>
                       <h3 className="font-bold text-[#06091F] text-base leading-snug mt-1 group-hover:text-[#1C2E5E] transition-colors line-clamp-2">
                         {p.name}
@@ -258,15 +258,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                       <div className="flex flex-col">
                         {hasDiscount && (
                           <span className="text-xs text-gray-400 line-through">
-                            {Number(p.basePrice).toLocaleString()} TND
+                            {Number(p.basePrice).toLocaleString('fr-FR')} TND
                           </span>
                         )}
                         <span className="font-black text-[#06091F] text-lg">
-                          {Number(displayPrice).toLocaleString()} TND
+                          {Number(displayPrice).toLocaleString('fr-FR')} TND
                         </span>
                       </div>
                       <span className="text-xs text-[#06091F] bg-[#F5D800] group-hover:bg-[#06091F] group-hover:text-white px-3 py-2 rounded-lg font-bold transition-all shadow-sm">
-                        View Product
+                        Voir Produit
                       </span>
                     </div>
                   </div>
@@ -287,32 +287,32 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="flex-1 text-center lg:text-left">
               <span className="inline-flex items-center gap-1.5 bg-[#F5D800]/10 border border-[#F5D800]/25 text-[#F5D800] text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full mb-4">
                 <Gift className="w-3.5 h-3.5" />
-                LOYALTY PROGRAM
+                PROGRAMME DE FIDÉLITÉ
               </span>
               <h2 className="text-4xl lg:text-5xl font-black mb-4 uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                Introducing <span className="text-[#F5D800]">Cavacoins</span>
+                Découvrez les <span className="text-[#F5D800]">Cavacoins</span>
               </h2>
               <p className="text-white/70 text-base max-w-2xl leading-relaxed mb-6">
-                Every purchase you make earns you Cavacoins! Collect points on each order, and redeem them at checkout to claim premium discounts or select accessories. 1 Cavacoin equals 1 TND in loyalty rewards.
+                Chaque achat vous rapporte des Cavacoins ! Cumulez des points sur chaque commande et échangez-les lors du paiement pour obtenir des réductions ou des accessoires. 1 Cavacoin équivaut à 1 TND de récompense de fidélité.
               </p>
               <div className="flex items-center justify-center lg:justify-start gap-8 flex-wrap">
                 <div className="text-left">
                   <span className="text-3xl font-black text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>1 CAVACOIN</span>
-                  <p className="text-xs text-white/50">per 1 TND Spent</p>
+                  <p className="text-xs text-white/50">par 1 TND Dépensé</p>
                 </div>
                 <div className="w-px h-10 bg-white/20 hidden sm:block" />
                 <div className="text-left">
-                  <span className="text-3xl font-black text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>100% FREE</span>
-                  <p className="text-xs text-white/50">Automatic Registration</p>
+                  <span className="text-3xl font-black text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>100% GRATUIT</span>
+                  <p className="text-xs text-white/50">Inscription Automatique</p>
                 </div>
               </div>
             </div>
             <div className="shrink-0 flex flex-col items-center justify-center bg-[#F5D800] text-[#06091F] p-8 rounded-2xl shadow-xl w-64 text-center">
               <Trophy className="w-12 h-12 mb-3 text-[#06091F]" />
-              <h3 className="font-black text-xl leading-none">JOIN NOW</h3>
-              <p className="text-xs opacity-75 mt-1">Start collecting points on your first checkout</p>
+              <h3 className="font-black text-xl leading-none">REJOINDRE</h3>
+              <p className="text-xs opacity-75 mt-1">Commencez à cumuler des points dès votre premier achat</p>
               <Link href="/products" className="bg-[#06091F] text-white w-full py-2.5 rounded-lg text-sm font-bold mt-5 hover:bg-[#1C2E5E] transition-colors block">
-                Start Shopping
+                Faire des Achats
               </Link>
             </div>
           </div>
@@ -335,36 +335,36 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <span className="bg-[#F5D800] text-[#06091F] text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded">
-                    CLASSIC · PREMIUM · VIP
+                    CLASSIQUE · PREMIUM · VIP
                   </span>
                   <h4 className="text-2xl font-black mt-2 uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                    Mobile Bars for Rent
+                    Location de Bars Mobiles
                   </h4>
-                  <p className="text-xs text-white/70 mt-1">We bring custom mixologists and top-tier bar layouts directly to your party site.</p>
+                  <p className="text-xs text-white/70 mt-1">Nous amenons nos mixologues et des structures de bar haut de gamme directement à votre événement.</p>
                 </div>
               </div>
             </div>
 
             <div className="flex-1">
               <span className="text-[#F5D800] text-xs font-bold uppercase tracking-[0.3em] bg-[#06091F] px-3.5 py-1 rounded-full">
-                PRIVATE & CORPORATE
+                PRIVÉ & PROFESSIONNEL
               </span>
               <h2
                 className="text-4xl lg:text-5xl font-black text-[#06091F] mt-4 uppercase"
                 style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
               >
-                Mobile Bar Rental Services
+                Services de Location de Bar
               </h2>
               <p className="text-gray-600 mt-4 leading-relaxed">
-                Hosting a wedding, corporate gala, or pool party? Make it unforgettable by hiring our premium mobile bar setups. We provide the bar structure, professional cocktail shakers, premium ingredients, and fully licensed bartenders.
+                Vous organisez un mariage, un gala d'entreprise ou une fête au bord de la piscine ? Rendez cet événement inoubliable avec nos bars mobiles. Nous fournissons la structure, les équipements professionnels, des ingrédients premium et des barmans qualifiés.
               </p>
               
               <ul className="mt-6 space-y-3.5">
                 {[
-                  "Three levels of setups: Classic, Premium, and VIP configurations.",
-                  "Bespoke cocktail menus created specifically for your guests.",
-                  "Certified and highly skilled local mixologists.",
-                  "Full glassware, custom ice cubes, and premium garnishes included."
+                  "Trois niveaux de configuration : Classique, Premium et VIP.",
+                  "Menus de cocktails sur mesure créés spécialement pour vos invités.",
+                  "Mixologues locaux certifiés et hautement qualifiés.",
+                  "Verrerie complète, glaçons personnalisés et garnitures premium incluses."
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700">
                     <span className="w-5 h-5 rounded-full bg-[#06091F] text-[#F5D800] flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
@@ -378,7 +378,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   href="/bar-events"
                   className="inline-flex items-center gap-2 bg-[#06091F] text-white hover:bg-[#1C2E5E] px-8 py-3.5 rounded-xl font-bold transition-all shadow-md"
                 >
-                  Book Your Event <ArrowRight className="w-4 h-4" />
+                  Réservez Votre Événement <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </div>
@@ -390,28 +390,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="py-20 bg-white" id="testimonials">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">FEEDBACK</span>
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">TÉMOIGNAGES</span>
             <h2 className="text-4xl font-black text-[#06091F] uppercase mt-2" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-              What Our Patrons Say
+              Ce que Disent nos Clients
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                text: "The delivery is insanely fast! I ordered two bottles of premium whisky for a corporate dinner, and they arrived in under 3 hours in La Goulette. Fantastic service.",
+                text: "La livraison est incroyablement rapide ! J'ai commandé deux bouteilles de whisky premium pour un dîner d'affaires, et elles sont arrivées en moins de 3 heures à La Goulette. Service fantastique.",
                 name: "Karim Meziane",
-                role: "Event Organizer"
+                role: "Organisateur d'Événements"
               },
               {
-                text: "We rented the VIP Mobile Bar package for our anniversary party, and the guests couldn't stop praising the mixologists. The setup matched the luxury vibes perfectly.",
+                text: "Nous avons loué le pack Bar Mobile VIP pour notre fête d'anniversaire, et les invités n'ont pas arrêté de féliciter les mixologues. L'installation correspondait parfaitement à l'ambiance luxe.",
                 name: "Selma Ben Jemaa",
-                role: "Private Host"
+                role: "Hôte Privé"
               },
               {
-                text: "Cavacoins points are a game changer. I've already redeemed points for a free cocktail shaker kit. Very smooth manual validation and friendly delivery drivers.",
+                text: "Les points Cavacoins changent la donne. J'ai déjà échangé des points contre un kit de shaker gratuit. Validation manuelle très fluide et livreurs sympathiques.",
                 name: "Ahmed Toumi",
-                role: "Home Bartender"
+                role: "Barman Amateur"
               }
             ].map((t, i) => (
               <div key={i} className="p-6 rounded-2xl bg-gray-50 border border-gray-100 flex flex-col justify-between">

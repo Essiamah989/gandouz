@@ -142,7 +142,7 @@ export default function ProductClient({ product }: { product: any }) {
                             : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                         }`}
                       >
-                        {v.size} — {(v.salePrice || v.price).toLocaleString()} TND
+                        {v.size} — {(v.salePrice || v.price).toLocaleString('fr-FR')} TND
                       </button>
                     ))}
                   </div>
@@ -164,11 +164,11 @@ export default function ProductClient({ product }: { product: any }) {
             <div className="mt-8 pt-6 border-t border-gray-100">
               <div className="flex items-baseline gap-2.5 mb-5">
                 <span className="text-3xl font-black text-[#06091F] tracking-tight">
-                  {currentPrice.toLocaleString()} TND
+                  {currentPrice.toLocaleString('fr-FR')} TND
                 </span>
                 {selectedVariant?.salePrice !== null && selectedVariant?.salePrice !== undefined && (
                   <span className="text-sm text-gray-400 line-through">
-                    {Number(selectedVariant.price).toLocaleString()} TND
+                    {Number(selectedVariant.price).toLocaleString('fr-FR')} TND
                   </span>
                 )}
               </div>

@@ -4,17 +4,17 @@ import ShellWrapper from "@/components/layout/ShellWrapper";
 
 export const metadata: Metadata = {
   title: {
-    default: "Distribution Gandouz — Premium Wines, Spirits & Bar Events",
+    default: "Distribution Gandouz — Vins, Spiritueux Premium & Événements Bar",
     template: "%s | Distribution Gandouz",
   },
   description:
-    "Tunisia's premier beverage distributor. Browse luxury wines, premium spirits, craft beers, and book mobile bar rental services. Cash on delivery.",
-  keywords: ["gandouz", "wines", "spirits", "beer", "Tunisia", "mobile bar", "cavista"],
+    "Le premier distributeur de boissons en Tunisie. Découvrez nos vins de luxe, spiritueux premium, bières artisanales et réservez des services de location de bar mobile. Paiement à la livraison.",
+  keywords: ["gandouz", "vins", "spiritueux", "bière", "Tunisie", "bar mobile", "caviste"],
   openGraph: {
     title: "Distribution Gandouz",
-    description: "Tunisia's premier beverage distributor.",
+    description: "Le premier distributeur de boissons en Tunisie.",
     type: "website",
-    locale: "en_US",
+    locale: "fr_FR",
   },
 };
 
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

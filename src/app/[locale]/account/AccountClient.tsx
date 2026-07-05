@@ -91,7 +91,7 @@ export default function AccountClient({ user, orders, wishlist }: { user: any, o
                           </span>
                         </div>
                         <p className="text-xs text-gray-500">
-                          {o.items?.length || 1} items · {Number(o.total).toLocaleString()} TND
+                          {o.items?.length || 1} items · {Number(o.total).toLocaleString('fr-FR')} TND
                         </p>
                         <div className="flex items-center gap-1 text-[10px] text-gray-400 pt-1">
                           <Calendar className="w-3 h-3" />
@@ -133,7 +133,7 @@ export default function AccountClient({ user, orders, wishlist }: { user: any, o
                         <div className="min-w-0">
                           <h4 className="font-bold text-xs text-[#06091F] truncate leading-tight">{p.name}</h4>
                           <span className="font-bold text-xs text-[#06091F] block mt-1">
-                            {Number(p.salePrice || p.basePrice).toLocaleString()} TND
+                            {Number(p.salePrice || p.basePrice).toLocaleString('fr-FR')} TND
                           </span>
                         </div>
                       </div>

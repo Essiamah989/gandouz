@@ -89,11 +89,10 @@ function ConfirmationContent({ orderNumber }: { orderNumber: string }) {
   );
 }
 
-export default function OrderConfirmationPage({
-  searchParams,
-}: {
-  searchParams: { orderNumber?: string };
+export default async function OrderConfirmationPage(props: {
+  searchParams: Promise<{ orderNumber?: string }>;
 }) {
+  const searchParams = await props.searchParams;
   const orderNumber = searchParams?.orderNumber ?? "000000";
 
   return (

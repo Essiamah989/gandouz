@@ -53,7 +53,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-[#06091F] text-sm leading-tight mb-1">{item.name}</h3>
-                    <p className="text-[#F5D800] font-bold text-base mb-3">{item.price.toLocaleString()} TND</p>
+                    <p className="text-[#F5D800] font-bold text-base mb-3">{item.price.toLocaleString('fr-FR')} TND</p>
 
                     <div className="flex items-center justify-between">
                       {/* Quantity controls */}
@@ -92,7 +92,7 @@ export default function CartPage() {
 
                   <div className="text-right shrink-0 flex flex-col justify-between items-end">
                     <p className="font-bold text-[#06091F] text-base">
-                      {(item.price * item.quantity).toLocaleString()} TND
+                      {(item.price * item.quantity).toLocaleString('fr-FR')} TND
                     </p>
                   </div>
                 </div>
@@ -108,12 +108,12 @@ export default function CartPage() {
                 <div className="flex flex-col gap-3 mb-5">
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Subtotal ({totalItems()} items)</span>
-                    <span className="font-semibold text-[#06091F]">{subtotal.toLocaleString()} TND</span>
+                    <span className="font-semibold text-[#06091F]">{subtotal.toLocaleString('fr-FR')} TND</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Shipping</span>
                     <span className={`font-semibold ${shipping === 0 ? "text-green-600" : "text-[#06091F]"}`}>
-                      {shipping === 0 ? "Free" : `${shipping.toLocaleString()} TND`}
+                      {shipping === 0 ? "Free" : `${shipping.toLocaleString('fr-FR')} TND`}
                     </span>
                   </div>
                   {shipping > 0 && (
@@ -123,7 +123,7 @@ export default function CartPage() {
                   )}
                   <div className="border-t border-gray-100 pt-3 flex justify-between">
                     <span className="font-bold text-[#06091F]">Total</span>
-                    <span className="font-bold text-[#06091F] text-lg">{total.toLocaleString()} TND</span>
+                    <span className="font-bold text-[#06091F] text-lg">{total.toLocaleString('fr-FR')} TND</span>
                   </div>
                 </div>
 

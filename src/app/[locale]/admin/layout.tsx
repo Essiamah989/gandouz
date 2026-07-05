@@ -46,7 +46,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen flex bg-[#F4F5F7]">
       {/* Sidebar */}
-      <aside className="w-60 shrink-0 bg-[#06091F] flex flex-col min-h-screen sticky top-0 h-screen">
+      <aside className="w-60 shrink-0 bg-[#06091F] flex flex-col min-h-screen sticky top-0 h-screen print:hidden">
         {/* Logo */}
         <div className="px-5 py-5 border-b border-white/10">
           <div className="mt-1">

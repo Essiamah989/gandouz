@@ -259,7 +259,7 @@ export default function CheckoutPage() {
                         <p className="text-gray-400 text-xs">Qty: {item.quantity}</p>
                       </div>
                       <span className="font-semibold text-[#06091F] shrink-0">
-                        {(item.price * item.quantity).toLocaleString()} TND
+                        {(item.price * item.quantity).toLocaleString('fr-FR')} TND
                       </span>
                     </div>
                   ))}
@@ -268,17 +268,17 @@ export default function CheckoutPage() {
                 <div className="border-t border-gray-100 pt-4 flex flex-col gap-2 mb-5">
                   <div className="flex justify-between text-sm text-gray-500">
                     <span>Subtotal</span>
-                    <span>{subtotal.toLocaleString()} TND</span>
+                    <span>{subtotal.toLocaleString('fr-FR')} TND</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-500">
                     <span>Shipping</span>
                     <span className={shipping === 0 ? "text-green-600" : ""}>
-                      {shipping === 0 ? "Free" : `${shipping.toLocaleString()} TND`}
+                      {shipping === 0 ? "Free" : `${shipping.toLocaleString('fr-FR')} TND`}
                     </span>
                   </div>
                   <div className="flex justify-between font-bold text-[#06091F] text-base pt-2 border-t border-gray-100">
                     <span>Total</span>
-                    <span>{total.toLocaleString()} TND</span>
+                    <span>{total.toLocaleString('fr-FR')} TND</span>
                   </div>
                 </div>
 
