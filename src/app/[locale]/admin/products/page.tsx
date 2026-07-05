@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Plus, Pencil, Trash2, Search, ChevronDown, ChevronUp, ImageOff, X, Check, AlertTriangle } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Plus, Pencil, Trash2, Search, ChevronDown, ChevronUp, ImageOff, X, Check, AlertTriangle, Upload, ImagePlus, Loader2 } from "lucide-react";
 
 type Variant = { id?: string; size: string; price: number; salePrice?: number | null; stock: number; sku?: string };
 type Product = {
@@ -36,7 +36,11 @@ export default function AdminProductsPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const showToast = (type: "success" | "error", msg: string) => {
@@ -81,7 +85,38 @@ export default function AdminProductsPage() {
   };
 
   const openDelete = (id: string) => { setDeleteId(id); setModal("delete"); };
-  const closeModal = () => { setModal("closed"); setEditId(null); setDeleteId(null); };
+  const closeModal = () => { setModal("closed"); setEditId(null); setDeleteId(null); setUploadError(null); };
+
+  const uploadFile = async (file: File) => {
+    setUploading(true);
+    setUploadError(null);
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+    setUploading(false);
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      setUploadError(json.error || "Upload failed");
+      return null;
+    }
+    const { url } = await res.json();
+    return url as string;
+  };
+
+  const handleFileChange = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const urls: string[] = [];
+    for (const file of Array.from(files)) {
+      const url = await uploadFile(file);
+      if (url) urls.push(url);
+    }
+    if (urls.length > 0) {
+      setForm((f: any) => ({
+        ...f,
+        images: [...(f.images.filter((u: string) => u.trim())), ...urls],
+      }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -362,11 +397,82 @@ export default function AdminProductsPage() {
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2E5E]/20 resize-none" />
                 </div>
                 <div className="col-span-2">
-                  <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5 block">Image URLs (one per line)</label>
-                  <textarea rows={2}
-                    value={form.images.join("\n")}
-                    onChange={e => setForm((f: any) => ({ ...f, images: e.target.value.split("\n").filter(Boolean) }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2E5E]/20 resize-none font-mono text-xs" />
+                  <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5 block">Product Images</label>
+
+                  {/* Drag-and-drop upload zone */}
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+                    onDragLeave={() => setDragOver(false)}
+                    onDrop={async e => {
+                      e.preventDefault();
+                      setDragOver(false);
+                      await handleFileChange(e.dataTransfer.files);
+                    }}
+                    className={`relative border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors ${
+                      dragOver
+                        ? "border-[#1C2E5E] bg-[#1C2E5E]/5"
+                        : "border-gray-200 hover:border-[#1C2E5E]/50 hover:bg-gray-50"
+                    }`}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                      multiple
+                      className="sr-only"
+                      onChange={e => handleFileChange(e.target.files)}
+                    />
+                    {uploading ? (
+                      <>
+                        <Loader2 className="w-8 h-8 text-[#1C2E5E] animate-spin" />
+                        <p className="text-sm font-medium text-[#1C2E5E]">Uploading...</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-12 h-12 rounded-xl bg-[#06091F]/5 flex items-center justify-center">
+                          <ImagePlus className="w-6 h-6 text-[#06091F]/40" />
+                        </div>
+                        <p className="text-sm font-semibold text-gray-700">Drop images here or <span className="text-[#1C2E5E] underline">browse</span></p>
+                        <p className="text-xs text-gray-400">JPEG, PNG, WebP, GIF · Max 5 MB each</p>
+                      </>
+                    )}
+                  </div>
+
+                  {uploadError && (
+                    <p className="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                      <AlertTriangle className="w-3.5 h-3.5" /> {uploadError}
+                    </p>
+                  )}
+
+                  {/* Thumbnails of added images */}
+                  {form.images.filter((u: string) => u.trim()).length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {form.images.filter((u: string) => u.trim()).map((url: string, idx: number) => (
+                        <div key={idx} className="relative group w-20 h-20 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={url} alt="" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => setForm((f: any) => ({ ...f, images: f.images.filter((_: string, i: number) => i !== idx) }))}
+                            className="absolute top-0.5 right-0.5 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Manual URL fallback */}
+                  <div className="mt-3">
+                    <p className="text-xs text-gray-400 mb-1 flex items-center gap-1"><Upload className="w-3 h-3" /> Or paste image URLs (one per line):</p>
+                    <textarea rows={2}
+                      value={form.images.join("\n")}
+                      onChange={e => setForm((f: any) => ({ ...f, images: e.target.value.split("\n") }))}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2E5E]/20 resize-none font-mono text-xs"
+                      placeholder="https://example.com/image.jpg" />
+                  </div>
                 </div>
                 <div className="col-span-2 flex items-center gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
