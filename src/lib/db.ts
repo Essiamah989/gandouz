@@ -267,14 +267,17 @@ export async function createProduct(data: {
           description: data.description,
           images: data.images,
           categoryId: data.categoryId,
-          brandId: data.brandId,
+          brandId: data.brandId || null,
           basePrice: data.basePrice,
           salePrice: data.salePrice,
           isFeatured: data.isFeatured,
           loyaltyPoints: data.loyaltyPoints || 0,
           tags: data.tags || [],
           variants: {
-            create: data.variants
+            create: data.variants.map((v: any) => ({
+              ...v,
+              sku: v.sku || null
+            }))
           }
         },
         include: { variants: true }
@@ -328,7 +331,7 @@ export async function updateProduct(id: string, data: any) {
           description: data.description,
           images: data.images,
           categoryId: data.categoryId,
-          brandId: data.brandId,
+          brandId: data.brandId || null,
           basePrice: data.basePrice,
           salePrice: data.salePrice,
           isFeatured: data.isFeatured,
@@ -341,7 +344,7 @@ export async function updateProduct(id: string, data: any) {
               price: v.price,
               salePrice: v.salePrice,
               stock: v.stock,
-              sku: v.sku
+              sku: v.sku || null
             }))
           }
         },
