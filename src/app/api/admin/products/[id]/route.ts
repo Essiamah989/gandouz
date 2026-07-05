@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getProductById, updateProduct, deleteProduct } from "@/lib/db";
 
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const product = await getProductById(params.id);
+    const { id } = await context.params;
+    const product = await getProductById(id);
     if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(product);
   } catch (e) {
@@ -12,10 +13,11 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await context.params;
     const body = await req.json();
-    const updated = await updateProduct(params.id, body);
+    const updated = await updateProduct(id, body);
     if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(updated);
   } catch (e) {
@@ -24,9 +26,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const result = await deleteProduct(params.id);
+    const { id } = await context.params;
+    const result = await deleteProduct(id);
     if (!result) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json({ success: true });
   } catch (e) {
