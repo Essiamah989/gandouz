@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     const orderItems = items.map((item: any) => ({
-      productId: item.id,
+      productId: item.productId || item.id,
       productName: item.name,
       variantId: item.variantId || null,
       variantSize: item.variantSize || null,

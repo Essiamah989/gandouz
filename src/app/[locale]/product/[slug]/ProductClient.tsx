@@ -42,6 +42,9 @@ export default function ProductClient({ product }: { product: any }) {
 
     addItem({
       id: selectedVariant ? selectedVariant.id : product.id,
+      productId: product.id,
+      variantId: selectedVariant ? selectedVariant.id : undefined,
+      variantSize: selectedVariant ? selectedVariant.size : undefined,
       name: itemName,
       price: currentPrice,
       quantity: qty,

@@ -23,7 +23,7 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<FormErrors>({});
 
   const subtotal = totalPrice();
-  const shipping = subtotal > 200 ? 0 : 7;
+  const shipping = 0;
   const total = subtotal + shipping;
 
   const [form, setForm] = useState<FormData>({
@@ -148,7 +148,7 @@ export default function CheckoutPage() {
                         type="tel"
                         value={form.phone}
                         onChange={handleChange}
-                        placeholder="+213 XXX XXX XXX"
+                        placeholder="+216 XXX XXX XXX"
                         className={`${inputClass("phone")} pl-10`}
                       />
                     </div>

@@ -8,7 +8,7 @@ import { useCartStore } from "@/lib/store/cart";
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, totalItems } = useCartStore();
   const subtotal = totalPrice();
-  const shipping = subtotal > 5000 ? 0 : 500;
+  const shipping = 0;
   const total = subtotal + shipping;
 
   return (
@@ -49,7 +49,7 @@ export default function CartPage() {
                   className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 flex gap-4 shadow-sm"
                 >
                   <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gray-50 shrink-0">
-                    <Image src={item.image} alt={item.name} fill className="object-cover" />
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-[#06091F] text-sm leading-tight mb-1">{item.name}</h3>
