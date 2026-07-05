@@ -284,12 +284,28 @@ export default function AdminProductsPage() {
                         </button>
                       </td>
                       <td className="px-4 py-4 text-center">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${p.isActive !== false ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
-                          {p.isActive !== false ? "Active" : "Inactive"}
-                        </span>
-                        {p.isFeatured && (
-                          <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">★</span>
-                        )}
+                        <div className="flex flex-col items-center gap-1.5">
+                          <div>
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${p.isActive !== false ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                              {p.isActive !== false ? "Active" : "Inactive"}
+                            </span>
+                            {p.isFeatured && (
+                              <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">★</span>
+                            )}
+                          </div>
+                          
+                          {(() => {
+                            if (!p.variants || p.variants.length === 0) return null;
+                            const totalStock = p.variants.reduce((sum, v) => sum + (v.stock || 0), 0);
+                            if (totalStock === 0) return (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700 border border-red-200 uppercase tracking-wider">Out of Stock</span>
+                            );
+                            if (p.variants.some(v => (v.stock || 0) <= 5)) return (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-orange-100 text-orange-700 border border-orange-200 uppercase tracking-wider">Low Stock</span>
+                            );
+                            return null;
+                          })()}
+                        </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2 justify-end">
@@ -315,8 +331,12 @@ export default function AdminProductsPage() {
                         <td colSpan={6} className="px-6 pb-4 bg-gray-50/80">
                           <div className="flex flex-wrap gap-2 mt-1">
                             {p.variants?.map(v => (
-                              <span key={v.id || v.size} className="bg-white border border-gray-200 px-3 py-1.5 rounded-lg text-xs text-gray-600">
-                                <strong>{v.size}</strong> — {v.salePrice ? `${v.salePrice} TND` : `${v.price} TND`} · Stock: {v.stock}
+                              <span key={v.id || v.size} className={`border px-3 py-1.5 rounded-lg text-xs ${
+                                (v.stock || 0) === 0 ? "bg-red-50 border-red-200 text-red-700" : 
+                                (v.stock || 0) <= 5 ? "bg-orange-50 border-orange-200 text-orange-700" : 
+                                "bg-white border-gray-200 text-gray-600"
+                              }`}>
+                                <strong>{v.size}</strong> — {v.salePrice ? `${v.salePrice} TND` : `${v.price} TND`} · <span className="font-semibold">Stock: {v.stock}</span>
                               </span>
                             ))}
                           </div>
