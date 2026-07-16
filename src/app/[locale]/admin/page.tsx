@@ -29,10 +29,10 @@ export default function AdminDashboardPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const totalRevenue = orders.filter(o => o.status !== "CANCELLED").reduce((s, o) => s + o.total, 0);
+  const totalRevenue = orders.filter(o => o.status !== "CANCELLED").reduce((s, o) => s + Number(o.total || 0), 0);
   const pending      = orders.filter(o => ["PENDING", "PENDING_VALIDATION"].includes(o.status)).length;
   const delivered    = orders.filter(o => o.status === "DELIVERED").length;
-  const recent       = [...orders].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5);
+  const recent       = [...orders].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 5);
 
   const kpis = [
     { label: "Total Orders", value: loading ? "—" : orders.length, sub: "All time", color: "text-[#1C2E5E]", bg: "bg-[#1C2E5E]/5", icon: ShoppingBag },

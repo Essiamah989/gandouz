@@ -24,7 +24,6 @@ export default function Navbar() {
   const navLinks = [
     { href: `/${currentLocale}`, label: dict.nav.catalog || "Home" },
     { href: `/${currentLocale}/products`, label: "Products" }, // Custom text if needed
-    { href: `/${currentLocale}/bar-events`, label: dict.nav.barRental || "Bar Rental" },
     { href: `/${currentLocale}/about`, label: dict.nav.about || "About" },
   ];
 

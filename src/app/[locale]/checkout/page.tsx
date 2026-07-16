@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingBag, User, Phone, Mail, MapPin, Building2, FileText, ArrowRight, Loader2 } from "lucide-react";
@@ -23,7 +23,20 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<FormErrors>({});
 
   const subtotal = totalPrice();
-  const shipping = 0;
+  const [shippingFee, setShippingFee] = useState(7);
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(200);
+
+  useEffect(() => {
+    fetch("/api/admin/settings")
+      .then(r => r.json())
+      .then(data => {
+        if (data.shipping_fee !== undefined) setShippingFee(Number(data.shipping_fee));
+        if (data.free_shipping !== undefined) setFreeShippingThreshold(Number(data.free_shipping));
+      })
+      .catch(console.error);
+  }, []);
+
+  const shipping = subtotal >= freeShippingThreshold ? 0 : shippingFee;
   const total = subtotal + shipping;
 
   const [form, setForm] = useState<FormData>({
@@ -272,9 +285,11 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-sm text-gray-500">
                     <span>Shipping</span>
-                    <span className="text-green-600">
-                      Free
-                    </span>
+                    {shipping === 0 ? (
+                      <span className="text-green-600">Free</span>
+                    ) : (
+                      <span className="text-[#06091F]">{shipping.toLocaleString('fr-FR')} TND</span>
+                    )}
                   </div>
                   <div className="flex justify-between font-bold text-[#06091F] text-base pt-2 border-t border-gray-100">
                     <span>Total</span>

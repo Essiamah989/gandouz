@@ -2,13 +2,27 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, totalItems } = useCartStore();
+  const [shippingFee, setShippingFee] = useState(7);
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(200);
+
+  useEffect(() => {
+    fetch("/api/admin/settings")
+      .then(r => r.json())
+      .then(data => {
+        if (data.shipping_fee !== undefined) setShippingFee(Number(data.shipping_fee));
+        if (data.free_shipping !== undefined) setFreeShippingThreshold(Number(data.free_shipping));
+      })
+      .catch(console.error);
+  }, []);
+
   const subtotal = totalPrice();
-  const shipping = 0;
+  const shipping = subtotal >= freeShippingThreshold ? 0 : shippingFee;
   const total = subtotal + shipping;
 
   return (
@@ -112,7 +126,11 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-sm text-gray-600">
                     <span>Shipping</span>
-                    <span className="font-semibold text-green-600">Free</span>
+                    {shipping === 0 ? (
+                      <span className="font-semibold text-green-600">Free</span>
+                    ) : (
+                      <span className="font-semibold text-[#06091F]">{shipping.toLocaleString('fr-FR')} TND</span>
+                    )}
                   </div>
                   <div className="border-t border-gray-100 pt-3 flex justify-between">
                     <span className="font-bold text-[#06091F]">Total</span>

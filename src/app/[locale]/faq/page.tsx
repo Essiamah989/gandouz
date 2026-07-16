@@ -3,7 +3,7 @@ import { HelpCircle, ArrowRight } from "lucide-react";
 
 export const metadata = {
   title: "Frequently Asked Questions — Cavista Store Clone",
-  description: "Common questions about our online ordering, delivery times, Cadopoints, and mobile bar rentals.",
+  description: "Common questions about our online ordering, delivery times, and Cadopoints.",
 };
 
 const FAQS = [
@@ -19,10 +19,7 @@ const FAQS = [
     q: "What are Cadopoints and how do I earn them?",
     a: "Cadopoints is our signature customer loyalty program. For every purchase you make, you earn loyalty points (Cadopoints) credited to your account. 1 Cadopoint equals 1 TND. You can redeem these points during checkout to claim discounts on future orders."
   },
-  {
-    q: "How do I request a mobile bar rental setup?",
-    a: "Head to our Bar Rental Service page, review the Classic, Premium, and VIP counter options, and fill out the event booking form. Our coordinator will contact you to check venue logistics, date availability, and finalize cocktail menus."
-  },
+
   {
     q: "Where do you deliver and what are the delivery fees?",
     a: "We deliver across major municipalities in Tunisia, with local hubs in Tunis, La Goulette, Oran, etc. The standard shipping fee is 7.000 TND, but orders exceeding 200.000 TND receive free delivery."

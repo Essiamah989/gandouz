@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{
     category?: string;
     brand?: string;
@@ -18,12 +19,14 @@ type PageProps = {
   }>;
 };
 
-export default async function ProductsPage({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const activeCategory = params.category || "";
-  const activeBrand = params.brand || "";
-  const searchQuery = params.search || "";
-  const activeSort = params.sort || "newest";
+export default async function ProductsPage(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const currentLocale = params.locale;
+  const activeCategory = searchParams.category || "";
+  const activeBrand = searchParams.brand || "";
+  const searchQuery = searchParams.search || "";
+  const activeSort = searchParams.sort || "newest";
 
   // Fetch data from DB (mock or actual postgres)
   const categories = await getCategories();
@@ -71,7 +74,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             {/* Search Box */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Search Products</h3>
-              <form action="/products" method="GET" className="relative">
+              <form action={`/${currentLocale}/products`} method="GET" className="relative">
                 {activeCategory && <input type="hidden" name="category" value={activeCategory} />}
                 {activeBrand && <input type="hidden" name="brand" value={activeBrand} />}
                 {activeSort && <input type="hidden" name="sort" value={activeSort} />}
