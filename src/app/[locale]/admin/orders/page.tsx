@@ -18,8 +18,9 @@ type OrderItem = {
 };
 
 type Order = {
-  id: string; orderNumber: string; customerName: string;
-  email: string; phone: string; city: string; address?: string;
+  id: string; orderNumber: string; customerName?: string;
+  email?: string; phone?: string; city?: string; address?: string;
+  guestEmail?: string; shippingAddress?: any;
   subtotal?: number; discount?: number; shipping?: number;
   total: number; status: OrderStatus; cashCollected?: boolean;
   notes?: string; createdAt: string; updatedAt?: string;
@@ -86,10 +87,12 @@ export default function AdminOrdersPage() {
   }, [router, locale]);
 
   const filtered = orders.filter(o => {
+    const cName = o.customerName || o.shippingAddress?.customerName || "";
+    const pNum = o.phone || o.shippingAddress?.phone || "";
     const matchSearch =
       o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
-      o.customerName.toLowerCase().includes(search.toLowerCase()) ||
-      o.phone?.includes(search);
+      cName.toLowerCase().includes(search.toLowerCase()) ||
+      pNum.includes(search);
     const matchStatus = statusFilter === "ALL" || o.status === statusFilter;
     return matchSearch && matchStatus;
   });
@@ -228,8 +231,8 @@ export default function AdminOrdersPage() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm text-gray-700 font-medium">{order.customerName}</p>
-                            <p className="text-xs text-gray-400">{order.phone} · {order.city}</p>
+                            <p className="text-sm text-gray-700 font-medium">{order.customerName || order.shippingAddress?.customerName || "Unknown"}</p>
+                            <p className="text-xs text-gray-400">{order.phone || order.shippingAddress?.phone} · {order.city || order.shippingAddress?.city}</p>
                           </div>
                           <div className="text-right shrink-0">
                             <p className="font-bold text-[#06091F] text-sm">{Number(order.total).toFixed(3)} TND</p>
@@ -277,14 +280,14 @@ export default function AdminOrdersPage() {
                   {/* Customer Info */}
                   <div>
                     <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Customer</p>
-                    <p className="font-bold text-[#06091F] text-sm">{selected.customerName}</p>
-                    <a href={`tel:${selected.phone}`} className="flex items-center gap-1.5 text-xs text-[#1C2E5E] hover:text-[#F5D800] mt-1 transition-colors">
-                      <Phone className="w-3 h-3" /> {selected.phone}
+                    <p className="font-bold text-[#06091F] text-sm">{selected.customerName || selected.shippingAddress?.customerName}</p>
+                    <a href={`tel:${selected.phone || selected.shippingAddress?.phone}`} className="flex items-center gap-1.5 text-xs text-[#1C2E5E] hover:text-[#F5D800] mt-1 transition-colors">
+                      <Phone className="w-3 h-3" /> {selected.phone || selected.shippingAddress?.phone}
                     </a>
-                    <a href={`mailto:${selected.email}`} className="flex items-center gap-1.5 text-xs text-[#1C2E5E] hover:text-[#F5D800] mt-0.5 transition-colors">
-                      <Mail className="w-3 h-3" /> {selected.email}
+                    <a href={`mailto:${selected.email || selected.guestEmail}`} className="flex items-center gap-1.5 text-xs text-[#1C2E5E] hover:text-[#F5D800] mt-0.5 transition-colors">
+                      <Mail className="w-3 h-3" /> {selected.email || selected.guestEmail}
                     </a>
-                    <p className="text-xs text-gray-500 mt-1">{selected.address}, {selected.city}</p>
+                    <p className="text-xs text-gray-500 mt-1">{selected.address || selected.shippingAddress?.address}, {selected.city || selected.shippingAddress?.city}</p>
                     {selected.notes && (
                       <p className="text-xs italic text-gray-400 mt-1 bg-gray-50 px-2 py-1.5 rounded-lg">"{selected.notes}"</p>
                     )}
@@ -371,7 +374,7 @@ export default function AdminOrdersPage() {
 
                     <div className="grid grid-cols-2 gap-2 pt-1">
                       <a
-                        href={`tel:${selected.phone}`}
+                        href={`tel:${selected.phone || selected.shippingAddress?.phone}`}
                         className="flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[#1C2E5E] text-white text-xs font-bold hover:bg-[#06091F] transition-colors"
                       >
                         <Phone className="w-3 h-3" /> Call
