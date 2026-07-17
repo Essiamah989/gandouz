@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ShellWrapper from "@/components/layout/ShellWrapper";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: {
@@ -31,6 +32,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <ShellWrapper>{children}</ShellWrapper>
+        <Analytics />
       </body>
     </html>
   );
