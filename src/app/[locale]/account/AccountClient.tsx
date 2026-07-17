@@ -30,22 +30,26 @@ export default function AccountClient({ user, orders, wishlist }: { user: any, o
                 <span>Loyalty Balance</span>
               </div>
               <p className="text-5xl font-black tracking-tight text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                35 <span className="text-lg text-white font-medium">Cadopoints</span>
+                {user?.loyaltyAcc?.balance ?? 0} <span className="text-lg text-white font-medium">Cadopoints</span>
               </p>
               <p className="text-xs text-white/60 mt-2 leading-relaxed">
-                Equivalent to <strong>35.000 TND</strong> in cashback. Points will automatically activate upon your next checkout confirmation.
+                Equivalent to <strong>{(user?.loyaltyAcc?.balance ?? 0).toFixed(3)} TND</strong> in cashback. Points will automatically activate upon your next checkout confirmation.
               </p>
               
               <div className="mt-6 pt-4 border-t border-white/10 space-y-2">
                 <p className="text-[10px] text-white/40 uppercase tracking-widest font-semibold">Points Statement</p>
-                <div className="flex justify-between items-center text-xs text-white/80">
-                  <span>Earned from order #GDZ-123456</span>
-                  <span className="text-green-400 font-bold">+15</span>
-                </div>
-                <div className="flex justify-between items-center text-xs text-white/80">
-                  <span>Manual Admin Reward</span>
-                  <span className="text-green-400 font-bold">+20</span>
-                </div>
+                {!user?.loyaltyAcc?.transactions || user.loyaltyAcc.transactions.length === 0 ? (
+                  <p className="text-xs text-white/40 italic">No transactions recorded yet.</p>
+                ) : (
+                  user.loyaltyAcc.transactions.map((tx: any) => (
+                    <div key={tx.id || tx.createdAt} className="flex justify-between items-center text-xs text-white/80">
+                      <span>{tx.description}</span>
+                      <span className={`font-bold ${tx.type === "REDEEM" ? "text-red-400" : "text-green-400"}`}>
+                        {tx.type === "REDEEM" ? "-" : "+"}{tx.amount}
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

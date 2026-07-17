@@ -431,21 +431,47 @@ export async function createOrder(data: {
     qty: number;
     total: number;
   }>;
+  userId?: string;
+  pointsRedeemed?: number;
 }) {
   const orderNumber = `GDZ-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000).toString().padStart(3, "0")}`;
 
   if (isRealDbAvailable()) {
     try {
-      return await prisma.order.create({
+      let finalUserId = data.userId || null;
+      if (!finalUserId) {
+        // Resolve or create user by email
+        const nameParts = data.customerName.split(" ");
+        const firstName = nameParts[0] || "";
+        const lastName = nameParts.slice(1).join(" ") || "";
+        let user = await prisma.user.findUnique({ where: { email: data.email } });
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              clerkId: `guest-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+              email: data.email,
+              firstName,
+              lastName,
+              phone: data.phone
+            }
+          });
+        }
+        finalUserId = user.id;
+      }
+
+      // 1. Create the Order
+      const order = await prisma.order.create({
         data: {
           orderNumber,
           guestEmail: data.email,
+          userId: finalUserId,
           status: "PENDING",
           subtotal: data.subtotal,
           discount: data.discount,
           shipping: data.shipping,
           total: data.total,
           notes: data.notes,
+          pointsRedeemed: data.pointsRedeemed || 0,
           shippingAddress: {
             customerName: data.customerName,
             phone: data.phone,
@@ -470,6 +496,71 @@ export async function createOrder(data: {
         },
         include: { items: true }
       });
+
+      // 2. Fetch User & Update Loyalty Balance
+      if (finalUserId) {
+        let loyaltyAcc = await prisma.loyaltyAccount.findUnique({ where: { userId: finalUserId } });
+        if (!loyaltyAcc) {
+          loyaltyAcc = await prisma.loyaltyAccount.create({
+            data: {
+              userId: finalUserId,
+              balance: 0,
+              lifetime: 0
+            }
+          });
+        }
+
+        // Deduct redeemed points
+        if (data.pointsRedeemed && data.pointsRedeemed > 0) {
+          await prisma.loyaltyAccount.update({
+            where: { id: loyaltyAcc.id },
+            data: {
+              balance: { decrement: data.pointsRedeemed }
+            }
+          });
+
+          await prisma.loyaltyTransaction.create({
+            data: {
+              accountId: loyaltyAcc.id,
+              orderId: order.id,
+              type: "REDEEM",
+              amount: data.pointsRedeemed,
+              description: `Redeemed ${data.pointsRedeemed} Cadopoints on order #${orderNumber}`
+            }
+          });
+        }
+
+        // Earn loyalty points based on products
+        let earnedPoints = 0;
+        for (const item of data.items) {
+          const product = await prisma.product.findUnique({ where: { id: item.productId } });
+          if (product && product.loyaltyPoints) {
+            earnedPoints += product.loyaltyPoints * item.qty;
+          }
+        }
+
+        if (earnedPoints > 0) {
+          await prisma.loyaltyAccount.update({
+            where: { id: loyaltyAcc.id },
+            data: {
+              balance: { increment: earnedPoints },
+              lifetime: { increment: earnedPoints }
+            }
+          });
+
+          await prisma.loyaltyTransaction.create({
+            data: {
+              accountId: loyaltyAcc.id,
+              orderId: order.id,
+              type: "EARN",
+              amount: earnedPoints,
+              description: `Earned ${earnedPoints} Cadopoints from order #${orderNumber}`
+            }
+          });
+        }
+      }
+
+      return order;
     } catch (e) {
       console.warn("DB insert failed, falling back to mock:", e);
     }
@@ -489,8 +580,9 @@ export async function createOrder(data: {
     discount: data.discount,
     shipping: data.shipping,
     total: data.total,
-    status: "PENDING",
+    status: "PENDING" as const,
     cashCollected: false,
+    pointsRedeemed: data.pointsRedeemed || 0,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     items: data.items,
@@ -686,4 +778,113 @@ export async function createDiscountCode(data: {
   db.discountCodes.push(newCode);
   writeMockDb(db);
   return newCode;
+}
+
+export async function getOrCreateUserFromClerk(clerkUser: any) {
+  if (!isRealDbAvailable()) {
+    return {
+      id: clerkUser.id,
+      clerkId: clerkUser.id,
+      email: clerkUser.email,
+      firstName: clerkUser.firstName,
+      lastName: clerkUser.lastName,
+      phone: clerkUser.phone,
+      loyaltyAcc: {
+        balance: 35,
+        transactions: [
+          { id: "tx1", amount: 15, description: "Points earned from order #GDZ-123456", createdAt: new Date().toISOString() },
+          { id: "tx2", amount: 20, description: "Manual Admin Reward", createdAt: new Date().toISOString() }
+        ]
+      }
+    };
+  }
+  try {
+    let user = await prisma.user.findUnique({
+      where: { clerkId: clerkUser.id },
+      include: {
+        loyaltyAcc: {
+          include: {
+            transactions: {
+              orderBy: { createdAt: "desc" }
+            }
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          clerkId: clerkUser.id,
+          email: clerkUser.email,
+          firstName: clerkUser.firstName || "",
+          lastName: clerkUser.lastName || "",
+          phone: clerkUser.phone || "",
+          loyaltyAcc: {
+            create: {
+              balance: 0,
+              lifetime: 0
+            }
+          }
+        },
+        include: {
+          loyaltyAcc: {
+            include: {
+              transactions: {
+                orderBy: { createdAt: "desc" }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    return user;
+  } catch (error) {
+    console.error("Error in getOrCreateUserFromClerk:", error);
+    return null;
+  }
+}
+
+export async function getOrCreateUserByEmail(email: string, customerName: string, phone: string) {
+  if (!isRealDbAvailable()) {
+    return { id: "mock-user-id" };
+  }
+  try {
+    let user = await prisma.user.findUnique({
+      where: { email },
+      include: {
+        loyaltyAcc: true
+      }
+    });
+
+    if (!user) {
+      const nameParts = customerName.split(" ");
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+      user = await prisma.user.create({
+        data: {
+          clerkId: `guest-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+          email,
+          firstName,
+          lastName,
+          phone,
+          loyaltyAcc: {
+            create: {
+              balance: 0,
+              lifetime: 0
+            }
+          }
+        },
+        include: {
+          loyaltyAcc: true
+        }
+      });
+    }
+
+    return user;
+  } catch (error) {
+    console.error("Error in getOrCreateUserByEmail:", error);
+    return null;
+  }
 }

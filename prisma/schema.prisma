@@ -92,9 +92,10 @@ model Product {
 
 enum OrderStatus {
   PENDING
-  CONFIRMED
-  PROCESSING
-  SHIPPED
+  PENDING_VALIDATION
+  VALIDATED
+  PREPARING
+  READY
   DELIVERED
   CANCELLED
   REFUNDED
@@ -114,6 +115,7 @@ model Order {
   notes           String?
   shippingAddress Json
   cashCollected   Boolean     @default(false)
+  pointsRedeemed  Int         @default(0)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 

@@ -56,14 +56,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   {dict.home.shopCatalog}
                   <ArrowRight className="w-5 h-5" />
                 </Link>
-                <Link
-                  href={`/${locale}/bar-events`}
-                  id="hero-cta-events"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4.5 rounded-xl text-base font-semibold border border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all backdrop-blur-sm"
-                >
-                  <Calendar className="w-5 h-5 text-[#F5D800]" />
-                  {dict.home.bookBar}
-                </Link>
               </div>
             </div>
 
@@ -319,72 +311,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>
 
-      {/* ===== MOBILE BAR SERVICES ===== */}
-      <section className="py-20 bg-[#F2F2F2]" id="bar-events">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="flex-1">
-              <div className="relative h-[450px] w-full rounded-2xl overflow-hidden shadow-xl border border-gray-200">
-                <Image
-                  src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=800&auto=format&fit=crop"
-                  alt="Mobile Bar Events"
-                  fill
-                  className="object-cover"
-                  unoptimized
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <span className="bg-[#F5D800] text-[#06091F] text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded">
-                    CLASSIQUE · PREMIUM · VIP
-                  </span>
-                  <h4 className="text-2xl font-black mt-2 uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                    Location de Bars Mobiles
-                  </h4>
-                  <p className="text-xs text-white/70 mt-1">Nous amenons nos mixologues et des structures de bar haut de gamme directement à votre événement.</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="flex-1">
-              <span className="text-[#F5D800] text-xs font-bold uppercase tracking-[0.3em] bg-[#06091F] px-3.5 py-1 rounded-full">
-                PRIVÉ & PROFESSIONNEL
-              </span>
-              <h2
-                className="text-4xl lg:text-5xl font-black text-[#06091F] mt-4 uppercase"
-                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-              >
-                Services de Location de Bar
-              </h2>
-              <p className="text-gray-600 mt-4 leading-relaxed">
-                Vous organisez un mariage, un gala d'entreprise ou une fête au bord de la piscine ? Rendez cet événement inoubliable avec nos bars mobiles. Nous fournissons la structure, les équipements professionnels, des ingrédients premium et des barmans qualifiés.
-              </p>
-              
-              <ul className="mt-6 space-y-3.5">
-                {[
-                  "Trois niveaux de configuration : Classique, Premium et VIP.",
-                  "Menus de cocktails sur mesure créés spécialement pour vos invités.",
-                  "Mixologues locaux certifiés et hautement qualifiés.",
-                  "Verrerie complète, glaçons personnalisés et garnitures premium incluses."
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-sm text-gray-700">
-                    <span className="w-5 h-5 rounded-full bg-[#06091F] text-[#F5D800] flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">✓</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-8">
-                <Link
-                  href="/bar-events"
-                  className="inline-flex items-center gap-2 bg-[#06091F] text-white hover:bg-[#1C2E5E] px-8 py-3.5 rounded-xl font-bold transition-all shadow-md"
-                >
-                  Réservez Votre Événement <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ===== CLIENT TESTIMONIALS ===== */}
       <section className="py-20 bg-white" id="testimonials">

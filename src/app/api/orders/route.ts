@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createOrder, getOrders, updateOrderStatus, markCashCollected } from "@/lib/db";
+import { createOrder, getOrders, updateOrderStatus, markCashCollected, getOrCreateUserFromClerk } from "@/lib/db";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { customerName, email, phone, address, city, notes, items, subtotal, shipping, total } = body;
+    const { customerName, email, phone, address, city, notes, items, subtotal, shipping, total, pointsRedeemed } = body;
 
     // Validation
     if (!customerName || !email || !phone || !address || !city) {
@@ -22,6 +23,13 @@ export async function POST(request: NextRequest) {
       total: Number(item.price) * Number(item.quantity)
     }));
 
+    const clerkUser = await getCurrentUser();
+    let finalUserId = undefined;
+    if (clerkUser) {
+      const dbUser = await getOrCreateUserFromClerk(clerkUser);
+      if (dbUser) finalUserId = dbUser.id;
+    }
+
     const order = await createOrder({
       customerName,
       email,
@@ -33,7 +41,9 @@ export async function POST(request: NextRequest) {
       discount: Number(body.discount || 0),
       shipping: Number(shipping),
       total: Number(total),
-      items: orderItems
+      items: orderItems,
+      userId: finalUserId,
+      pointsRedeemed: pointsRedeemed ? Number(pointsRedeemed) : 0
     });
 
     return NextResponse.json({

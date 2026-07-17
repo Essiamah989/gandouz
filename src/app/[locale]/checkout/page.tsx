@@ -26,7 +26,16 @@ export default function CheckoutPage() {
   const [shippingFee, setShippingFee] = useState(7);
   const [freeShippingThreshold, setFreeShippingThreshold] = useState(200);
 
+  const [user, setUser] = useState<any>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<any>(null);
+  const [promoError, setPromoError] = useState("");
+  const [promoSuccess, setPromoSuccess] = useState("");
+  const [useLoyalty, setUseLoyalty] = useState(false);
+  const [isValidatingPromo, setIsValidatingPromo] = useState(false);
+
   useEffect(() => {
+    // Fetch settings
     fetch("/api/admin/settings")
       .then(r => r.json())
       .then(data => {
@@ -34,10 +43,65 @@ export default function CheckoutPage() {
         if (data.free_shipping !== undefined) setFreeShippingThreshold(Number(data.free_shipping));
       })
       .catch(console.error);
+
+    // Fetch user details & available loyalty points
+    fetch("/api/me")
+      .then(r => r.json())
+      .then(data => {
+        if (data.user) {
+          setUser(data.user);
+          setForm(prev => ({
+            ...prev,
+            customerName: `${data.user.firstName} ${data.user.lastName}`.trim() || prev.customerName,
+            email: data.user.email || prev.email,
+            phone: data.user.phone || prev.phone
+          }));
+        }
+      })
+      .catch(console.error);
   }, []);
 
+  const handleValidatePromo = async () => {
+    if (!promoCode.trim()) return;
+    setIsValidatingPromo(true);
+    setPromoError("");
+    setPromoSuccess("");
+    try {
+      const res = await fetch("/api/promotions/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoCode, subtotal }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setAppliedPromo(data);
+        setPromoSuccess(`Promo code "${data.code}" applied!`);
+      } else {
+        setPromoError(data.error || "Invalid promo code.");
+        setAppliedPromo(null);
+      }
+    } catch {
+      setPromoError("Failed to validate promo code.");
+    } finally {
+      setIsValidatingPromo(false);
+    }
+  };
+
+  let promoDiscount = 0;
+  if (appliedPromo) {
+    if (appliedPromo.type === "PERCENTAGE") {
+      promoDiscount = (subtotal * appliedPromo.value) / 100;
+    } else {
+      promoDiscount = appliedPromo.value;
+    }
+  }
+
+  const maxRedeemablePoints = user?.loyaltyAcc ? Math.min(Math.floor(subtotal - promoDiscount), user.loyaltyAcc.balance) : 0;
+  const pointsRedeemed = useLoyalty ? maxRedeemablePoints : 0;
+
+  const discount = promoDiscount + pointsRedeemed;
   const shipping = subtotal >= freeShippingThreshold ? 0 : shippingFee;
-  const total = subtotal + shipping;
+  const total = Math.max(0, subtotal - discount) + shipping;
 
   const [form, setForm] = useState<FormData>({
     customerName: "",
@@ -74,8 +138,11 @@ export default function CheckoutPage() {
           ...form,
           items,
           subtotal,
+          discount,
           shipping,
           total,
+          pointsRedeemed,
+          promoCode: appliedPromo?.code || null
         }),
       });
 
@@ -278,11 +345,78 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
+                {/* Promotions and Loyalty */}
+                <div className="border-t border-gray-100 pt-4 mb-4 space-y-4">
+                  {/* Promo Code Input */}
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1 flex items-center justify-between">
+                      <span>PROMOTION CODE</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter code"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-xs uppercase focus:outline-none focus:ring-1 focus:ring-[#F5D800] bg-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleValidatePromo}
+                        disabled={isValidatingPromo}
+                        className="px-3 py-2 bg-[#06091F] text-white rounded-lg text-xs font-bold hover:bg-[#1C2E5E] transition-all disabled:opacity-50"
+                      >
+                        {isValidatingPromo ? "..." : "Apply"}
+                      </button>
+                    </div>
+                    {promoError && <p className="text-red-500 text-[10px] mt-1">{promoError}</p>}
+                    {promoSuccess && <p className="text-green-600 text-[10px] mt-1">{promoSuccess}</p>}
+                  </div>
+
+                  {/* Cadopoints Redemption */}
+                  {user?.loyaltyAcc?.balance > 0 && (
+                    <div className="bg-[#06091F]/5 border border-[#06091F]/10 rounded-xl p-3">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={useLoyalty}
+                          onChange={(e) => setUseLoyalty(e.target.checked)}
+                          className="rounded text-[#F5D800] focus:ring-[#F5D800] w-4 h-4 cursor-pointer"
+                        />
+                        <div className="text-xs">
+                          <span className="font-bold text-[#06091F]">Use Cadopoints</span>
+                          <p className="text-gray-500 text-[10px]">
+                            Available: {user.loyaltyAcc.balance} pts (Save up to {maxRedeemablePoints} TND)
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  )}
+                </div>
+
                 <div className="border-t border-gray-100 pt-4 flex flex-col gap-2 mb-5">
                   <div className="flex justify-between text-sm text-gray-500">
                     <span>Subtotal</span>
                     <span>{subtotal.toLocaleString('fr-FR')} TND</span>
                   </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-sm text-green-600 font-medium">
+                      <span>Discount</span>
+                      <span>-{discount.toLocaleString('fr-FR')} TND</span>
+                    </div>
+                  )}
+                  {pointsRedeemed > 0 && (
+                    <div className="flex justify-between text-[10px] text-green-700 font-semibold pl-2">
+                      <span>• Cadopoints Used</span>
+                      <span>-{pointsRedeemed} TND</span>
+                    </div>
+                  )}
+                  {promoDiscount > 0 && (
+                    <div className="flex justify-between text-[10px] text-green-700 font-semibold pl-2">
+                      <span>• Promo Discount</span>
+                      <span>-{promoDiscount.toLocaleString('fr-FR')} TND</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm text-gray-500">
                     <span>Shipping</span>
                     {shipping === 0 ? (
