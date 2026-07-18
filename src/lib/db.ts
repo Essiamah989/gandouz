@@ -433,6 +433,7 @@ export async function createOrder(data: {
   }>;
   userId?: string;
   pointsRedeemed?: number;
+  promoCode?: string;
 }) {
   const orderNumber = `GDZ-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000).toString().padStart(3, "0")}`;
 
@@ -558,6 +559,14 @@ export async function createOrder(data: {
             }
           });
         }
+      }
+
+      // 3. Update Promo Code used count
+      if (data.promoCode) {
+        await prisma.discountCode.updateMany({
+          where: { code: data.promoCode.toUpperCase() },
+          data: { usedCount: { increment: 1 } }
+        });
       }
 
       return order;

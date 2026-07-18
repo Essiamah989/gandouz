@@ -48,13 +48,14 @@ export default function AdminAnalyticsPage() {
 
   const totalRevenue = orders
     .filter(o => o.status !== "CANCELLED")
-    .reduce((sum, o) => sum + (o.total || 0), 0);
+    .reduce((sum, o) => sum + (Number(o.total) || 0), 0);
 
   const delivered = orders.filter(o => o.status === "DELIVERED").length;
-  const pending   = orders.filter(o => ["PENDING", "PENDING_VALIDATION"].includes(o.status)).length;
+  const pending   = orders.filter(o => ["PENDING", "PENDING_VALIDATION"].includes(o.status || "")).length;
   const cancelled = orders.filter(o => o.status === "CANCELLED").length;
 
-  const avgOrder = orders.length > 0 ? totalRevenue / orders.filter(o => o.status !== "CANCELLED").length : 0;
+  const validOrdersCount = orders.filter(o => o.status !== "CANCELLED").length;
+  const avgOrder = validOrdersCount > 0 ? totalRevenue / validOrdersCount : 0;
 
   // Orders by status distribution
   const statusCounts = orders.reduce((acc: Record<string, number>, o) => {
@@ -70,7 +71,7 @@ export default function AdminAnalyticsPage() {
   const dailyRevenue: Record<string, number> = {};
   orders.filter(o => o.status !== "CANCELLED").forEach(o => {
     const day = new Date(o.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" });
-    dailyRevenue[day] = (dailyRevenue[day] || 0) + o.total;
+    dailyRevenue[day] = (dailyRevenue[day] || 0) + (Number(o.total) || 0);
   });
 
   const maxRevenue = Math.max(...Object.values(dailyRevenue), 1);
@@ -92,7 +93,7 @@ export default function AdminAnalyticsPage() {
         ) : (
           <>
             {/* KPI Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard label="Total Revenue" value={`${totalRevenue.toFixed(3)} TND`} sub="All non-cancelled orders" icon={DollarSign} color="text-green-600" />
               <StatCard label="Total Orders" value={orders.length} sub={`${pending} pending`} icon={ShoppingBag} color="text-[#1C2E5E]" />
               <StatCard label="Avg. Order Value" value={isNaN(avgOrder) ? "—" : `${avgOrder.toFixed(3)} TND`} icon={TrendingUp} color="text-purple-600" />

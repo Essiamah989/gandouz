@@ -14,9 +14,20 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [loyaltyBalance, setLoyaltyBalance] = useState<number | null>(null);
   const totalItems = useCartStore((state) => state.totalItems());
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => { 
+    setMounted(true);
+    fetch("/api/me")
+      .then(r => r.json())
+      .then(data => {
+        if (data?.user?.loyaltyAcc?.balance !== undefined) {
+          setLoyaltyBalance(data.user.loyaltyAcc.balance);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const currentLocale = pathname.startsWith("/fr") ? "fr" : "en";
   const dict = currentLocale === "fr" ? fr : en;
@@ -71,6 +82,12 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-4">
+          {mounted && loyaltyBalance !== null && (
+            <Link href={`/${currentLocale}/account`} className="hidden sm:flex items-center gap-1.5 bg-[#F5D800]/10 border border-[#F5D800]/30 px-3 py-1.5 rounded-full hover:bg-[#F5D800]/20 transition-colors">
+              <span className="text-[#F5D800] text-xs font-bold">{loyaltyBalance} pts</span>
+            </Link>
+          )}
+
           <LanguageSwitcher />
 
           {/* Search Icon */}
@@ -113,6 +130,11 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="md:hidden bg-[#1C2E5E] border-t border-white/10 px-4 pb-4 pt-2 flex flex-col gap-3">
+          {mounted && loyaltyBalance !== null && (
+            <Link href={`/${currentLocale}/account`} className="flex items-center gap-2 py-2 border-b border-white/10" onClick={() => setMobileOpen(false)}>
+              <span className="text-[#F5D800] text-sm font-bold">Cadopoints: {loyaltyBalance} pts</span>
+            </Link>
+          )}
           {navLinks.map((link) => {
             const cleanPathname = pathname.replace(/^\/(en|fr)/, "") || "/";
             const cleanHref = link.href.replace(/^\/(en|fr)/, "") || "/";

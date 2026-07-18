@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { customerName, email, phone, address, city, notes, items, subtotal, shipping, total, pointsRedeemed } = body;
+    const { customerName, email, phone, address, city, notes, items, subtotal, shipping, total, pointsRedeemed, promoCode } = body;
 
     // Validation
     if (!customerName || !email || !phone || !address || !city) {
@@ -43,7 +43,8 @@ export async function POST(request: NextRequest) {
       total: Number(total),
       items: orderItems,
       userId: finalUserId,
-      pointsRedeemed: pointsRedeemed ? Number(pointsRedeemed) : 0
+      pointsRedeemed: pointsRedeemed ? Number(pointsRedeemed) : 0,
+      promoCode: promoCode || null
     });
 
     return NextResponse.json({
