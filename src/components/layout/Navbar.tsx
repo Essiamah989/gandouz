@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ShoppingCart, Menu, X, Search } from "lucide-react";
+import { ShoppingCart, Menu, X, Search, User } from "lucide-react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useCartStore } from "@/lib/store/cart";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import en from "@/dictionaries/en.json";
@@ -99,6 +100,27 @@ export default function Navbar() {
           >
             <Search className="w-5 h-5" />
           </Link>
+
+          {/* Auth */}
+          <div className="flex items-center text-white/70 hover:text-[#F5D800] transition-colors">
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="flex items-center gap-2 p-1 text-sm font-medium">
+                  <User className="w-5 h-5" />
+                  <span className="hidden sm:inline">Sign In</span>
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton 
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: "w-8 h-8 rounded-full border-2 border-white/20 hover:border-[#F5D800] transition-colors"
+                  }
+                }}
+              />
+            </SignedIn>
+          </div>
 
           {/* Cart */}
           <Link
