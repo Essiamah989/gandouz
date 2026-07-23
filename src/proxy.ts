@@ -47,7 +47,6 @@ const clerk = clerkMiddleware(async (auth, request) => {
   }
 
   const { pathname } = request.nextUrl;
-  const locale = getLocale(request);
   const pathnameHasLocale = locales.some(
     (loc) => pathname.startsWith(`/${loc}/`) || pathname === `/${loc}`
   );
