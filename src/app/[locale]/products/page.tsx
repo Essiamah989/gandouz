@@ -54,18 +54,6 @@ export default async function ProductsPage(props: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#F2F2F2]">
-      {/* Page Header */}
-      <div className="gandouz-gradient py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-[0.3em] mb-2">Cavista Store Clone</p>
-          <h1 className="text-5xl lg:text-6xl font-black text-white uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-            CELLAR & ACCESSORIES
-          </h1>
-          <p className="text-white/60 text-sm mt-2 max-w-md mx-auto">
-            Order premium drinks online with Cash on Delivery. Zero online payment required.
-          </p>
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
