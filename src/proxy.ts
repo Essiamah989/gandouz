@@ -24,7 +24,8 @@ const isClerkProtectedRoute = createRouteMatcher([
 ]);
 
 const isAdminRoute = createRouteMatcher([
-  "/:locale/admin(.*)",
+  "/:locale/admin",
+  "/:locale/admin/(.*)",
 ]);
 
 const clerk = clerkMiddleware(async (auth, request) => {
