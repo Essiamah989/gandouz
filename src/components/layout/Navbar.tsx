@@ -5,7 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ShoppingCart, Menu, X, Search, User } from "lucide-react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, Show, UserButton } from "@clerk/nextjs";
 import { useCartStore } from "@/lib/store/cart";
 import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 import en from "@/dictionaries/en.json";
@@ -103,15 +103,15 @@ export default function Navbar() {
 
           {/* Auth */}
           <div className="flex items-center text-white/70 hover:text-[#F5D800] transition-colors">
-            <SignedOut>
+            <Show when="signed-out">
               <SignInButton mode="modal">
                 <button className="flex items-center gap-2 p-1 text-sm font-medium">
                   <User className="w-5 h-5" />
                   <span className="hidden sm:inline">Sign In</span>
                 </button>
               </SignInButton>
-            </SignedOut>
-            <SignedIn>
+            </Show>
+            <Show when="signed-in">
               <UserButton 
                 appearance={{
                   elements: {
@@ -119,7 +119,7 @@ export default function Navbar() {
                   }
                 }}
               />
-            </SignedIn>
+            </Show>
           </div>
 
           {/* Cart */}
