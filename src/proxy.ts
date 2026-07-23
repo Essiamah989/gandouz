@@ -1,4 +1,4 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest, NextFetchEvent } from "next/server";
 
@@ -19,41 +19,17 @@ function getLocale(request: NextRequest) {
   return defaultLocale;
 }
 
-const isClerkProtectedRoute = createRouteMatcher([
-  "/:locale/account(.*)",
-]);
-
-const isAdminRoute = createRouteMatcher([
-  "/:locale/admin",
-  "/:locale/admin/(.*)",
-]);
-
 const clerk = clerkMiddleware(async (auth, request) => {
-  const locale = request.nextUrl.pathname.split("/")[1] || getLocale(request);
-
-  if (isAdminRoute(request)) {
-    const hasAdminAuth = request.cookies.has("ADMIN_AUTH");
-    if (!hasAdminAuth) {
-      const adminLoginUrl = new URL(`/${locale}/admin-login`, request.url);
-      return NextResponse.redirect(adminLoginUrl);
-    }
-  }
-
-  if (isClerkProtectedRoute(request)) {
-    const session = await auth();
-    if (!session.userId) {
-      const signInUrl = new URL(`/${locale}`, request.url);
-      return NextResponse.redirect(signInUrl);
-    }
-  }
-
   const { pathname } = request.nextUrl;
-  const pathnameHasLocale = locales.some(
+
+  // 1. Ensure locale prefix exists
+  const currentLocale = locales.find(
     (loc) => pathname.startsWith(`/${loc}/`) || pathname === `/${loc}`
   );
 
-  if (!pathnameHasLocale) {
-    const newPathname = `/${locale}${pathname}`;
+  if (!currentLocale) {
+    const locale = getLocale(request);
+    const newPathname = `/${locale}${pathname === "/" ? "" : pathname}`;
     const url = request.nextUrl.clone();
     url.pathname = newPathname;
     const response = NextResponse.redirect(url);
@@ -62,6 +38,27 @@ const clerk = clerkMiddleware(async (auth, request) => {
       path: "/",
     });
     return response;
+  }
+
+  // Extract path after locale, e.g. "/en/admin/orders" -> "/admin/orders"
+  const unprefixedPath = pathname.substring(currentLocale.length + 1) || "/";
+
+  // 2. Check Admin routes (e.g. /admin, /admin/orders, but NOT /admin-login)
+  if (unprefixedPath === "/admin" || unprefixedPath.startsWith("/admin/")) {
+    const hasAdminAuth = request.cookies.has("ADMIN_AUTH");
+    if (!hasAdminAuth) {
+      const adminLoginUrl = new URL(`/${currentLocale}/admin-login`, request.url);
+      return NextResponse.redirect(adminLoginUrl);
+    }
+  }
+
+  // 3. Check Clerk Protected routes (e.g. /account)
+  if (unprefixedPath === "/account" || unprefixedPath.startsWith("/account/")) {
+    const session = await auth();
+    if (!session.userId) {
+      const signInUrl = new URL(`/${currentLocale}`, request.url);
+      return NextResponse.redirect(signInUrl);
+    }
   }
 
   return NextResponse.next();
