@@ -19,16 +19,28 @@ function getLocale(request: NextRequest) {
   return defaultLocale;
 }
 
-const isProtectedRoute = createRouteMatcher([
-  "/:locale/admin(.*)",
+const isClerkProtectedRoute = createRouteMatcher([
   "/:locale/account(.*)",
 ]);
 
+const isAdminRoute = createRouteMatcher([
+  "/:locale/admin(.*)",
+]);
+
 const clerk = clerkMiddleware(async (auth, request) => {
-  if (isProtectedRoute(request)) {
+  const locale = request.nextUrl.pathname.split("/")[1] || getLocale(request);
+
+  if (isAdminRoute(request)) {
+    const hasAdminAuth = request.cookies.has("ADMIN_AUTH");
+    if (!hasAdminAuth) {
+      const adminLoginUrl = new URL(`/${locale}/admin-login`, request.url);
+      return NextResponse.redirect(adminLoginUrl);
+    }
+  }
+
+  if (isClerkProtectedRoute(request)) {
     const session = await auth();
     if (!session.userId) {
-      const locale = request.nextUrl.pathname.split("/")[1] || getLocale(request);
       const signInUrl = new URL(`/${locale}`, request.url);
       return NextResponse.redirect(signInUrl);
     }
