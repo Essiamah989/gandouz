@@ -569,6 +569,20 @@ export async function createOrder(data: {
         });
       }
 
+      // 4. Decrement Product Stock
+      for (const item of data.items) {
+        if (item.productId) {
+          try {
+            await prisma.product.update({
+              where: { id: item.productId },
+              data: { stock: { decrement: item.qty } }
+            });
+          } catch (e) {
+            console.warn(`Failed to update stock for product ${item.productId}:`, e);
+          }
+        }
+      }
+
       return order;
     } catch (e) {
       console.warn("DB insert failed, falling back to mock:", e);
@@ -604,6 +618,14 @@ export async function createOrder(data: {
       }
     ]
   };
+
+  // Decrement stock in mock DB
+  for (const item of data.items) {
+    const prod = db.products.find((p: any) => p.id === item.productId || p.name === item.productName);
+    if (prod && typeof prod.stock === "number") {
+      prod.stock = Math.max(0, prod.stock - item.qty);
+    }
+  }
 
   db.orders.unshift(newOrder);
   writeMockDb(db);

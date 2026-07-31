@@ -101,7 +101,8 @@ export default function Navbar() {
             <Search className="w-5 h-5" />
           </Link>
 
-          {/* Auth */}
+          {/* Auth - Hidden until further notice */}
+          {/*
           <div className="flex items-center text-white/70 hover:text-[#F5D800] transition-colors">
             <Show when="signed-out">
               <SignInButton mode="modal">
@@ -121,6 +122,7 @@ export default function Navbar() {
               />
             </Show>
           </div>
+          */}
 
           {/* Cart */}
           <Link
@@ -152,11 +154,7 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="md:hidden bg-[#1C2E5E] border-t border-white/10 px-4 pb-4 pt-2 flex flex-col gap-3">
-          {mounted && loyaltyBalance !== null && (
-            <Link href={`/${currentLocale}/account`} className="flex items-center gap-2 py-2 border-b border-white/10" onClick={() => setMobileOpen(false)}>
-              <span className="text-[#F5D800] text-sm font-bold">Cadopoints: {loyaltyBalance} pts</span>
-            </Link>
-          )}
+          {/* Cadopoints hidden */}
           {navLinks.map((link) => {
             const cleanPathname = pathname.replace(/^\/(en|fr)/, "") || "/";
             const cleanHref = link.href.replace(/^\/(en|fr)/, "") || "/";

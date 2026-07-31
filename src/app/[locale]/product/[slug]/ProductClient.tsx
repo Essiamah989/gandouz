@@ -111,12 +111,7 @@ export default function ProductClient({ product }: { product: any }) {
                   ))}
                   <span className="text-xs font-semibold text-gray-400 ml-1.5">(4.9 rating)</span>
                 </div>
-                {product.loyaltyPoints > 0 && (
-                  <span className="inline-flex items-center gap-1 bg-[#06091F] text-[#F5D800] border border-[#F5D800]/25 text-[10px] font-black px-3 py-1 rounded-full shadow-sm">
-                    <Trophy className="w-3 h-3" />
-                    Earns +{product.loyaltyPoints} Cadopoints
-                  </span>
-                )}
+                {/* Cadopoints badge hidden */}
               </div>
 
               <p className="text-sm text-gray-600 leading-relaxed mt-4">
@@ -129,10 +124,8 @@ export default function ProductClient({ product }: { product: any }) {
                 <span className={`w-2 h-2 rounded-full ${
                   product.stock > 0 ? "bg-green-500" : "bg-red-500"
                 }`} />
-                <span className="text-xs font-bold text-gray-500">
-                  {product.stock > 0 
-                    ? `In Stock (${product.stock} bottles left)` 
-                    : "Out of Stock"}
+                <span className="text-xs font-semibold text-gray-600">
+                  {product.stock > 0 ? `${product.stock} items available in stock` : "Out of stock"}
                 </span>
               </div>
             </div>
@@ -150,17 +143,19 @@ export default function ProductClient({ product }: { product: any }) {
               </div>
 
               <div className="flex gap-4">
-                <div className="flex items-center border border-gray-200 rounded-xl bg-gray-50 overflow-hidden shadow-sm">
+                <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
                   <button
                     onClick={() => setQty(Math.max(1, qty - 1))}
-                    className="px-4 py-3 text-gray-500 hover:bg-gray-100 font-bold"
+                    className="px-3.5 py-3 hover:bg-gray-100 font-semibold text-gray-600 text-sm transition-colors"
                   >
                     -
                   </button>
-                  <span className="px-4 text-sm font-bold text-[#06091F]">{qty}</span>
+                  <span className="px-4 py-3 text-sm font-bold text-[#06091F] min-w-[40px] text-center">
+                    {qty}
+                  </span>
                   <button
                     onClick={() => setQty(qty + 1)}
-                    className="px-4 py-3 text-gray-500 hover:bg-gray-100 font-bold"
+                    className="px-3.5 py-3 hover:bg-gray-100 font-semibold text-gray-600 text-sm transition-colors"
                   >
                     +
                   </button>
@@ -176,14 +171,10 @@ export default function ProductClient({ product }: { product: any }) {
                 </button>
               </div>
 
-              <div className="mt-6 grid grid-cols-2 gap-4 text-center">
+              <div className="mt-6 grid grid-cols-1 gap-4 text-center">
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[#F5D800]" />
                   <span className="text-[10px] font-bold text-gray-500">100% SECURE COD</span>
-                </div>
-                <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#F5D800]" />
-                  <span className="text-[10px] font-bold text-gray-500">CADOPOINT CREDIT</span>
                 </div>
               </div>
             </div>

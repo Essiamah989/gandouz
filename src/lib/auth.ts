@@ -42,12 +42,5 @@ export async function getCurrentUser() {
     // Clerk not configured
   }
 
-  // Development mock fallback
-  return {
-    id: "mock-customer-1",
-    email: "customer@example.com",
-    firstName: "Amine",
-    lastName: "Trabelsi",
-    phone: "+216 22 111 222"
-  };
+  return null;
 }

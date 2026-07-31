@@ -1,21 +1,30 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Tag, Layers, Pencil, X, Check, AlertTriangle } from "lucide-react";
+import { Plus, Tag, Layers, Pencil, X, Check, AlertTriangle, Upload, Image as ImageIcon } from "lucide-react";
 
-type Category = { id: string; name: string; slug: string; description?: string };
+type Category = { id: string; name: string; slug: string; description?: string; image?: string };
 type Brand    = { id: string; name: string; slug: string; description?: string; logo?: string };
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
-function ItemCard({ name, sub, onEdit }: { name: string; sub?: string; onEdit: () => void }) {
+function ItemCard({ name, sub, image, onEdit }: { name: string; sub?: string; image?: string; onEdit: () => void }) {
   return (
     <div className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors">
-      <div>
-        <p className="font-semibold text-[#06091F] text-sm">{name}</p>
-        {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+      <div className="flex items-center gap-3">
+        {image ? (
+          <img src={image} alt={name} className="w-10 h-10 rounded-xl object-cover border border-gray-100" />
+        ) : (
+          <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400">
+            <ImageIcon className="w-5 h-5" />
+          </div>
+        )}
+        <div>
+          <p className="font-semibold text-[#06091F] text-sm">{name}</p>
+          {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
+        </div>
       </div>
       <button onClick={onEdit} className="p-1.5 rounded-lg hover:bg-[#1C2E5E]/10 text-gray-400 hover:text-[#1C2E5E] transition-colors">
         <Pencil className="w-4 h-4" />
@@ -24,8 +33,8 @@ function ItemCard({ name, sub, onEdit }: { name: string; sub?: string; onEdit: (
   );
 }
 
-type ModalState = { open: boolean; type: "category" | "brand"; name: string; slug: string; description: string; logo: string };
-const EMPTY: ModalState = { open: false, type: "category", name: "", slug: "", description: "", logo: "" };
+type ModalState = { open: boolean; type: "category" | "brand"; name: string; slug: string; description: string; logo: string; image: string };
+const EMPTY: ModalState = { open: false, type: "category", name: "", slug: "", description: "", logo: "", image: "" };
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -33,6 +42,7 @@ export default function AdminCategoriesPage() {
   const [loading, setLoading]       = useState(true);
   const [modal, setModal]           = useState<ModalState>(EMPTY);
   const [saving, setSaving]         = useState(false);
+  const [uploading, setUploading]   = useState(false);
   const [toast, setToast]           = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
   const showToast = (type: "success" | "error", msg: string) => {
@@ -54,16 +64,43 @@ export default function AdminCategoriesPage() {
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const openAdd = (type: "category" | "brand") =>
-    setModal({ open: true, type, name: "", slug: "", description: "", logo: "" });
+    setModal({ open: true, type, name: "", slug: "", description: "", logo: "", image: "" });
 
   const closeModal = () => setModal(EMPTY);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      if (res.ok) {
+        const { url } = await res.json();
+        if (modal.type === "category") {
+          setModal(m => ({ ...m, image: url }));
+        } else {
+          setModal(m => ({ ...m, logo: url }));
+        }
+        showToast("success", "Image uploaded!");
+      } else {
+        showToast("error", "Failed to upload image.");
+      }
+    } catch {
+      showToast("error", "Error uploading file.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     const url = modal.type === "category" ? "/api/admin/categories" : "/api/admin/brands";
     const body: any = { name: modal.name, slug: modal.slug, description: modal.description };
-    if (modal.type === "brand") body.logo = modal.logo;
+    if (modal.type === "category" && modal.image) body.image = modal.image;
+    if (modal.type === "brand" && modal.logo) body.logo = modal.logo;
 
     const res = await fetch(url, {
       method: "POST",
@@ -128,7 +165,8 @@ export default function AdminCategoriesPage() {
                   key={c.id}
                   name={c.name}
                   sub={c.slug}
-                  onEdit={() => setModal({ open: true, type: "category", name: c.name, slug: c.slug, description: c.description || "", logo: "" })}
+                  image={c.image}
+                  onEdit={() => setModal({ open: true, type: "category", name: c.name, slug: c.slug, description: c.description || "", logo: "", image: c.image || "" })}
                 />
               ))}
             </div>
@@ -162,7 +200,8 @@ export default function AdminCategoriesPage() {
                   key={b.id}
                   name={b.name}
                   sub={b.description}
-                  onEdit={() => setModal({ open: true, type: "brand", name: b.name, slug: b.slug, description: b.description || "", logo: b.logo || "" })}
+                  image={b.logo}
+                  onEdit={() => setModal({ open: true, type: "brand", name: b.name, slug: b.slug, description: b.description || "", logo: b.logo || "", image: "" })}
                 />
               ))}
             </div>
@@ -209,23 +248,39 @@ export default function AdminCategoriesPage() {
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2E5E]/20 resize-none"
                 />
               </div>
-              {modal.type === "brand" && (
-                <div>
-                  <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5 block">Logo URL</label>
+
+              {/* Image / Logo Upload */}
+              <div>
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5 block">
+                  {modal.type === "category" ? "Category Image" : "Brand Logo"}
+                </label>
+                <div className="flex items-center gap-3 mb-2">
                   <input
-                    value={modal.logo}
-                    onChange={e => setModal(m => ({ ...m, logo: e.target.value }))}
+                    type="text"
+                    value={modal.type === "category" ? modal.image : modal.logo}
+                    onChange={e => setModal(m => modal.type === "category" ? { ...m, image: e.target.value } : { ...m, logo: e.target.value })}
                     placeholder="https://..."
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2E5E]/20"
+                    className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1C2E5E]/20"
                   />
+                  <label className="flex items-center gap-1.5 px-3 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl cursor-pointer transition-colors">
+                    <Upload className="w-3.5 h-3.5" />
+                    {uploading ? "..." : "Upload"}
+                    <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} disabled={uploading} />
+                  </label>
                 </div>
-              )}
+                {(modal.type === "category" ? modal.image : modal.logo) && (
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-200">
+                    <img src={modal.type === "category" ? modal.image : modal.logo} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
+
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={closeModal} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
                   Cancel
                 </button>
-                <button type="submit" disabled={saving} className="flex-1 py-2.5 rounded-xl bg-[#06091F] text-white text-sm font-semibold hover:bg-[#1C2E5E] transition-colors disabled:opacity-60">
-                  {saving ? "Saving..." : "Create"}
+                <button type="submit" disabled={saving || uploading} className="flex-1 py-2.5 rounded-xl bg-[#06091F] text-white text-sm font-semibold hover:bg-[#1C2E5E] transition-colors disabled:opacity-60">
+                  {saving ? "Saving..." : "Save"}
                 </button>
               </div>
             </form>

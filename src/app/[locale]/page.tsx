@@ -224,12 +224,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                         SALE
                       </span>
                     )}
-                    {p.loyaltyPoints > 0 && (
-                      <span className="absolute bottom-3 left-3 bg-[#06091F]/90 text-[#F5D800] border border-[#F5D800]/30 text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 backdrop-blur-sm">
-                        <Trophy className="w-2.5 h-2.5" />
-                        +{p.loyaltyPoints} Cadopoints
-                      </span>
-                    )}
+                    {/* Cadopoints badge hidden */}
                   </div>
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
@@ -239,26 +234,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                       <h3 className="font-bold text-[#06091F] text-base leading-snug mt-1 group-hover:text-[#1C2E5E] transition-colors line-clamp-2">
                         {p.name}
                       </h3>
-                      <div className="flex items-center gap-1 my-2">
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <Star key={s} className="w-3.5 h-3.5 fill-[#F5D800] text-[#F5D800]" />
-                        ))}
-                      </div>
                     </div>
                     
-                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
-                      <div className="flex flex-col">
-                        {hasDiscount && (
-                          <span className="text-xs text-gray-400 line-through">
-                            {Number(p.basePrice).toLocaleString('fr-FR')} TND
+                    <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                      <div>
+                        {hasDiscount ? (
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-lg font-black text-[#06091F]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                              {Number(displayPrice).toLocaleString('fr-FR')} TND
+                            </span>
+                            <span className="text-xs text-gray-400 line-through">
+                              {Number(p.basePrice).toLocaleString('fr-FR')} TND
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-lg font-black text-[#06091F]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                            {Number(displayPrice).toLocaleString('fr-FR')} TND
                           </span>
                         )}
-                        <span className="font-black text-[#06091F] text-lg">
-                          {Number(displayPrice).toLocaleString('fr-FR')} TND
-                        </span>
                       </div>
-                      <span className="text-xs text-[#06091F] bg-[#F5D800] group-hover:bg-[#06091F] group-hover:text-white px-3 py-2 rounded-lg font-bold transition-all shadow-sm">
-                        Voir Produit
+                      <span className="w-8 h-8 rounded-xl bg-[#06091F] text-[#F5D800] group-hover:bg-[#F5D800] group-hover:text-[#06091F] transition-all flex items-center justify-center font-bold text-lg">
+                        +
                       </span>
                     </div>
                   </div>
@@ -269,7 +265,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>
 
-      {/* ===== CADOPOINTS LOYALTY BANNER ===== */}
+      {/* ===== CADOPOINTS LOYALTY BANNER - Hidden until further notice ===== */}
+      {/*
       <section className="py-16 bg-[#06091F] text-white relative overflow-hidden" id="loyalty-banner">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-[#F5D800] rounded-full filter blur-[120px] animate-pulse" />
@@ -310,6 +307,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         </div>
       </section>
+      */}
 
 
 

@@ -373,25 +373,7 @@ export default function CheckoutPage() {
                     {promoSuccess && <p className="text-green-600 text-[10px] mt-1">{promoSuccess}</p>}
                   </div>
 
-                  {/* Cadopoints Redemption */}
-                  {user?.loyaltyAcc?.balance > 0 && (
-                    <div className="bg-[#06091F]/5 border border-[#06091F]/10 rounded-xl p-3">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={useLoyalty}
-                          onChange={(e) => setUseLoyalty(e.target.checked)}
-                          className="rounded text-[#F5D800] focus:ring-[#F5D800] w-4 h-4 cursor-pointer"
-                        />
-                        <div className="text-xs">
-                          <span className="font-bold text-[#06091F]">Use Cadopoints</span>
-                          <p className="text-gray-500 text-[10px]">
-                            Available: {user.loyaltyAcc.balance} pts (Save up to {maxRedeemablePoints} TND)
-                          </p>
-                        </div>
-                      </label>
-                    </div>
-                  )}
+                  {/* Cadopoints Redemption - Hidden */}
                 </div>
 
                 <div className="border-t border-gray-100 pt-4 flex flex-col gap-2 mb-5">
@@ -403,12 +385,6 @@ export default function CheckoutPage() {
                     <div className="flex justify-between text-sm text-green-600 font-medium">
                       <span>Discount</span>
                       <span>-{discount.toLocaleString('fr-FR')} TND</span>
-                    </div>
-                  )}
-                  {pointsRedeemed > 0 && (
-                    <div className="flex justify-between text-[10px] text-green-700 font-semibold pl-2">
-                      <span>• Cadopoints Used</span>
-                      <span>-{pointsRedeemed} TND</span>
                     </div>
                   )}
                   {promoDiscount > 0 && (
