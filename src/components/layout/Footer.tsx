@@ -38,7 +38,7 @@ export default function Footer() {
               {[
                 { href: "/", label: "Home" },
                 { href: "/products", label: "Products" },
-                { href: "/categories", label: "Categories" },
+                { href: "/#categories-section", label: "Categories" },
                 { href: "/about", label: "About Us" },
               ].map((link) => (
                 <li key={link.href}>
@@ -57,7 +57,7 @@ export default function Footer() {
               {[
                 { href: "/cart", label: "Shopping Cart" },
                 { href: "/checkout", label: "Checkout" },
-                { href: "/order-tracking", label: "Track Order" },
+                { href: "/account", label: "Track Order" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-white/70 hover:text-[#F5D800] transition-colors">
@@ -74,7 +74,7 @@ export default function Footer() {
             <ul className="flex flex-col gap-3">
               <li className="flex items-center gap-2 text-sm text-white/70">
                 <MapPin className="w-4 h-4 text-[#F5D800] shrink-0" />
-                <span>Tunisia</span>
+                <span>La Goulette</span>
               </li>
               <li className="flex items-center gap-2 text-sm text-white/70">
                 <Phone className="w-4 h-4 text-[#F5D800] shrink-0" />
@@ -131,7 +131,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} Distribution Gandouz. All rights reserved.
+            © {new Date().getFullYear()} Distribution Gandouz. Powered by MSDI Soft All rights reserved.
           </p>
           <p className="text-xs text-white/40">
             No online payment — all orders are processed manually.

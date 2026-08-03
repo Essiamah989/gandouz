@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useParams, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -13,22 +13,22 @@ import {
   ChevronRight,
   LogOut,
   Store,
+  Star,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const params = useParams();
   const router = useRouter();
-  const locale = (params?.locale as string) || "en";
 
   const adminNav = [
-    { href: `/${locale}/admin`, label: "Dashboard", icon: LayoutDashboard, exact: true },
-    { href: `/${locale}/admin/orders`, label: "Orders", icon: ShoppingBag, exact: false },
-    { href: `/${locale}/admin/products`, label: "Products", icon: Package, exact: false },
-    { href: `/${locale}/admin/categories`, label: "Categories & Brands", icon: Tag, exact: false },
-    { href: `/${locale}/admin/promotions`, label: "Promotions", icon: Ticket, exact: false },
-    { href: `/${locale}/admin/analytics`, label: "Analytics", icon: BarChart3, exact: false },
-    { href: `/${locale}/admin/settings`, label: "Settings", icon: Settings, exact: false },
+    { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard, exact: true },
+    { href: "/admin/orders", label: "Commandes", icon: ShoppingBag, exact: false },
+    { href: "/admin/products", label: "Produits", icon: Package, exact: false },
+    { href: "/admin/categories", label: "Catégories & Marques", icon: Tag, exact: false },
+    { href: "/admin/promotions", label: "Promotions", icon: Ticket, exact: false },
+    { href: "/admin/analytics", label: "Analytiques", icon: BarChart3, exact: false },
+    { href: "/admin/testimonials", label: "Témoignages", icon: Star, exact: false },
+    { href: "/admin/settings", label: "Paramètres", icon: Settings, exact: false },
   ];
 
   const isActive = (item: (typeof adminNav)[0]) => {
@@ -37,9 +37,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   const handleLogout = () => {
-    // Clear the admin auth cookie
     document.cookie = "ADMIN_AUTH=; path=/; max-age=0";
-    router.push(`/${locale}/admin-login`);
+    router.push("/admin-login");
     router.refresh();
   };
 
@@ -51,7 +50,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="px-5 py-5 border-b border-white/10">
           <div className="mt-1">
             <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-0.5">
-              Admin Panel
+              Panneau Admin
             </p>
             <p
               className="text-white font-bold text-lg"
@@ -91,18 +90,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Footer */}
         <div className="px-3 py-4 border-t border-white/10 space-y-1">
           <Link
-            href={`/${locale}`}
+            href="/"
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-white hover:bg-white/5 transition-all"
           >
             <Store className="w-4 h-4" />
-            View Store
+            Voir la boutique
           </Link>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition-all"
           >
             <LogOut className="w-4 h-4" />
-            Sign Out
+            Déconnexion
           </button>
           <p className="text-white/20 text-xs px-3 pt-2">Distribution Gandouz © 2026</p>
         </div>

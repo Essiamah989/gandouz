@@ -4,11 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ShoppingCart, Menu, X, Search, User } from "lucide-react";
-import { SignInButton, Show, UserButton } from "@clerk/nextjs";
+import { ShoppingCart, Menu, X, Search } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
-import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
-import en from "@/dictionaries/en.json";
 import fr from "@/dictionaries/fr.json";
 
 export default function Navbar() {
@@ -30,20 +27,19 @@ export default function Navbar() {
       .catch(console.error);
   }, []);
 
-  const currentLocale = pathname.startsWith("/fr") ? "fr" : "en";
-  const dict = currentLocale === "fr" ? fr : en;
+  const dict = fr;
 
   const navLinks = [
-    { href: `/${currentLocale}`, label: dict.nav.catalog || "Home" },
-    { href: `/${currentLocale}/products`, label: "Products" }, // Custom text if needed
-    { href: `/${currentLocale}/about`, label: dict.nav.about || "About" },
+    { href: `/`, label: dict.nav.catalog || "Catalogue" },
+    { href: `/products`, label: "Produits" },
+    { href: `/about`, label: dict.nav.about || "À Propos" },
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full gandouz-gradient border-b border-white/10 shadow-xl">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href={`/${currentLocale}`} className="flex items-center gap-3 shrink-0" id="nav-logo">
+        <Link href={`/`} className="flex items-center gap-3 shrink-0" id="nav-logo">
           <Image
             src="/logo.png"
             alt="Distribution Gandouz"
@@ -62,10 +58,7 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
-            // Strip locale to match active paths correctly
-            const cleanPathname = pathname.replace(/^\/(en|fr)/, "") || "/";
-            const cleanHref = link.href.replace(/^\/(en|fr)/, "") || "/";
-            const isActive = cleanPathname === cleanHref || (cleanPathname.startsWith(cleanHref) && cleanHref !== "/");
+            const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
 
             return (
               <Link
@@ -84,16 +77,14 @@ export default function Navbar() {
         {/* Actions */}
         <div className="flex items-center gap-4">
           {mounted && loyaltyBalance !== null && (
-            <Link href={`/${currentLocale}/account`} className="hidden sm:flex items-center gap-1.5 bg-[#F5D800]/10 border border-[#F5D800]/30 px-3 py-1.5 rounded-full hover:bg-[#F5D800]/20 transition-colors">
+            <Link href={`/account`} className="hidden sm:flex items-center gap-1.5 bg-[#F5D800]/10 border border-[#F5D800]/30 px-3 py-1.5 rounded-full hover:bg-[#F5D800]/20 transition-colors">
               <span className="text-[#F5D800] text-xs font-bold">{loyaltyBalance} pts</span>
             </Link>
           )}
 
-          <LanguageSwitcher />
-
           {/* Search Icon */}
           <Link
-            href={`/${currentLocale}/products`}
+            href={`/products`}
             id="nav-search-btn"
             className="text-white/70 hover:text-[#F5D800] transition-colors p-1"
             aria-label="Search"
@@ -101,32 +92,9 @@ export default function Navbar() {
             <Search className="w-5 h-5" />
           </Link>
 
-          {/* Auth - Hidden until further notice */}
-          {/*
-          <div className="flex items-center text-white/70 hover:text-[#F5D800] transition-colors">
-            <Show when="signed-out">
-              <SignInButton mode="modal">
-                <button className="flex items-center gap-2 p-1 text-sm font-medium">
-                  <User className="w-5 h-5" />
-                  <span className="hidden sm:inline">Sign In</span>
-                </button>
-              </SignInButton>
-            </Show>
-            <Show when="signed-in">
-              <UserButton 
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox: "w-8 h-8 rounded-full border-2 border-white/20 hover:border-[#F5D800] transition-colors"
-                  }
-                }}
-              />
-            </Show>
-          </div>
-          */}
-
           {/* Cart */}
           <Link
-            href={`/${currentLocale}/cart`}
+            href={`/cart`}
             id="nav-cart-btn"
             className="relative text-white/70 hover:text-white transition-colors p-1"
             aria-label={dict.nav.cart}
@@ -154,11 +122,8 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="md:hidden bg-[#1C2E5E] border-t border-white/10 px-4 pb-4 pt-2 flex flex-col gap-3">
-          {/* Cadopoints hidden */}
           {navLinks.map((link) => {
-            const cleanPathname = pathname.replace(/^\/(en|fr)/, "") || "/";
-            const cleanHref = link.href.replace(/^\/(en|fr)/, "") || "/";
-            const isActive = cleanPathname === cleanHref || (cleanPathname.startsWith(cleanHref) && cleanHref !== "/");
+            const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/");
 
             return (
               <Link

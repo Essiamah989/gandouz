@@ -230,3 +230,16 @@ model StoreSetting {
   value     String
   updatedAt DateTime @updatedAt
 }
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  author     String
+  role       String?
+  content    String
+  rating     Int      @default(5)
+  avatarUrl  String?
+  isVisible  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+

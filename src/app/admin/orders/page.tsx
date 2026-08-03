@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Package, Search, Eye, Clock, CheckCircle, Truck, Star, XCircle,
   ChevronDown, Phone, Mail, Printer, DollarSign, CheckSquare,
@@ -56,8 +56,6 @@ function getItemPrice(item: OrderItem){ return item.unitPrice || item.price || 0
 
 export default function AdminOrdersPage() {
   const router = useRouter();
-  const params = useParams();
-  const locale = (params?.locale as string) || "fr";
 
   const [orders, setOrders]             = useState<Order[]>([]);
   const [selected, setSelected]         = useState<Order | null>(null);
@@ -78,13 +76,7 @@ export default function AdminOrdersPage() {
 
   useEffect(() => { fetchOrders(); }, []);
 
-  useEffect(() => {
-    const handleAfterPrint = () => {
-      router.push(`/${locale}/products`);
-    };
-    window.addEventListener('afterprint', handleAfterPrint);
-    return () => window.removeEventListener('afterprint', handleAfterPrint);
-  }, [router, locale]);
+
 
   const filtered = orders.filter(o => {
     const cName = o.customerName || o.shippingAddress?.customerName || "";

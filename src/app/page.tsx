@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ShieldCheck, Truck, Clock, Star, Gift, Wine, Beer, Trophy, Calendar } from "lucide-react";
-import { getProducts, getCategories } from "@/lib/db";
+import { getProducts, getCategories, getTestimonials } from "@/lib/db";
 
 import { getDictionary } from "@/lib/i18n";
 
@@ -10,11 +10,11 @@ export const metadata = {
   description: "Re-live the premier beverage shopping experience of Tunisia. Browse luxury champagnes, single malt whiskies, local wines, and request custom mobile bar bookings.",
 };
 
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const dict = await getDictionary(locale as "en" | "fr");
+export default async function HomePage() {
+  const dict = await getDictionary();
   const categories = await getCategories();
   const featuredProducts = await getProducts({ featuredOnly: true, limit: 4 });
+  const dbTestimonials = await getTestimonials();
 
   return (
     <div className="min-h-screen bg-[#F2F2F2]">
@@ -49,7 +49,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link
-                  href={`/${locale}/products`}
+                  href="/products"
                   id="hero-cta-shop"
                   className="btn-gold inline-flex items-center justify-center gap-2 px-8 py-4.5 rounded-xl text-base font-bold transition-all"
                 >
@@ -97,7 +97,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               {
                 icon: Truck,
                 title: "Livraison Rapide",
-                desc: "Livré en main propre en toute sécurité sous 24 à 48 heures.",
+                desc: "Livré en main propre en toute sécurité sous 12 heures.",
               },
               {
                 icon: Clock,
@@ -322,38 +322,42 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                text: "La livraison est incroyablement rapide ! J'ai commandé deux bouteilles de whisky premium pour un dîner d'affaires, et elles sont arrivées en moins de 3 heures à La Goulette. Service fantastique.",
-                name: "Karim Meziane",
-                role: "Organisateur d'Événements"
-              },
-              {
-                text: "Nous avons loué le pack Bar Mobile VIP pour notre fête d'anniversaire, et les invités n'ont pas arrêté de féliciter les mixologues. L'installation correspondait parfaitement à l'ambiance luxe.",
-                name: "Selma Ben Jemaa",
-                role: "Hôte Privé"
-              },
-              {
-                text: "Les points Cadopoints changent la donne. J'ai déjà échangé des points contre un kit de shaker gratuit. Validation manuelle très fluide et livreurs sympathiques.",
-                name: "Ahmed Toumi",
-                role: "Barman Amateur"
-              }
-            ].map((t, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-gray-50 border border-gray-100 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-1 mb-4">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className="w-4 h-4 fill-[#F5D800] text-[#F5D800]" />
-                    ))}
+            {(() => {
+              const fallback = [
+                {
+                  text: "La livraison est incroyablement rapide ! J'ai commandé deux bouteilles de whisky premium pour un dîner d'affaires, et elles sont arrivées en moins de 3 heures à La Goulette. Service fantastique.",
+                  name: "Karim Meziane",
+                  role: "Organisateur d'Événements"
+                },
+                {
+                  text: "Nous avons loué le pack Bar Mobile VIP pour notre fête d'anniversaire, et les invités n'ont pas arrêté de féliciter les mixologues. L'installation correspondait parfaitement à l'ambiance luxe.",
+                  name: "Selma Ben Jemaa",
+                  role: "Hôte Privé"
+                },
+                {
+                  text: "Les points Cadopoints changent la donne. J'ai déjà échangé des points contre un kit de shaker gratuit. Validation manuelle très fluide et livreurs sympathiques.",
+                  name: "Ahmed Toumi",
+                  role: "Barman Amateur"
+                }
+              ];
+              const list = (dbTestimonials && dbTestimonials.length > 0) ? dbTestimonials : fallback;
+              return list.map((t: any, i: number) => (
+                <div key={i} className="p-6 rounded-2xl bg-gray-50 border border-gray-100 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-1 mb-4">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} className="w-4 h-4 fill-[#F5D800] text-[#F5D800]" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-600 italic leading-relaxed">"{t.text}"</p>
                   </div>
-                  <p className="text-sm text-gray-600 italic leading-relaxed">"{t.text}"</p>
+                  <div className="mt-6 pt-4 border-t border-gray-100">
+                    <h4 className="font-bold text-sm text-[#06091F]">{t.name}</h4>
+                    <p className="text-xs text-gray-400">{t.role}</p>
+                  </div>
                 </div>
-                <div className="mt-6 pt-4 border-t border-gray-100">
-                  <h4 className="font-bold text-sm text-[#06091F]">{t.name}</h4>
-                  <p className="text-xs text-gray-400">{t.role}</p>
-                </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
       </section>
