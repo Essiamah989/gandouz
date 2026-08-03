@@ -915,7 +915,62 @@ export async function getOrCreateUserByEmail(email: string, customerName: string
 
     return user;
   } catch (error) {
+
     console.error("Error in getOrCreateUserByEmail:", error);
     return null;
   }
 }
+
+/* ==========================================================================
+   TESTIMONIAL SERVICES
+   ========================================================================== */
+export async function getTestimonials(visibleOnly = true) {
+  if (isRealDbAvailable()) {
+    try {
+      return await prisma.testimonial.findMany({
+        where: visibleOnly ? { isVisible: true } : undefined,
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (e) {
+      console.warn("DB query failed, falling back to static testimonials:", e);
+    }
+  }
+
+  // Static fallback testimonials
+  return [
+    {
+      id: "t1",
+      author: "Yassine B.",
+      role: "Client fidèle",
+      content: "Service impeccable et livraison ultra rapide. Je recommande vivement !",
+      rating: 5,
+      avatarUrl: null,
+      isVisible: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "t2",
+      author: "Mariem K.",
+      role: "Cliente",
+      content: "Des produits de qualité et un emballage soigné. Très satisfaite de ma commande.",
+      rating: 5,
+      avatarUrl: null,
+      isVisible: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "t3",
+      author: "Raouf T.",
+      role: "Entrepreneur",
+      content: "Parfait pour mes événements. L'équipe est professionnelle et réactive.",
+      rating: 5,
+      avatarUrl: null,
+      isVisible: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  ];
+}
+
