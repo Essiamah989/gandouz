@@ -33,8 +33,8 @@ function ItemCard({ name, sub, image, onEdit }: { name: string; sub?: string; im
   );
 }
 
-type ModalState = { open: boolean; type: "category" | "brand"; name: string; slug: string; description: string; logo: string; image: string };
-const EMPTY: ModalState = { open: false, type: "category", name: "", slug: "", description: "", logo: "", image: "" };
+type ModalState = { open: boolean; type: "category" | "brand"; editId?: string; name: string; slug: string; description: string; logo: string; image: string };
+const EMPTY: ModalState = { open: false, type: "category", editId: undefined, name: "", slug: "", description: "", logo: "", image: "" };
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -64,7 +64,7 @@ export default function AdminCategoriesPage() {
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const openAdd = (type: "category" | "brand") =>
-    setModal({ open: true, type, name: "", slug: "", description: "", logo: "", image: "" });
+    setModal({ open: true, type, editId: undefined, name: "", slug: "", description: "", logo: "", image: "" });
 
   const closeModal = () => setModal(EMPTY);
 
@@ -98,19 +98,21 @@ export default function AdminCategoriesPage() {
     e.preventDefault();
     setSaving(true);
     const url = modal.type === "category" ? "/api/admin/categories" : "/api/admin/brands";
+    const method = modal.editId ? "PUT" : "POST";
     const body: any = { name: modal.name, slug: modal.slug, description: modal.description };
-    if (modal.type === "category" && modal.image) body.image = modal.image;
-    if (modal.type === "brand" && modal.logo) body.logo = modal.logo;
+    if (modal.editId) body.id = modal.editId;
+    if (modal.type === "category") body.image = modal.image;
+    if (modal.type === "brand") body.logo = modal.logo;
 
     const res = await fetch(url, {
-      method: "POST",
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
 
     setSaving(false);
     if (res.ok) {
-      showToast("success", `${modal.type === "category" ? "Category" : "Brand"} created!`);
+      showToast("success", `${modal.type === "category" ? "Category" : "Brand"} ${modal.editId ? "updated" : "created"}!`);
       closeModal();
       fetchAll();
     } else {
@@ -166,7 +168,7 @@ export default function AdminCategoriesPage() {
                   name={c.name}
                   sub={c.slug}
                   image={c.image}
-                  onEdit={() => setModal({ open: true, type: "category", name: c.name, slug: c.slug, description: c.description || "", logo: "", image: c.image || "" })}
+                  onEdit={() => setModal({ open: true, type: "category", editId: c.id, name: c.name, slug: c.slug, description: c.description || "", logo: "", image: c.image || "" })}
                 />
               ))}
             </div>
@@ -201,7 +203,7 @@ export default function AdminCategoriesPage() {
                   name={b.name}
                   sub={b.description}
                   image={b.logo}
-                  onEdit={() => setModal({ open: true, type: "brand", name: b.name, slug: b.slug, description: b.description || "", logo: b.logo || "", image: "" })}
+                  onEdit={() => setModal({ open: true, type: "brand", editId: b.id, name: b.name, slug: b.slug, description: b.description || "", logo: b.logo || "", image: "" })}
                 />
               ))}
             </div>
@@ -215,7 +217,7 @@ export default function AdminCategoriesPage() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
             <div className="flex items-center justify-between px-7 pt-7 pb-5 border-b border-gray-100">
               <h2 className="text-lg font-bold text-[#06091F]">
-                New {modal.type === "category" ? "Category" : "Brand"}
+                {modal.editId ? "Edit" : "New"} {modal.type === "category" ? "Category" : "Brand"}
               </h2>
               <button onClick={closeModal} className="p-2 rounded-xl hover:bg-gray-100 text-gray-500">
                 <X className="w-5 h-5" />

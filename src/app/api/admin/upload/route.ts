@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import fs from "fs";
+import path from "path";
 
-// Use service-role key for storage admin operations
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAdmin = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 const BUCKET = "product-images";
 
 export async function POST(req: NextRequest) {
@@ -18,7 +17,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // Validate file type
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
@@ -27,37 +25,46 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: "File too large. Maximum size is 5MB." }, { status: 400 });
     }
 
-    // Generate unique filename
     const ext = file.name.split(".").pop() || "jpg";
     const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const filePath = `products/${uniqueName}`;
 
-    // Convert File to ArrayBuffer then Uint8Array for Supabase
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = new Uint8Array(arrayBuffer);
+    const buffer = Buffer.from(arrayBuffer);
 
-    // Upload to Supabase Storage
-    const { error: uploadError } = await supabaseAdmin.storage
-      .from(BUCKET)
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        upsert: false,
-      });
+    // Try Supabase upload if configured
+    if (supabaseAdmin) {
+      try {
+        const filePath = `products/${uniqueName}`;
+        const { error: uploadError } = await supabaseAdmin.storage
+          .from(BUCKET)
+          .upload(filePath, buffer, {
+            contentType: file.type,
+            upsert: false,
+          });
 
-    if (uploadError) {
-      console.error("Supabase upload error:", uploadError);
-      return NextResponse.json({ error: uploadError.message }, { status: 500 });
+        if (!uploadError) {
+          const { data } = supabaseAdmin.storage.from(BUCKET).getPublicUrl(filePath);
+          return NextResponse.json({ url: data.publicUrl });
+        }
+        console.warn("Supabase upload error, falling back to local storage:", uploadError.message);
+      } catch (err) {
+        console.warn("Supabase upload failed, falling back to local storage:", err);
+      }
     }
 
-    // Get public URL
-    const { data } = supabaseAdmin.storage.from(BUCKET).getPublicUrl(filePath);
+    // Local filesystem fallback
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    const localFilePath = path.join(uploadsDir, uniqueName);
+    fs.writeFileSync(localFilePath, buffer);
 
-    return NextResponse.json({ url: data.publicUrl });
+    return NextResponse.json({ url: `/uploads/${uniqueName}` });
   } catch (e) {
     console.error("Upload error:", e);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });

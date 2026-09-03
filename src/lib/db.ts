@@ -69,6 +69,38 @@ export async function createCategory(data: { name: string; slug: string; descrip
   return newCat;
 }
 
+export async function updateCategory(id: string, data: { name: string; slug: string; description?: string; image?: string }) {
+  if (isRealDbAvailable()) {
+    try {
+      return await prisma.category.update({
+        where: { id },
+        data
+      });
+    } catch (e) {
+      console.warn("DB update failed, falling back to mock:", e);
+    }
+  }
+  const db = readMockDb();
+  const index = db.categories.findIndex((c: any) => c.id === id || c.slug === data.slug);
+  if (index !== -1) {
+    db.categories[index] = {
+      ...db.categories[index],
+      ...data,
+      updatedAt: new Date().toISOString()
+    };
+    writeMockDb(db);
+    return db.categories[index];
+  }
+  const newCat = {
+    id: id || `cat-${Date.now()}`,
+    ...data,
+    createdAt: new Date().toISOString()
+  };
+  db.categories.push(newCat);
+  writeMockDb(db);
+  return newCat;
+}
+
 /* ==========================================================================
    BRAND SERVICES
    ========================================================================== */
@@ -96,6 +128,38 @@ export async function createBrand(data: { name: string; slug: string; logo?: str
   const db = readMockDb();
   const newBrand = {
     id: `brand-${Date.now()}`,
+    ...data,
+    createdAt: new Date().toISOString()
+  };
+  db.brands.push(newBrand);
+  writeMockDb(db);
+  return newBrand;
+}
+
+export async function updateBrand(id: string, data: { name: string; slug: string; logo?: string; description?: string }) {
+  if (isRealDbAvailable()) {
+    try {
+      return await prisma.brand.update({
+        where: { id },
+        data
+      });
+    } catch (e) {
+      console.warn("DB update failed, falling back to mock:", e);
+    }
+  }
+  const db = readMockDb();
+  const index = db.brands.findIndex((b: any) => b.id === id || b.slug === data.slug);
+  if (index !== -1) {
+    db.brands[index] = {
+      ...db.brands[index],
+      ...data,
+      updatedAt: new Date().toISOString()
+    };
+    writeMockDb(db);
+    return db.brands[index];
+  }
+  const newBrand = {
+    id: id || `brand-${Date.now()}`,
     ...data,
     createdAt: new Date().toISOString()
   };
