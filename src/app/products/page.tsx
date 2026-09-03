@@ -54,6 +54,44 @@ export default async function ProductsPage(props: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#F2F2F2]">
+      {/* Category Visual Showcase */}
+      <div className="bg-[#06091F] text-white py-8 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-extrabold uppercase tracking-wider text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+              Explore Categories
+            </h2>
+            {activeCategory && (
+              <Link href="/products" className="text-xs text-gray-400 hover:text-white underline">
+                View All
+              </Link>
+            )}
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {categories.map((cat: any) => {
+              const catImg = cat.image || "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop";
+              const isActive = activeCategory === cat.slug;
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/products?category=${cat.slug}`}
+                  className={`group shrink-0 relative w-32 h-36 rounded-2xl overflow-hidden border-2 transition-all shadow-md flex flex-col justify-end p-3 ${
+                    isActive ? "border-[#F5D800] ring-4 ring-[#F5D800]/20 scale-105" : "border-white/10 hover:border-[#F5D800]/50"
+                  }`}
+                >
+                  <Image src={catImg} alt={cat.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" unoptimized />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="relative z-10 text-center">
+                    <p className="text-xs font-bold uppercase text-white truncate" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                      {cat.name}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -80,7 +118,7 @@ export default async function ProductsPage(props: PageProps) {
             {/* Categories Filter */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Categories</h3>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 max-h-96 overflow-y-auto pr-1">
                 <Link
                   href={`/products?${new URLSearchParams({
                     ...(activeBrand ? { brand: activeBrand } : {}),
@@ -95,24 +133,32 @@ export default async function ProductsPage(props: PageProps) {
                 >
                   All Categories
                 </Link>
-                {categories.map((cat: any) => (
-                  <Link
-                    key={cat.id}
-                    href={`/products?${new URLSearchParams({
-                      category: cat.slug,
-                      ...(activeBrand ? { brand: activeBrand } : {}),
-                      ...(searchQuery ? { search: searchQuery } : {}),
-                      ...(activeSort ? { sort: activeSort } : {}),
-                    })}`}
-                    className={`text-xs font-semibold py-2 px-3 rounded-lg transition-colors flex justify-between items-center ${
-                      activeCategory === cat.slug
-                        ? "bg-[#06091F] text-[#F5D800]"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span>{cat.name}</span>
-                  </Link>
-                ))}
+                {categories.map((cat: any) => {
+                  const catImg = cat.image || "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop";
+                  return (
+                    <Link
+                      key={cat.id}
+                      href={`/products?${new URLSearchParams({
+                        category: cat.slug,
+                        ...(activeBrand ? { brand: activeBrand } : {}),
+                        ...(searchQuery ? { search: searchQuery } : {}),
+                        ...(activeSort ? { sort: activeSort } : {}),
+                      })}`}
+                      className={`text-xs font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-between gap-2 ${
+                        activeCategory === cat.slug
+                          ? "bg-[#06091F] text-[#F5D800]"
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="relative w-6 h-6 rounded-md overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+                          <Image src={catImg} alt={cat.name} fill className="object-cover" unoptimized />
+                        </div>
+                        <span className="truncate">{cat.name}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 

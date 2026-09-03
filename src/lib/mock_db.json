@@ -41,7 +41,7 @@
       "name": "UCCV",
       "slug": "uccv",
       "description": "Category for UCCV",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -50,7 +50,7 @@
       "name": "RAOUIA",
       "slug": "raouia",
       "description": "Category for RAOUIA",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -59,7 +59,7 @@
       "name": "CEPTUNE",
       "slug": "ceptune",
       "description": "Category for CEPTUNE",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1528825871115-3581a5387919?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -68,7 +68,7 @@
       "name": "DOMAINE SHADRAPA",
       "slug": "domaine-shadrapa",
       "description": "Category for DOMAINE SHADRAPA",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -77,7 +77,7 @@
       "name": "PRINCE BIR DRASSEN",
       "slug": "prince-bir-drassen",
       "description": "Category for PRINCE BIR DRASSEN",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -86,7 +86,7 @@
       "name": "SICOB",
       "slug": "sicob",
       "description": "Category for SICOB",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1528825871115-3581a5387919?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -95,7 +95,7 @@
       "name": "TUNISIE COCKTAIL",
       "slug": "tunisie-cocktail",
       "description": "Category for TUNISIE COCKTAIL",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -104,7 +104,7 @@
       "name": "DOMAINE NEFERYS",
       "slug": "domaine-neferys",
       "description": "Category for DOMAINE NEFERYS",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -113,7 +113,7 @@
       "name": "WHISKY VODKA",
       "slug": "whisky-vodka",
       "description": "Category for WHISKY VODKA",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -122,7 +122,7 @@
       "name": "SONOBRA",
       "slug": "sonobra",
       "description": "Category for SONOBRA",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1608270586620-248524c67de9?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -131,7 +131,7 @@
       "name": "KURUBIS",
       "slug": "kurubis",
       "description": "Category for KURUBIS",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -140,7 +140,7 @@
       "name": "SOTEV",
       "slug": "sotev",
       "description": "Category for SOTEV",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -149,7 +149,7 @@
       "name": "SFBT",
       "slug": "sfbt",
       "description": "Category for SFBT",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1608270586620-248524c67de9?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -158,7 +158,7 @@
       "name": "TERRAGLACIA",
       "slug": "terraglacia",
       "description": "Category for TERRAGLACIA",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1527061011665-3652c757a4d4?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     },
@@ -167,7 +167,7 @@
       "name": "BOUARGOUB",
       "slug": "bouargoub",
       "description": "Category for BOUARGOUB",
-      "image": null,
+      "image": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop",
       "parentId": null,
       "createdAt": "2026-06-22T22:37:01.062Z"
     }
