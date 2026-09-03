@@ -67,7 +67,7 @@ export default async function ProductsPage(props: PageProps) {
               </Link>
             )}
           </div>
-          <div className="flex gap-4 overflow-x-auto pb-2">
+          <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar scrollbar-none">
             {categories.map((cat: any) => {
               const catImg = cat.image || "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop";
               const isActive = activeCategory === cat.slug;

@@ -139,38 +139,41 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((cat: any) => (
-              <Link
-                key={cat.slug}
-                href={`/products?category=${cat.slug}`}
-                id={`cat-${cat.slug}`}
-                className="group relative h-96 rounded-2xl overflow-hidden shadow-md flex flex-col justify-end p-6 border border-white/10"
-              >
-                {/* Background Image */}
-                <Image
-                  src={cat.image || "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop"}
-                  alt={cat.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  unoptimized
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#06091F] via-[#06091F]/40 to-transparent" />
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-black text-white uppercase tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                    {cat.name}
-                  </h3>
-                  <p className="text-white/70 text-xs mt-1.5 line-clamp-2 leading-relaxed">
-                    {cat.description || "Parcourez notre inventaire de haute qualité."}
-                  </p>
-                  <div className="inline-flex items-center gap-1 text-[#F5D800] text-xs font-bold mt-4 uppercase tracking-wider group-hover:underline">
-                    Voir les Produits
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            {categories.map((cat: any) => {
+              const catImage = cat.image || "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop";
+              return (
+                <Link
+                  key={cat.slug}
+                  href={`/products?category=${cat.slug}`}
+                  id={`cat-${cat.slug}`}
+                  className="group relative h-96 rounded-2xl overflow-hidden shadow-md flex flex-col justify-end p-6 border border-white/10 bg-[#06091F]"
+                >
+                  {/* Background Image */}
+                  <Image
+                    src={catImage}
+                    alt={cat.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#06091F] via-[#06091F]/40 to-transparent" />
+                  
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <h3 className="text-2xl font-black text-white uppercase tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                      {cat.name}
+                    </h3>
+                    <p className="text-white/70 text-xs mt-1.5 line-clamp-2 leading-relaxed">
+                      {cat.description || "Parcourez notre inventaire de haute qualité."}
+                    </p>
+                    <div className="inline-flex items-center gap-1 text-[#F5D800] text-xs font-bold mt-4 uppercase tracking-wider group-hover:underline">
+                      Voir les Produits
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
