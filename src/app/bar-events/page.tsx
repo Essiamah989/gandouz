@@ -225,7 +225,7 @@ export default function BarEventsPage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+216 XX XXX XXX"
+                      placeholder="+216 54 333 612"
                       className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white text-xs focus:ring-2 focus:ring-[#F5D800] focus:border-transparent outline-none"
                     />
                   </div>

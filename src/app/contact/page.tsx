@@ -49,7 +49,11 @@ export default function ContactPage() {
               </div>
               <div>
                 <h4 className="font-bold text-sm text-[#06091F] uppercase tracking-wider">Téléphone</h4>
-                <p className="text-xs text-gray-500 mt-1">+216 XX XXX XXX</p>
+                <div className="flex flex-col gap-1 mt-1 text-xs text-gray-500">
+                  <a href="tel:+21654333612" className="hover:text-[#06091F] transition-colors">+216 54333612</a>
+                  <a href="tel:+21654555712" className="hover:text-[#06091F] transition-colors">+216 54555712</a>
+                  <a href="tel:+21654555885" className="hover:text-[#06091F] transition-colors">+216 54555885</a>
+                </div>
               </div>
             </div>
 
@@ -59,7 +63,11 @@ export default function ContactPage() {
               </div>
               <div>
                 <h4 className="font-bold text-sm text-[#06091F] uppercase tracking-wider">Email</h4>
-                <p className="text-xs text-gray-500 mt-1">contact@gandouz.com</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  <a href="mailto:contact.gandouz@gmail.com" className="hover:text-[#06091F] transition-colors">
+                    contact.gandouz@gmail.com
+                  </a>
+                </p>
               </div>
             </div>
           </div>

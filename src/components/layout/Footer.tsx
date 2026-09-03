@@ -76,13 +76,19 @@ export default function Footer() {
                 <MapPin className="w-4 h-4 text-[#F5D800] shrink-0" />
                 <span>La Goulette</span>
               </li>
-              <li className="flex items-center gap-2 text-sm text-white/70">
-                <Phone className="w-4 h-4 text-[#F5D800] shrink-0" />
-                <span>+216 XX XXX XXX</span>
+              <li className="flex items-start gap-2 text-sm text-white/70">
+                <Phone className="w-4 h-4 text-[#F5D800] shrink-0 mt-0.5" />
+                <div className="flex flex-col gap-1">
+                  <a href="tel:+21654333612" className="hover:text-[#F5D800] transition-colors">+216 54333612</a>
+                  <a href="tel:+21654555712" className="hover:text-[#F5D800] transition-colors">+216 54555712</a>
+                  <a href="tel:+21654555885" className="hover:text-[#F5D800] transition-colors">+216 54555885</a>
+                </div>
               </li>
               <li className="flex items-center gap-2 text-sm text-white/70">
                 <Mail className="w-4 h-4 text-[#F5D800] shrink-0" />
-                <span>contact@gandouz.com</span>
+                <a href="mailto:contact.gandouz@gmail.com" className="hover:text-[#F5D800] transition-colors">
+                  contact.gandouz@gmail.com
+                </a>
               </li>
             </ul>
 
@@ -114,7 +120,7 @@ export default function Footer() {
               </a>
               <a
                 id="footer-whatsapp"
-                href="https://wa.me/213000000000"
+                href="https://wa.me/21654333612"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"

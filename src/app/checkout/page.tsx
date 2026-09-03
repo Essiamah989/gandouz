@@ -228,7 +228,7 @@ export default function CheckoutPage() {
                         type="tel"
                         value={form.phone}
                         onChange={handleChange}
-                        placeholder="+216 XXX XXX XXX"
+                        placeholder="+216 54 333 612"
                         className={`${inputClass("phone")} pl-10`}
                       />
                     </div>

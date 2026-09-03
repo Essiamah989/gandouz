@@ -2,8 +2,8 @@ import Link from "next/link";
 import { HelpCircle, ArrowRight } from "lucide-react";
 
 export const metadata = {
-  title: "Frequently Asked Questions — Cavista Store Clone",
-  description: "Common questions about our online ordering, delivery times, and Cadopoints.",
+  title: "Foire Aux Questions",
+  description: "Questions fréquentes sur les commandes, la livraison et les services de Distribution Gandouz.",
 };
 
 const FAQS = [

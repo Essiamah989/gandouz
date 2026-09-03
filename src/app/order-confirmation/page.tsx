@@ -61,7 +61,7 @@ function ConfirmationContent({ orderNumber }: { orderNumber: string }) {
         {/* Contact */}
         <div className="flex gap-3 justify-center mb-8">
           <a
-            href="tel:+21650705128"
+            href="tel:+21654333612"
             id="confirm-call-btn"
             className="flex items-center gap-2 text-sm font-semibold text-[#1C2E5E] hover:text-[#F5D800] transition-colors"
           >
@@ -69,7 +69,7 @@ function ConfirmationContent({ orderNumber }: { orderNumber: string }) {
           </a>
           <span className="text-gray-300">|</span>
           <a
-            href="mailto:contact@cavistastore.com"
+            href="mailto:contact.gandouz@gmail.com"
             id="confirm-email-btn"
             className="flex items-center gap-2 text-sm font-semibold text-[#1C2E5E] hover:text-[#F5D800] transition-colors"
           >

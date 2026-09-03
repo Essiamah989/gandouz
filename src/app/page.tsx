@@ -6,8 +6,8 @@ import { getProducts, getCategories, getTestimonials } from "@/lib/db";
 import { getDictionary } from "@/lib/i18n";
 
 export const metadata = {
-  title: "Cavista Store Clone — Premium Wines, Spirits & Mobile Bar Events",
-  description: "Re-live the premier beverage shopping experience of Tunisia. Browse luxury champagnes, single malt whiskies, local wines, and request custom mobile bar bookings.",
+  title: "Gandouz - Wines and spirits",
+  description: "Distribution Gandouz - Le premier distributeur de vins, spiritueux premium et événements de bar mobile en Tunisie.",
 };
 
 export default async function HomePage() {

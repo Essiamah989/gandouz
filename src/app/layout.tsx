@@ -5,14 +5,14 @@ import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: {
-    default: "Distribution Gandouz — Vins, Spiritueux Premium & Événements Bar",
-    template: "%s | Distribution Gandouz",
+    default: "Gandouz - Wines and spirits",
+    template: "%s | Gandouz - Wines and spirits",
   },
   description:
     "Le premier distributeur de boissons en Tunisie. Découvrez nos vins de luxe, spiritueux premium, bières artisanales et réservez des services de location de bar mobile. Paiement à la livraison.",
   keywords: ["gandouz", "vins", "spiritueux", "bière", "Tunisie", "bar mobile", "caviste"],
   openGraph: {
-    title: "Distribution Gandouz",
+    title: "Gandouz - Wines and spirits",
     description: "Le premier distributeur de boissons en Tunisie.",
     type: "website",
     locale: "fr_FR",

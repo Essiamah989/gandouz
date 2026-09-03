@@ -3,8 +3,8 @@ import Image from "next/image";
 import { ArrowRight, Star, ShieldCheck, Award } from "lucide-react";
 
 export const metadata = {
-  title: "About Us — Cavista Store Clone",
-  description: "Learn about Tunisia's finest cellar collection and mobile bar service providers.",
+  title: "À Propos",
+  description: "Découvrez l'histoire de Distribution Gandouz, premier distributeur de vins et spiritueux en Tunisie.",
 };
 
 export default function AboutPage() {
