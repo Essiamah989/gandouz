@@ -211,12 +211,12 @@ export default async function HomePage() {
                   id={`product-${p.id}`}
                   className="bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover group shadow-sm flex flex-col justify-between"
                 >
-                  <div className="relative aspect-square bg-gray-50">
+                  <div className="relative aspect-square bg-gray-50 p-2">
                     <Image
                       src={p.images && p.images[0] ? p.images[0] : "https://placehold.co/400x400/1C2E5E/F5D800?text=Product"}
                       alt={p.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
                       unoptimized
                     />
                     {hasDiscount && (

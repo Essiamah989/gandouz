@@ -62,8 +62,8 @@ export default function CartPage() {
                   id={`cart-item-${item.id}`}
                   className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 flex gap-4 shadow-sm"
                 >
-                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gray-50 shrink-0">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-gray-50 shrink-0 border border-gray-100 p-1 flex items-center justify-center">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-[#06091F] text-sm leading-tight mb-1">{item.name}</h3>

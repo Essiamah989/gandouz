@@ -58,12 +58,12 @@ export default function ProductClient({ product }: { product: any }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 bg-white rounded-3xl p-6 lg:p-10 border border-gray-100 shadow-sm">
           {/* Images Section */}
           <div className="lg:col-span-6 space-y-4">
-            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
+            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 p-3">
               <Image
                 src={selectedImage || "https://placehold.co/400x400/1C2E5E/F5D800?text=Product"}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-contain p-3"
                 unoptimized
               />
             </div>
@@ -73,11 +73,11 @@ export default function ProductClient({ product }: { product: any }) {
                   <button
                     key={idx}
                     onClick={() => setSelectedImage(img)}
-                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 shrink-0 ${
+                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 shrink-0 bg-gray-50 p-1 ${
                       selectedImage === img ? "border-[#F5D800]" : "border-transparent opacity-70 hover:opacity-100"
                     }`}
                   >
-                    <Image src={img} alt="" fill className="object-cover" unoptimized />
+                    <Image src={img} alt="" fill className="object-contain p-1" unoptimized />
                   </button>
                 ))}
               </div>

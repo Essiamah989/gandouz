@@ -131,8 +131,8 @@ export default function AccountClient({ user, orders, wishlist }: { user: any, o
                   {wishlist.map((p: any) => (
                     <div key={p.id} className="flex gap-4 border border-gray-100 rounded-2xl p-3 bg-gray-50/20 items-center justify-between">
                       <div className="flex gap-3 items-center min-w-0">
-                        <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                          <Image src={p.images && p.images[0] ? p.images[0] : "https://placehold.co/400x400/1C2E5E/F5D800?text=Product"} alt="" fill className="object-cover" unoptimized />
+                        <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100 p-0.5">
+                          <Image src={p.images && p.images[0] ? p.images[0] : "https://placehold.co/400x400/1C2E5E/F5D800?text=Product"} alt="" fill className="object-contain p-0.5" unoptimized />
                         </div>
                         <div className="min-w-0">
                           <h4 className="font-bold text-xs text-[#06091F] truncate leading-tight">{p.name}</h4>

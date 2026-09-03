@@ -256,7 +256,7 @@ export default function AdminProductsPage() {
                           <div className="w-10 h-10 rounded-lg bg-gray-100 overflow-hidden shrink-0">
                             {p.images?.[0] ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
+                              <img src={p.images[0]} alt={p.name} className="w-full h-full object-contain p-0.5" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
                                 <ImageOff className="w-4 h-4 text-gray-300" />
