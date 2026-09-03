@@ -5,6 +5,9 @@ import { getProducts, getCategories, getTestimonials } from "@/lib/db";
 
 import { getDictionary } from "@/lib/i18n";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "Gandouz - Wines and spirits",
   description: "Distribution Gandouz - Le premier distributeur de vins, spiritueux premium et événements de bar mobile en Tunisie.",
