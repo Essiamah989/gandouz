@@ -140,35 +140,51 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.map((cat: any) => {
-              const catImage = cat.image || "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop";
+              const catImage = (cat.image && typeof cat.image === "string" && cat.image.trim().length > 0)
+                ? cat.image
+                : "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop";
+
               return (
                 <Link
                   key={cat.slug}
                   href={`/products?category=${cat.slug}`}
                   id={`cat-${cat.slug}`}
-                  className="group relative h-96 rounded-2xl overflow-hidden shadow-md flex flex-col justify-end p-6 border border-white/10 bg-[#06091F]"
+                  className="group bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
                 >
-                  {/* Background Image */}
-                  <Image
-                    src={catImage}
-                    alt={cat.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    unoptimized
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#06091F] via-[#06091F]/40 to-transparent" />
-                  
+                  {/* Category Photo Container */}
+                  <div className="relative h-60 w-full bg-gray-50 overflow-hidden p-2.5 border-b border-gray-100">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={catImage}
+                      alt={cat.name}
+                      className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <span className="absolute top-5 right-5 bg-[#06091F]/80 backdrop-blur-md text-[#F5D800] text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+                      COLLECTION
+                    </span>
+                  </div>
+
                   {/* Content */}
-                  <div className="relative z-10">
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                      {cat.name}
-                    </h3>
-                    <p className="text-white/70 text-xs mt-1.5 line-clamp-2 leading-relaxed">
-                      {cat.description || "Parcourez notre inventaire de haute qualité."}
-                    </p>
-                    <div className="inline-flex items-center gap-1 text-[#F5D800] text-xs font-bold mt-4 uppercase tracking-wider group-hover:underline">
-                      Voir les Produits
-                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <div className="p-6 flex-1 flex flex-col justify-between bg-white">
+                    <div>
+                      <h3
+                        className="text-2xl font-black text-[#06091F] uppercase tracking-tight group-hover:text-[#1C2E5E] transition-colors"
+                        style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                      >
+                        {cat.name}
+                      </h3>
+                      <p className="text-gray-500 text-xs mt-2 line-clamp-2 leading-relaxed">
+                        {cat.description || "Parcourez notre inventaire de haute qualité."}
+                      </p>
+                    </div>
+
+                    <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between">
+                      <span className="text-xs font-bold text-[#1C2E5E] uppercase tracking-wider group-hover:text-[#F5D800] transition-colors">
+                        Voir les Produits
+                      </span>
+                      <span className="w-8 h-8 rounded-xl bg-[#06091F] text-[#F5D800] group-hover:bg-[#F5D800] group-hover:text-[#06091F] transition-all flex items-center justify-center font-bold text-sm">
+                        →
+                      </span>
                     </div>
                   </div>
                 </Link>
