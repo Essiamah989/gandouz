@@ -223,34 +223,50 @@ export default async function HomePage() {
             {featuredProducts.map((p: any) => {
               const displayPrice = p.salePrice !== null ? p.salePrice : p.basePrice;
               const hasDiscount = p.salePrice !== null;
+              const isOutOfStock = p.isActive === false || (p.stock !== undefined && p.stock <= 0);
               
               return (
                 <Link
                   key={p.id}
                   href={`/product/${p.slug}`}
                   id={`product-${p.id}`}
-                  className="bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover group shadow-sm flex flex-col justify-between"
+                  className={`bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover group shadow-sm flex flex-col justify-between relative ${
+                    isOutOfStock ? "opacity-90" : ""
+                  }`}
                 >
                   <div className="relative aspect-square bg-gray-50 p-2">
                     <Image
                       src={p.images && p.images[0] ? p.images[0] : "https://placehold.co/400x400/1C2E5E/F5D800?text=Product"}
                       alt={p.name}
                       fill
-                      className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                      className={`object-contain p-2 transition-transform duration-300 ${
+                        isOutOfStock ? "grayscale-[20%] group-hover:scale-100" : "group-hover:scale-105"
+                      }`}
                       unoptimized
                     />
-                    {hasDiscount && (
+                    {hasDiscount && !isOutOfStock && (
                       <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-sm">
                         SALE
                       </span>
                     )}
-                    {/* Cadopoints badge hidden */}
+                    {isOutOfStock && (
+                      <span className="absolute top-3 left-3 bg-[#06091F] text-[#F5D800] border border-[#F5D800]/40 text-[10px] font-black uppercase px-2.5 py-1 rounded-md shadow-md tracking-wider">
+                        OUT OF STOCK
+                      </span>
+                    )}
                   </div>
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
-                      <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">
-                        {p.brand?.name || "Qualité Premium"}
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">
+                          {p.brand?.name || "Qualité Premium"}
+                        </p>
+                        {isOutOfStock && (
+                          <span className="text-[10px] font-bold text-red-500 uppercase">
+                            Out of Stock
+                          </span>
+                        )}
+                      </div>
                       <h3 className="font-bold text-[#06091F] text-base leading-snug mt-1 group-hover:text-[#1C2E5E] transition-colors line-clamp-2">
                         {p.name}
                       </h3>
@@ -273,9 +289,15 @@ export default async function HomePage() {
                           </span>
                         )}
                       </div>
-                      <span className="w-8 h-8 rounded-xl bg-[#06091F] text-[#F5D800] group-hover:bg-[#F5D800] group-hover:text-[#06091F] transition-all flex items-center justify-center font-bold text-lg">
-                        +
-                      </span>
+                      {isOutOfStock ? (
+                        <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-lg">
+                          Épuisé
+                        </span>
+                      ) : (
+                        <span className="w-8 h-8 rounded-xl bg-[#06091F] text-[#F5D800] group-hover:bg-[#F5D800] group-hover:text-[#06091F] transition-all flex items-center justify-center font-bold text-lg">
+                          +
+                        </span>
+                      )}
                     </div>
                   </div>
                 </Link>

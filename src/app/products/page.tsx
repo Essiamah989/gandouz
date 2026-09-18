@@ -100,7 +100,7 @@ export default async function ProductsPage(props: PageProps) {
             {/* Search Box */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
               <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Search Products</h3>
-              <form action={`/${currentLocale}/products`} method="GET" className="relative">
+              <form action={currentLocale ? `/${currentLocale}/products` : "/products"} method="GET" className="relative">
                 {activeCategory && <input type="hidden" name="category" value={activeCategory} />}
                 {activeBrand && <input type="hidden" name="brand" value={activeBrand} />}
                 {activeSort && <input type="hidden" name="sort" value={activeSort} />}
@@ -274,34 +274,50 @@ export default async function ProductsPage(props: PageProps) {
                 {products.map((p: any) => {
                   const displayPrice = p.salePrice !== null ? p.salePrice : p.basePrice;
                   const hasDiscount = p.salePrice !== null;
+                  const isOutOfStock = p.isActive === false || (p.stock !== undefined && p.stock <= 0);
                   
                   return (
                     <Link
                       key={p.id}
                       href={`/product/${p.slug}`}
                       id={`product-card-${p.id}`}
-                      className="bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover group shadow-sm flex flex-col justify-between"
+                      className={`bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover group shadow-sm flex flex-col justify-between relative ${
+                        isOutOfStock ? "opacity-90" : ""
+                      }`}
                     >
                       <div className="relative aspect-square bg-gray-50 p-2">
                         <Image
                           src={p.images && p.images[0] ? p.images[0] : "https://placehold.co/400x400/1C2E5E/F5D800?text=Product"}
                           alt={p.name}
                           fill
-                          className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+                          className={`object-contain p-2 transition-transform duration-300 ${
+                            isOutOfStock ? "grayscale-[20%] group-hover:scale-100" : "group-hover:scale-105"
+                          }`}
                           unoptimized
                         />
-                        {hasDiscount && (
+                        {hasDiscount && !isOutOfStock && (
                           <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded shadow-sm">
                             SALE
                           </span>
                         )}
-                        {/* Cadopoints badge hidden */}
+                        {isOutOfStock && (
+                          <span className="absolute top-3 left-3 bg-[#06091F] text-[#F5D800] border border-[#F5D800]/40 text-[10px] font-black uppercase px-2.5 py-1 rounded-md shadow-md tracking-wider">
+                            OUT OF STOCK
+                          </span>
+                        )}
                       </div>
                       <div className="p-4 flex-1 flex flex-col justify-between">
                         <div>
-                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                            {p.brand?.name || "Cavista Cellar"}
-                          </p>
+                          <div className="flex items-center justify-between">
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                              {p.brand?.name || "Cavista Cellar"}
+                            </p>
+                            {isOutOfStock && (
+                              <span className="text-[10px] font-bold text-red-500 uppercase">
+                                Out of Stock
+                              </span>
+                            )}
+                          </div>
                           <h3 className="font-bold text-[#06091F] text-sm leading-snug mt-1 group-hover:text-[#1C2E5E] transition-colors line-clamp-2">
                             {p.name}
                           </h3>
@@ -323,9 +339,15 @@ export default async function ProductsPage(props: PageProps) {
                               {Number(displayPrice).toLocaleString('fr-FR')} TND
                             </span>
                           </div>
-                          <span className="text-[10px] text-[#06091F] bg-[#F5D800] group-hover:bg-[#06091F] group-hover:text-white px-3 py-1.5 rounded-md font-bold transition-all">
-                            View Details
-                          </span>
+                          {isOutOfStock ? (
+                            <span className="text-[10px] text-gray-500 bg-gray-100 px-3 py-1.5 rounded-md font-bold transition-all">
+                              Out of Stock
+                            </span>
+                          ) : (
+                            <span className="text-[10px] text-[#06091F] bg-[#F5D800] group-hover:bg-[#06091F] group-hover:text-white px-3 py-1.5 rounded-md font-bold transition-all">
+                              View Details
+                            </span>
+                          )}
                         </div>
                       </div>
                     </Link>

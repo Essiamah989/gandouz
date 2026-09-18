@@ -120,14 +120,26 @@ export default function ProductClient({ product }: { product: any }) {
 
 
 
-              <div className="mt-6 flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${
-                  product.stock > 0 ? "bg-green-500" : "bg-red-500"
-                }`} />
-                <span className="text-xs font-semibold text-gray-600">
-                  {product.stock > 0 ? `${product.stock} items available in stock` : "Out of stock"}
-                </span>
-              </div>
+              {(() => {
+                const isOutOfStock = product.isActive === false || (product.stock !== undefined && product.stock <= 0);
+                return (
+                  <div className="mt-6 flex items-center gap-2">
+                    <span className={`w-2.5 h-2.5 rounded-full ${
+                      !isOutOfStock ? "bg-green-500 ring-4 ring-green-100" : "bg-red-500 ring-4 ring-red-100"
+                    }`} />
+                    <span className="text-xs font-semibold text-gray-700">
+                      {!isOutOfStock
+                        ? `${product.stock ?? 20} items available in stock`
+                        : "Out of stock / Actuellement indisponible"}
+                    </span>
+                    {isOutOfStock && (
+                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black bg-red-100 text-red-700 uppercase tracking-wider">
+                        Out of Stock
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="mt-8 pt-6 border-t border-gray-100">
@@ -142,34 +154,41 @@ export default function ProductClient({ product }: { product: any }) {
                 )}
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
-                  <button
-                    onClick={() => setQty(Math.max(1, qty - 1))}
-                    className="px-3.5 py-3 hover:bg-gray-100 font-semibold text-gray-600 text-sm transition-colors"
-                  >
-                    -
-                  </button>
-                  <span className="px-4 py-3 text-sm font-bold text-[#06091F] min-w-[40px] text-center">
-                    {qty}
-                  </span>
-                  <button
-                    onClick={() => setQty(qty + 1)}
-                    className="px-3.5 py-3 hover:bg-gray-100 font-semibold text-gray-600 text-sm transition-colors"
-                  >
-                    +
-                  </button>
-                </div>
+              {(() => {
+                const isOutOfStock = product.isActive === false || (product.stock !== undefined && product.stock <= 0);
+                return (
+                  <div className="flex gap-4">
+                    <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+                      <button
+                        onClick={() => setQty(Math.max(1, qty - 1))}
+                        disabled={isOutOfStock}
+                        className="px-3.5 py-3 hover:bg-gray-100 font-semibold text-gray-600 text-sm transition-colors disabled:opacity-40"
+                      >
+                        -
+                      </button>
+                      <span className="px-4 py-3 text-sm font-bold text-[#06091F] min-w-[40px] text-center">
+                        {isOutOfStock ? 0 : qty}
+                      </span>
+                      <button
+                        onClick={() => setQty(qty + 1)}
+                        disabled={isOutOfStock}
+                        className="px-3.5 py-3 hover:bg-gray-100 font-semibold text-gray-600 text-sm transition-colors disabled:opacity-40"
+                      >
+                        +
+                      </button>
+                    </div>
 
-                <button
-                  onClick={handleAddToCart}
-                  disabled={product.stock <= 0}
-                  className="btn-gold flex-1 flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed uppercase"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  {added ? "Item Added!" : "Add to Cart"}
-                </button>
-              </div>
+                    <button
+                      onClick={handleAddToCart}
+                      disabled={isOutOfStock}
+                      className="btn-gold flex-1 flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 uppercase"
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      {isOutOfStock ? "Out of Stock" : added ? "Item Added!" : "Add to Cart"}
+                    </button>
+                  </div>
+                );
+              })()}
 
               <div className="mt-6 grid grid-cols-1 gap-4 text-center">
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">

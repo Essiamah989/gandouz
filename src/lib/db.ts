@@ -176,13 +176,17 @@ export async function getProducts(options: {
   brandSlug?: string;
   search?: string;
   featuredOnly?: boolean;
+  activeOnly?: boolean;
   limit?: number;
 } = {}) {
-  const { categorySlug, brandSlug, search, featuredOnly, limit } = options;
+  const { categorySlug, brandSlug, search, featuredOnly, activeOnly, limit } = options;
 
   if (isRealDbAvailable()) {
     try {
-      const where: any = { isActive: true };
+      const where: any = {};
+      if (activeOnly) {
+        where.isActive = true;
+      }
       if (categorySlug) {
         where.category = { slug: categorySlug };
       }
@@ -216,7 +220,10 @@ export async function getProducts(options: {
 
   // MOCK FALLBACK
   const db = readMockDb();
-  let filtered = [...db.products].filter(p => p.isActive !== false);
+  let filtered = [...db.products];
+  if (activeOnly) {
+    filtered = filtered.filter(p => p.isActive !== false);
+  }
 
   if (categorySlug) {
     const category = db.categories.find((c: any) => c.slug === categorySlug);
