@@ -4,18 +4,20 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Package, ShoppingBag, Tag, BarChart3, Settings, ArrowRight,
-  Ticket, TrendingUp, DollarSign, Clock, CheckCircle, Truck,
+  Ticket, TrendingUp, DollarSign, Clock, CheckCircle, Truck, Star,
+  Layers, CheckCircle2, XCircle
 } from "lucide-react";
 
 type Order = { id: string; total: number; status: string; createdAt: string; customerName: string; orderNumber: string };
 
 const adminNav = [
-  { icon: ShoppingBag, title: "Orders", desc: "View, validate, and manage all customer orders.", href: "/admin/orders", id: "admin-card-orders" },
-  { icon: Package,     title: "Products",  desc: "Add, edit, and manage your product catalog.",       href: "/admin/products",    id: "admin-card-products" },
-  { icon: Tag,         title: "Categories & Brands", desc: "Organise your catalog with categories and brands.", href: "/admin/categories", id: "admin-card-categories" },
-  { icon: Ticket,      title: "Promotions", desc: "Discount codes and promo campaigns.",              href: "/admin/promotions",  id: "admin-card-promotions" },
-  { icon: BarChart3,   title: "Analytics", desc: "Sales reports, order trends and performance.",      href: "/admin/analytics",   id: "admin-card-analytics" },
-  { icon: Settings,    title: "Settings",  desc: "Shipping fees, loyalty rate, contact details.",     href: "/admin/settings",    id: "admin-card-settings" },
+  { icon: ShoppingBag, title: "Commandes", desc: "Consulter, valider et gérer toutes les commandes clients.", href: "/admin/orders", id: "admin-card-orders" },
+  { icon: Package,     title: "Produits",  desc: "Ajouter, modifier le stock et gérer le catalogue de produits.",       href: "/admin/products",    id: "admin-card-products" },
+  { icon: Tag,         title: "Catégories & Marques", desc: "Organiser le catalogue avec vos catégories et marques.", href: "/admin/categories", id: "admin-card-categories" },
+  { icon: Ticket,      title: "Promotions", desc: "Codes promotionnels, remises et campagnes marketing.",              href: "/admin/promotions",  id: "admin-card-promotions" },
+  { icon: BarChart3,   title: "Analytiques", desc: "Rapports des ventes, tendances et chiffre d'affaires.",      href: "/admin/analytics",   id: "admin-card-analytics" },
+  { icon: Star,        title: "Témoignages", desc: "Modérer et publier les avis clients vérifiés.",              href: "/admin/testimonials", id: "admin-card-testimonials" },
+  { icon: Settings,    title: "Paramètres",  desc: "Frais de livraison, fidélité et coordonnées du magasin.",     href: "/admin/settings",    id: "admin-card-settings" },
 ];
 
 export default function AdminDashboardPage() {
@@ -32,51 +34,61 @@ export default function AdminDashboardPage() {
   const totalRevenue = orders.filter(o => o.status !== "CANCELLED").reduce((s, o) => s + Number(o.total || 0), 0);
   const pending      = orders.filter(o => ["PENDING", "PENDING_VALIDATION"].includes(o.status)).length;
   const delivered    = orders.filter(o => o.status === "DELIVERED").length;
-  const recent       = [...orders].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 5);
+  const recent       = [...orders].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()).slice(0, 6);
 
   const kpis = [
-    { label: "Total Orders", value: loading ? "—" : orders.length, sub: "All time", color: "text-[#1C2E5E]", bg: "bg-[#1C2E5E]/5", icon: ShoppingBag },
-    { label: "Pending", value: loading ? "—" : pending, sub: "Need review", color: "text-yellow-600", bg: "bg-yellow-50", icon: Clock },
-    { label: "Revenue", value: loading ? "—" : `${totalRevenue.toFixed(0)} TND`, sub: "Non-cancelled", color: "text-green-600", bg: "bg-green-50", icon: DollarSign },
-    { label: "Delivered", value: loading ? "—" : delivered, sub: "Completed", color: "text-gray-700", bg: "bg-gray-50", icon: Truck },
+    { label: "Total Commandes", value: loading ? "—" : orders.length, sub: "Toutes périodes", color: "text-[#1C2E5E]", bg: "bg-[#1C2E5E]/5", icon: ShoppingBag },
+    { label: "En Attente", value: loading ? "—" : pending, sub: "Nécessite validation", color: "text-amber-600", bg: "bg-amber-50", icon: Clock },
+    { label: "Chiffre d'Affaires", value: loading ? "—" : `${totalRevenue.toFixed(3)} TND`, sub: "Commandes valides", color: "text-emerald-600", bg: "bg-emerald-50", icon: DollarSign },
+    { label: "Livrées", value: loading ? "—" : delivered, sub: "Commandes finalisées", color: "text-gray-700", bg: "bg-gray-50", icon: Truck },
   ];
 
+  const STATUS_LABEL: Record<string, string> = {
+    PENDING: "En attente",
+    PENDING_VALIDATION: "En attente de validation",
+    VALIDATED: "Validée",
+    PREPARING: "En préparation",
+    READY: "Prête",
+    DELIVERED: "Livrée",
+    CANCELLED: "Annulée",
+  };
+
   const STATUS_COLOR: Record<string, string> = {
-    PENDING: "bg-yellow-100 text-yellow-700",
-    PENDING_VALIDATION: "bg-yellow-100 text-yellow-700",
-    VALIDATED: "bg-blue-100 text-blue-700",
-    PREPARING: "bg-purple-100 text-purple-700",
-    READY: "bg-green-100 text-green-700",
-    DELIVERED: "bg-gray-100 text-gray-700",
-    CANCELLED: "bg-red-100 text-red-700",
+    PENDING: "bg-amber-100 text-amber-800 border-amber-200",
+    PENDING_VALIDATION: "bg-amber-100 text-amber-800 border-amber-200",
+    VALIDATED: "bg-blue-100 text-blue-800 border-blue-200",
+    PREPARING: "bg-purple-100 text-purple-800 border-purple-200",
+    READY: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    DELIVERED: "bg-gray-100 text-gray-700 border-gray-200",
+    CANCELLED: "bg-rose-100 text-rose-800 border-rose-200",
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#F8FAFC]">
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8">
-        <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Distribution Gandouz</p>
-        <h1 className="text-4xl font-extrabold text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-          ADMIN DASHBOARD
+      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10">
+        <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Distribution Gandouz · Administration</p>
+        <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+          TABLEAU DE BORD
         </h1>
-        <p className="text-white/50 text-sm mt-1">Welcome back — here's your store at a glance</p>
+        <p className="text-white/60 text-xs mt-1">Bienvenue — Vue d'ensemble en temps réel de votre activité commerciale</p>
       </div>
 
       <div className="px-8 py-6 space-y-6">
         {/* KPIs */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {kpis.map(k => (
-            <div key={k.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <div key={k.label} className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">{k.label}</p>
-                  <p className={`text-2xl font-extrabold ${k.color}`} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                  <p className="text-xs text-gray-500 font-semibold mb-1">{k.label}</p>
+                  <p className={`text-2xl font-black ${k.color}`} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                     {k.value}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">{k.sub}</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">{k.sub}</p>
                 </div>
-                <div className={`w-9 h-9 rounded-xl ${k.bg} flex items-center justify-center`}>
-                  <k.icon className={`w-4 h-4 ${k.color}`} />
+                <div className={`w-10 h-10 rounded-xl ${k.bg} flex items-center justify-center`}>
+                  <k.icon className={`w-5 h-5 ${k.color}`} />
                 </div>
               </div>
             </div>
@@ -91,19 +103,17 @@ export default function AdminDashboardPage() {
                 key={id}
                 href={href}
                 id={id}
-                className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm hover:shadow-md hover:border-[#F5D800]/40 group flex flex-col gap-3 transition-all"
+                className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs hover:shadow-md hover:border-[#F5D800]/50 group flex flex-col justify-between gap-3 transition-all"
               >
-                <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-[#06091F] flex items-center justify-center group-hover:bg-[#1C2E5E] transition-colors">
-                    <Icon className="w-4.5 h-4.5 text-[#F5D800]" />
-                  </div>
-                </div>
                 <div>
-                  <h3 className="font-bold text-[#06091F] text-sm mb-0.5">{title}</h3>
+                  <div className="w-10 h-10 rounded-xl bg-[#06091F] flex items-center justify-center group-hover:bg-[#1C2E5E] transition-colors mb-3">
+                    <Icon className="w-5 h-5 text-[#F5D800]" />
+                  </div>
+                  <h3 className="font-bold text-[#06091F] text-base mb-1">{title}</h3>
                   <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
                 </div>
-                <div className="flex items-center gap-1 text-[#1C2E5E] group-hover:text-[#F5D800] transition-colors text-xs font-semibold mt-auto">
-                  Open {title} <ArrowRight className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1 text-[#06091F] group-hover:text-[#F5D800] transition-colors text-xs font-bold pt-2 border-t border-gray-100">
+                  Accéder à {title} <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </Link>
             ))}
@@ -111,34 +121,34 @@ export default function AdminDashboardPage() {
 
           {/* Recent Orders */}
           <div className="xl:col-span-1">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                <h2 className="font-bold text-[#06091F] text-sm">Recent Orders</h2>
-                <Link href="/admin/orders" className="text-xs text-[#1C2E5E] hover:text-[#F5D800] font-semibold transition-colors">
-                  View all →
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="font-bold text-[#06091F] text-sm uppercase tracking-wide">Commandes Récentes</h2>
+                <Link href="/admin/orders" className="text-xs text-[#1C2E5E] hover:text-[#F5D800] font-bold transition-colors">
+                  Voir tout →
                 </Link>
               </div>
               {loading ? (
-                <div className="py-10 text-center text-gray-400 text-sm">Loading...</div>
+                <div className="py-12 text-center text-gray-400 text-xs font-medium">Chargement des commandes...</div>
               ) : recent.length === 0 ? (
-                <div className="py-10 text-center text-gray-400 text-sm">No orders yet.</div>
+                <div className="py-12 text-center text-gray-400 text-xs font-medium">Aucune commande pour le moment.</div>
               ) : (
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-gray-100">
                   {recent.map(o => (
                     <Link
                       key={o.id}
                       href="/admin/orders"
-                      className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-between px-5 py-3.5 hover:bg-gray-50/80 transition-colors"
                     >
-                      <div>
+                      <div className="min-w-0 pr-3">
                         <p className="text-xs font-bold text-[#06091F]">#{o.orderNumber}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">{o.customerName}</p>
+                        <p className="text-xs text-gray-500 truncate mt-0.5">{o.customerName || "Client"}</p>
                       </div>
-                      <div className="text-right">
-                        <span className={`inline-flex text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_COLOR[o.status] || "bg-gray-100 text-gray-600"}`}>
-                          {o.status?.replace(/_/g, " ")}
+                      <div className="text-right shrink-0">
+                        <span className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full border ${STATUS_COLOR[o.status] || "bg-gray-100 text-gray-700"}`}>
+                          {STATUS_LABEL[o.status] || o.status}
                         </span>
-                        <p className="text-xs font-bold text-[#06091F] mt-0.5">{Number(o.total || 0).toFixed(3)} TND</p>
+                        <p className="text-xs font-black text-[#06091F] mt-1">{Number(o.total || 0).toFixed(3)} TND</p>
                       </div>
                     </Link>
                   ))}

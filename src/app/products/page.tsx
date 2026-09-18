@@ -5,8 +5,8 @@ import Image from "next/image";
 import { getProducts, getCategories, getBrands } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Shop Wine & Spirits Catalog",
-  description: "Browse premium champagnes, wines, beers, and bar accessories.",
+  title: "Catalogue des Vins & Spiritueux - Distribution Gandouz",
+  description: "Parcourez notre sélection de champagnes, vins d'exception, bières et accessoires.",
 };
 
 type PageProps = {
@@ -28,7 +28,7 @@ export default async function ProductsPage(props: PageProps) {
   const searchQuery = searchParams.search || "";
   const activeSort = searchParams.sort || "newest";
 
-  // Fetch data from DB (mock or actual postgres)
+  // Récupération des données depuis la DB
   const categories = await getCategories();
   const brands = await getBrands();
   let products = await getProducts({
@@ -37,7 +37,7 @@ export default async function ProductsPage(props: PageProps) {
     search: searchQuery,
   });
 
-  // Perform sorting
+  // Tri
   if (activeSort === "price-asc") {
     products.sort((a: any, b: any) => {
       const pA = a.salePrice !== null ? Number(a.salePrice) : Number(a.basePrice);
@@ -54,16 +54,16 @@ export default async function ProductsPage(props: PageProps) {
 
   return (
     <div className="min-h-screen bg-[#F2F2F2]">
-      {/* Category Visual Showcase */}
+      {/* Vitrine Visuelle des Catégories */}
       <div className="bg-[#06091F] text-white py-8 border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-extrabold uppercase tracking-wider text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-              Explore Categories
+              Explorer par Catégorie
             </h2>
             {activeCategory && (
               <Link href="/products" className="text-xs text-gray-400 hover:text-white underline">
-                View All
+                Voir Tout
               </Link>
             )}
           </div>
@@ -95,11 +95,11 @@ export default async function ProductsPage(props: PageProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar Filters */}
+          {/* Filtres Barre Latérale */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Search Box */}
+            {/* Barre de Recherche */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-              <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Search Products</h3>
+              <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Rechercher un produit</h3>
               <form action={currentLocale ? `/${currentLocale}/products` : "/products"} method="GET" className="relative">
                 {activeCategory && <input type="hidden" name="category" value={activeCategory} />}
                 {activeBrand && <input type="hidden" name="brand" value={activeBrand} />}
@@ -109,15 +109,15 @@ export default async function ProductsPage(props: PageProps) {
                   name="search"
                   defaultValue={searchQuery}
                   type="text"
-                  placeholder="Type to search..."
+                  placeholder="Tapez pour rechercher..."
                   className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-[#F5D800] focus:border-transparent"
                 />
               </form>
             </div>
 
-            {/* Categories Filter */}
+            {/* Filtre Catégories */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-              <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Categories</h3>
+              <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Catégories</h3>
               <div className="flex flex-col gap-1.5 max-h-96 overflow-y-auto pr-1">
                 <Link
                   href={`/products?${new URLSearchParams({
@@ -131,7 +131,7 @@ export default async function ProductsPage(props: PageProps) {
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  All Categories
+                  Toutes les Catégories
                 </Link>
                 {categories.map((cat: any) => {
                   const catImg = cat.image || "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=600&auto=format&fit=crop";
@@ -162,9 +162,9 @@ export default async function ProductsPage(props: PageProps) {
               </div>
             </div>
 
-            {/* Brands Filter */}
+            {/* Filtre Marques */}
             <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-              <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Brands</h3>
+              <h3 className="font-bold text-[#06091F] text-sm uppercase tracking-wider mb-3">Marques</h3>
               <div className="flex flex-col gap-1.5">
                 <Link
                   href={`/products?${new URLSearchParams({
@@ -178,7 +178,7 @@ export default async function ProductsPage(props: PageProps) {
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
                 >
-                  All Brands
+                  Toutes les Marques
                 </Link>
                 {brands.map((brand: any) => (
                   <Link
@@ -202,16 +202,16 @@ export default async function ProductsPage(props: PageProps) {
             </div>
           </div>
 
-          {/* Catalog Listing */}
+          {/* Liste du Catalogue */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Sort & Stats Bar */}
+            {/* Barre de Tri & Statistiques */}
             <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
               <span className="text-xs font-semibold text-gray-500">
-                Showing {products.length} products
+                {products.length} produit{products.length > 1 ? "s" : ""} affiché{products.length > 1 ? "s" : ""}
               </span>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-gray-400">Sort by:</span>
+                <span className="text-xs font-semibold text-gray-400">Trier par :</span>
                 <div className="flex bg-gray-50 border border-gray-200 rounded-lg p-0.5">
                   <Link
                     href={`/products?${new URLSearchParams({
@@ -224,7 +224,7 @@ export default async function ProductsPage(props: PageProps) {
                       activeSort === "newest" ? "bg-[#06091F] text-white" : "text-gray-500 hover:text-gray-900"
                     }`}
                   >
-                    Newest
+                    Plus récents
                   </Link>
                   <Link
                     href={`/products?${new URLSearchParams({
@@ -237,7 +237,7 @@ export default async function ProductsPage(props: PageProps) {
                       activeSort === "price-asc" ? "bg-[#06091F] text-white" : "text-gray-500 hover:text-gray-900"
                     }`}
                   >
-                    Price: Low to High
+                    Prix : Croissant
                   </Link>
                   <Link
                     href={`/products?${new URLSearchParams({
@@ -250,23 +250,23 @@ export default async function ProductsPage(props: PageProps) {
                       activeSort === "price-desc" ? "bg-[#06091F] text-white" : "text-gray-500 hover:text-gray-900"
                     }`}
                   >
-                    Price: High to Low
+                    Prix : Décroissant
                   </Link>
                 </div>
               </div>
             </div>
 
-            {/* Grid */}
+            {/* Grille de Produits */}
             {products.length === 0 ? (
               <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 shadow-sm">
                 <RefreshCw className="w-10 h-10 text-gray-300 mx-auto mb-3 animate-spin" />
-                <h3 className="font-bold text-lg text-[#06091F]">No Products Found</h3>
-                <p className="text-gray-500 text-sm mt-1">Try resetting your filter parameters or checking your spellings.</p>
+                <h3 className="font-bold text-lg text-[#06091F]">Aucun Produit Trouvé</h3>
+                <p className="text-gray-500 text-sm mt-1">Essayez de modifier vos filtres ou de vérifier l'orthographe de votre recherche.</p>
                 <Link
                   href="/products"
                   className="mt-4 inline-flex px-6 py-2.5 bg-[#06091F] text-white font-semibold rounded-xl text-xs hover:bg-[#1C2E5E] transition-colors"
                 >
-                  Clear Filters
+                  Réinitialiser les filtres
                 </Link>
               </div>
             ) : (
@@ -297,12 +297,12 @@ export default async function ProductsPage(props: PageProps) {
                         />
                         {hasDiscount && !isOutOfStock && (
                           <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded shadow-sm">
-                            SALE
+                            PROMO
                           </span>
                         )}
                         {isOutOfStock && (
                           <span className="absolute top-3 left-3 bg-[#06091F] text-[#F5D800] border border-[#F5D800]/40 text-[10px] font-black uppercase px-2.5 py-1 rounded-md shadow-md tracking-wider">
-                            OUT OF STOCK
+                            RUPTURE DE STOCK
                           </span>
                         )}
                       </div>
@@ -310,11 +310,11 @@ export default async function ProductsPage(props: PageProps) {
                         <div>
                           <div className="flex items-center justify-between">
                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                              {p.brand?.name || "Cavista Cellar"}
+                              {p.brand?.name || "Gandouz Cave"}
                             </p>
                             {isOutOfStock && (
                               <span className="text-[10px] font-bold text-red-500 uppercase">
-                                Out of Stock
+                                Épuisé
                               </span>
                             )}
                           </div>
@@ -341,11 +341,11 @@ export default async function ProductsPage(props: PageProps) {
                           </div>
                           {isOutOfStock ? (
                             <span className="text-[10px] text-gray-500 bg-gray-100 px-3 py-1.5 rounded-md font-bold transition-all">
-                              Out of Stock
+                              Épuisé
                             </span>
                           ) : (
                             <span className="text-[10px] text-[#06091F] bg-[#F5D800] group-hover:bg-[#06091F] group-hover:text-white px-3 py-1.5 rounded-md font-bold transition-all">
-                              View Details
+                              Voir Détails
                             </span>
                           )}
                         </div>

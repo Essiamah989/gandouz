@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata = {
-  title: "Gandouz - Wines and spirits",
+  title: "Distribution Gandouz - Vins & Spiritueux",
   description: "Distribution Gandouz - Le premier distributeur de vins, spiritueux premium et événements de bar mobile en Tunisie.",
 };
 
@@ -68,10 +68,10 @@ export default async function HomePage() {
                 <div className="absolute inset-0 rounded-full bg-[#F5D800]/5 blur-3xl animate-pulse" />
                 <Image
                   src="/logo.png"
-                  alt="Cavista Brand Logo"
+                  alt="Gandouz Logo"
                   width={250}
                   height={250}
-                  className="object-contain filter invert brightness-0 invert drop-shadow-[0_10px_30px_rgba(245,216,0,0.25)]"
+                  className="object-contain filter invert brightness-0 drop-shadow-[0_10px_30px_rgba(245,216,0,0.25)]"
                   priority
                 />
               </div>
@@ -95,17 +95,17 @@ export default async function HomePage() {
               {
                 icon: ShieldCheck,
                 title: "Produits 100% Originaux",
-                desc: "Vérification directe à la source pour toutes les marques premium.",
+                desc: "Vérification directe à la source pour toutes les marques de prestige.",
               },
               {
                 icon: Truck,
                 title: "Livraison Rapide",
-                desc: "Livré en main propre en toute sécurité sous 12 heures.",
+                desc: "Livré en main propre en toute sécurité avec soin.",
               },
               {
                 icon: Clock,
                 title: "Paiement à la Livraison Sécurisé",
-                desc: "Aucune carte requise en ligne. Inspectez vos articles avant de payer.",
+                desc: "Aucun paiement en ligne requis. Inspectez vos articles avant de payer.",
               },
             ].map(({ icon: Icon, title, desc }, index) => (
               <div
@@ -129,7 +129,7 @@ export default async function HomePage() {
       <section className="py-20 bg-[#F2F2F2]" id="categories-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-[#F5D800] text-xs font-bold uppercase tracking-[0.3em] bg-[#06091F] text-gold px-3.5 py-1 rounded-full">
+            <span className="text-[#F5D800] text-xs font-bold uppercase tracking-[0.3em] bg-[#06091F] px-3.5 py-1 rounded-full">
               COLLECTIONS
             </span>
             <h2
@@ -246,12 +246,12 @@ export default async function HomePage() {
                     />
                     {hasDiscount && !isOutOfStock && (
                       <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-md shadow-sm">
-                        SALE
+                        PROMO
                       </span>
                     )}
                     {isOutOfStock && (
                       <span className="absolute top-3 left-3 bg-[#06091F] text-[#F5D800] border border-[#F5D800]/40 text-[10px] font-black uppercase px-2.5 py-1 rounded-md shadow-md tracking-wider">
-                        OUT OF STOCK
+                        RUPTURE DE STOCK
                       </span>
                     )}
                   </div>
@@ -263,7 +263,7 @@ export default async function HomePage() {
                         </p>
                         {isOutOfStock && (
                           <span className="text-[10px] font-bold text-red-500 uppercase">
-                            Out of Stock
+                            Épuisé
                           </span>
                         )}
                       </div>
@@ -306,52 +306,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ===== CADOPOINTS LOYALTY BANNER - Hidden until further notice ===== */}
-      {/*
-      <section className="py-16 bg-[#06091F] text-white relative overflow-hidden" id="loyalty-banner">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-[#F5D800] rounded-full filter blur-[120px] animate-pulse" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-12 p-8 lg:p-12 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-md">
-            <div className="flex-1 text-center lg:text-left">
-              <span className="inline-flex items-center gap-1.5 bg-[#F5D800]/10 border border-[#F5D800]/25 text-[#F5D800] text-xs font-black uppercase tracking-wider px-3.5 py-1 rounded-full mb-4">
-                <Gift className="w-3.5 h-3.5" />
-                PROGRAMME DE FIDÉLITÉ
-              </span>
-              <h2 className="text-4xl lg:text-5xl font-black mb-4 uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                Découvrez les <span className="text-[#F5D800]">Cadopoints</span>
-              </h2>
-              <p className="text-white/70 text-base max-w-2xl leading-relaxed mb-6">
-                Chaque achat vous rapporte des Cadopoints ! Cumulez des points sur chaque commande et échangez-les lors du paiement pour obtenir des réductions ou des accessoires. 1 Cadopoint équivaut à 1 TND de récompense de fidélité.
-              </p>
-              <div className="flex items-center justify-center lg:justify-start gap-8 flex-wrap">
-                <div className="text-left">
-                  <span className="text-3xl font-black text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>1 CADOPOINT</span>
-                  <p className="text-xs text-white/50">par 1 TND Dépensé</p>
-                </div>
-                <div className="w-px h-10 bg-white/20 hidden sm:block" />
-                <div className="text-left">
-                  <span className="text-3xl font-black text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>100% GRATUIT</span>
-                  <p className="text-xs text-white/50">Inscription Automatique</p>
-                </div>
-              </div>
-            </div>
-            <div className="shrink-0 flex flex-col items-center justify-center bg-[#F5D800] text-[#06091F] p-8 rounded-2xl shadow-xl w-64 text-center">
-              <Trophy className="w-12 h-12 mb-3 text-[#06091F]" />
-              <h3 className="font-black text-xl leading-none">REJOINDRE</h3>
-              <p className="text-xs opacity-75 mt-1">Commencez à cumuler des points dès votre premier achat</p>
-              <Link href="/products" className="bg-[#06091F] text-white w-full py-2.5 rounded-lg text-sm font-bold mt-5 hover:bg-[#1C2E5E] transition-colors block">
-                Faire des Achats
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-      */}
-
-
 
       {/* ===== CLIENT TESTIMONIALS ===== */}
       <section className="py-20 bg-white" id="testimonials">

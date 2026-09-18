@@ -15,7 +15,7 @@ export default function Footer() {
                 alt="Distribution Gandouz"
                 width={48}
                 height={48}
-                className="object-contain invert brightness-0 invert"
+                className="object-contain invert brightness-0"
               />
               <div>
                 <p className="font-bold text-lg text-[#F5D800]" style={{ fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: "0.1em" }}>
@@ -26,20 +26,20 @@ export default function Footer() {
                 </p>
               </div>
             </Link>
-            <p className="text-sm text-white/60 leading-relaxed">
-              Your trusted distribution partner, delivering quality products with reliability and speed.
+            <p className="text-sm text-white/70 leading-relaxed">
+              Votre partenaire de confiance en Tunisie pour la distribution de vins, bières, champagnes et spiritueux de prestige.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[#F5D800] font-semibold text-sm uppercase tracking-widest mb-4">Quick Links</h3>
-            <ul className="flex flex-col gap-2">
+            <h3 className="text-[#F5D800] font-bold text-sm uppercase tracking-widest mb-4">Liens Rapides</h3>
+            <ul className="flex flex-col gap-2.5">
               {[
-                { href: "/", label: "Home" },
-                { href: "/products", label: "Products" },
-                { href: "/#categories-section", label: "Categories" },
-                { href: "/about", label: "About Us" },
+                { href: "/", label: "Accueil" },
+                { href: "/products", label: "Tous les Produits" },
+                { href: "/#categories-section", label: "Catégories" },
+                { href: "/about", label: "À Propos & Emplacement" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-white/70 hover:text-[#F5D800] transition-colors">
@@ -52,12 +52,13 @@ export default function Footer() {
 
           {/* Customer */}
           <div>
-            <h3 className="text-[#F5D800] font-semibold text-sm uppercase tracking-widest mb-4">Customer</h3>
-            <ul className="flex flex-col gap-2">
+            <h3 className="text-[#F5D800] font-bold text-sm uppercase tracking-widest mb-4">Espace Client</h3>
+            <ul className="flex flex-col gap-2.5">
               {[
-                { href: "/cart", label: "Shopping Cart" },
-                { href: "/checkout", label: "Checkout" },
-                { href: "/account", label: "Track Order" },
+                { href: "/cart", label: "Mon Panier" },
+                { href: "/checkout", label: "Passer Commande" },
+                { href: "/account", label: "Mes Commandes & Points" },
+                { href: "/faq", label: "Foire Aux Questions" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="text-sm text-white/70 hover:text-[#F5D800] transition-colors">
@@ -70,21 +71,21 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-[#F5D800] font-semibold text-sm uppercase tracking-widest mb-4">Contact</h3>
+            <h3 className="text-[#F5D800] font-bold text-sm uppercase tracking-widest mb-4">Contact & Dépôt</h3>
             <ul className="flex flex-col gap-3">
-              <li className="flex items-center gap-2 text-sm text-white/70">
-                <MapPin className="w-4 h-4 text-[#F5D800] shrink-0" />
-                <span>La Goulette</span>
+              <li className="flex items-start gap-2 text-sm text-white/80">
+                <MapPin className="w-4 h-4 text-[#F5D800] shrink-0 mt-0.5" />
+                <span>Khéreddine / Le Kram / La Goulette, Tunis</span>
               </li>
-              <li className="flex items-start gap-2 text-sm text-white/70">
+              <li className="flex items-start gap-2 text-sm text-white/80">
                 <Phone className="w-4 h-4 text-[#F5D800] shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1">
-                  <a href="tel:+21654333612" className="hover:text-[#F5D800] transition-colors">+216 54333612</a>
-                  <a href="tel:+21654555712" className="hover:text-[#F5D800] transition-colors">+216 54555712</a>
-                  <a href="tel:+21654555885" className="hover:text-[#F5D800] transition-colors">+216 54555885</a>
+                  <a href="tel:+21654333612" className="hover:text-[#F5D800] transition-colors">+216 54 333 612</a>
+                  <a href="tel:+21654555712" className="hover:text-[#F5D800] transition-colors">+216 54 555 712</a>
+                  <a href="tel:+21654555885" className="hover:text-[#F5D800] transition-colors">+216 54 555 885</a>
                 </div>
               </li>
-              <li className="flex items-center gap-2 text-sm text-white/70">
+              <li className="flex items-center gap-2 text-sm text-white/80">
                 <Mail className="w-4 h-4 text-[#F5D800] shrink-0" />
                 <a href="mailto:contact.gandouz@gmail.com" className="hover:text-[#F5D800] transition-colors">
                   contact.gandouz@gmail.com
@@ -92,7 +93,7 @@ export default function Footer() {
               </li>
             </ul>
 
-            {/* Social — explicit buttons (no dynamic icon mapping to avoid undefined issues) */}
+            {/* Social */}
             <div className="flex items-center gap-3 mt-5">
               <a
                 id="footer-facebook"
@@ -136,11 +137,11 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} Distribution Gandouz. Powered by MSDI Soft All rights reserved.
+          <p className="text-xs text-white/50">
+            © {new Date().getFullYear()} Distribution Gandouz. Tous droits réservés.
           </p>
-          <p className="text-xs text-white/40">
-            No online payment — all orders are processed manually.
+          <p className="text-xs text-white/50">
+            Paiement sécurisé à la livraison — Toutes les commandes sont traitées avec soin.
           </p>
         </div>
       </div>

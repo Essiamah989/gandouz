@@ -7,7 +7,6 @@ import { useCartStore } from "@/lib/store/cart";
 import { Star, Trophy, ShoppingCart, ArrowLeft, ShieldCheck, Sparkles, Heart } from "lucide-react";
 
 export default function ProductClient({ product }: { product: any }) {
-
   const [selectedImage, setSelectedImage] = useState<string>(
     product?.images && product.images.length > 0 ? product.images[0] : ""
   );
@@ -19,10 +18,10 @@ export default function ProductClient({ product }: { product: any }) {
   if (!product) {
     return (
       <div className="min-h-screen bg-[#F2F2F2] flex flex-col items-center justify-center p-4">
-        <h2 className="text-3xl font-black text-[#06091F] uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>Product Not Found</h2>
-        <p className="text-sm text-gray-500 mt-2">The bottle or item you requested does not exist in our cellar.</p>
+        <h2 className="text-3xl font-black text-[#06091F] uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>Produit Introuvable</h2>
+        <p className="text-sm text-gray-500 mt-2">L'article que vous recherchez n'existe pas ou n'est plus disponible.</p>
         <Link href="/products" className="mt-6 btn-gold px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-          <ArrowLeft className="w-4 h-4" /> Back to Catalog
+          <ArrowLeft className="w-4 h-4" /> Retour au Catalogue
         </Link>
       </div>
     );
@@ -52,11 +51,11 @@ export default function ProductClient({ product }: { product: any }) {
     <div className="min-h-screen bg-[#F2F2F2] py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link href="/products" className="inline-flex items-center gap-2 text-xs font-bold text-gray-500 hover:text-[#06091F] mb-6 uppercase tracking-wider transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back to Shop Catalog
+          <ArrowLeft className="w-4 h-4" /> Retour au Catalogue
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 bg-white rounded-3xl p-6 lg:p-10 border border-gray-100 shadow-sm">
-          {/* Images Section */}
+          {/* Section Images */}
           <div className="lg:col-span-6 space-y-4">
             <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 p-3">
               <Image
@@ -84,17 +83,17 @@ export default function ProductClient({ product }: { product: any }) {
             )}
           </div>
 
-          {/* Details Section */}
+          {/* Section Détails */}
           <div className="lg:col-span-6 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-center">
                 <p className="text-xs font-black text-gray-400 uppercase tracking-widest">
-                  {product.brand?.name || "Premium Quality"} · {product.category?.name}
+                  {product.brand?.name || "Qualité Premium"} · {product.category?.name}
                 </p>
                 <button 
                   onClick={() => setIsWishlisted(!isWishlisted)}
                   className="p-2.5 rounded-full bg-gray-50 hover:bg-gray-100 transition-colors"
-                  aria-label="Wishlist"
+                  aria-label="Ajouter aux favoris"
                 >
                   <Heart className={`w-4 h-4 ${isWishlisted ? "fill-red-500 text-red-500" : "text-gray-400"}`} />
                 </button>
@@ -109,16 +108,13 @@ export default function ProductClient({ product }: { product: any }) {
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star key={s} className="w-3.5 h-3.5 fill-[#F5D800] text-[#F5D800]" />
                   ))}
-                  <span className="text-xs font-semibold text-gray-400 ml-1.5">(4.9 rating)</span>
+                  <span className="text-xs font-semibold text-gray-400 ml-1.5">(Avis 4.9/5)</span>
                 </div>
-                {/* Cadopoints badge hidden */}
               </div>
 
               <p className="text-sm text-gray-600 leading-relaxed mt-4">
-                {product.description || "No description provided for this cellar item."}
+                {product.description || "Aucune description détaillée n'est disponible pour ce produit."}
               </p>
-
-
 
               {(() => {
                 const isOutOfStock = product.isActive === false || (product.stock !== undefined && product.stock <= 0);
@@ -129,12 +125,12 @@ export default function ProductClient({ product }: { product: any }) {
                     }`} />
                     <span className="text-xs font-semibold text-gray-700">
                       {!isOutOfStock
-                        ? `${product.stock ?? 20} items available in stock`
-                        : "Out of stock / Actuellement indisponible"}
+                        ? `${product.stock ?? 20} articles disponibles en stock`
+                        : "Actuellement en rupture de stock"}
                     </span>
                     {isOutOfStock && (
                       <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black bg-red-100 text-red-700 uppercase tracking-wider">
-                        Out of Stock
+                        Épuisé
                       </span>
                     )}
                   </div>
@@ -184,7 +180,7 @@ export default function ProductClient({ product }: { product: any }) {
                       className="btn-gold flex-1 flex items-center justify-center gap-2 py-4 rounded-xl text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 uppercase"
                     >
                       <ShoppingCart className="w-4 h-4" />
-                      {isOutOfStock ? "Out of Stock" : added ? "Item Added!" : "Add to Cart"}
+                      {isOutOfStock ? "Rupture de Stock" : added ? "Ajouté au Panier !" : "Ajouter au Panier"}
                     </button>
                   </div>
                 );
@@ -193,7 +189,7 @@ export default function ProductClient({ product }: { product: any }) {
               <div className="mt-6 grid grid-cols-1 gap-4 text-center">
                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[#F5D800]" />
-                  <span className="text-[10px] font-bold text-gray-500">100% SECURE COD</span>
+                  <span className="text-[10px] font-bold text-gray-500">PAIEMENT 100% SÉCURISÉ À LA LIVRAISON</span>
                 </div>
               </div>
             </div>

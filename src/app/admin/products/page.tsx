@@ -114,7 +114,7 @@ export default function AdminProductsPage() {
       if (bRes.ok) setBrands(await bRes.json());
     } catch (err) {
       console.error(err);
-      showToast("error", "Failed to fetch catalog data");
+      showToast("error", "Échec du chargement du catalogue");
     } finally {
       setLoading(false);
     }
@@ -179,13 +179,13 @@ export default function AdminProductsPage() {
       });
 
       if (res.ok) {
-        showToast("success", nextState ? `"${p.name}" marked as Active` : `"${p.name}" marked as Out of Stock`);
+        showToast("success", nextState ? `"${p.name}" marqué comme Actif (En stock)` : `"${p.name}" marqué en Rupture de Stock`);
         fetchAll();
       } else {
-        showToast("error", "Failed to update product status");
+        showToast("error", "Échec de mise à jour du statut du produit");
       }
     } catch {
-      showToast("error", "Error communicating with server");
+      showToast("error", "Erreur de communication avec le serveur");
     } finally {
       setTogglingId(null);
     }
@@ -201,14 +201,14 @@ export default function AdminProductsPage() {
       setUploading(false);
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
-        setUploadError(json.error || "Upload failed");
+        setUploadError(json.error || "Échec du téléchargement");
         return null;
       }
       const { url } = await res.json();
       return url as string;
     } catch {
       setUploading(false);
-      setUploadError("Upload network error");
+      setUploadError("Erreur réseau pendant le téléchargement");
       return null;
     }
   };
@@ -253,15 +253,15 @@ export default function AdminProductsPage() {
 
       setSaving(false);
       if (res.ok) {
-        showToast("success", editId ? "Product updated successfully!" : "Product created successfully!");
+        showToast("success", editId ? "Produit modifié avec succès !" : "Produit ajouté avec succès !");
         closeModal();
         fetchAll();
       } else {
-        showToast("error", "Something went wrong.");
+        showToast("error", "Une erreur s'est produite.");
       }
     } catch {
       setSaving(false);
-      showToast("error", "Failed to save product.");
+      showToast("error", "Impossible de sauvegarder le produit.");
     }
   };
 
@@ -270,14 +270,14 @@ export default function AdminProductsPage() {
     try {
       const res = await fetch(`/api/admin/products/${deleteId}`, { method: "DELETE" });
       if (res.ok) {
-        showToast("success", "Product marked as inactive / deleted.");
+        showToast("success", "Produit désactivé (Rupture de stock).");
         closeModal();
         fetchAll();
       } else {
-        showToast("error", "Delete failed.");
+        showToast("error", "Échec de suppression.");
       }
     } catch {
-      showToast("error", "Delete failed.");
+      showToast("error", "Échec de suppression.");
     }
   };
 
@@ -380,13 +380,13 @@ export default function AdminProductsPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <p className="text-[#F5D800] text-xs font-bold uppercase tracking-widest mb-1 flex items-center gap-1.5">
-              <Package className="w-3.5 h-3.5" /> Inventory & Catalog Management
+              <Package className="w-3.5 h-3.5" /> Gestion des Stocks & Catalogue
             </p>
             <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-              PRODUCTS CATALOG
+              CATALOGUE PRODUITS
             </h1>
             <p className="text-white/60 text-xs mt-1">
-              Manage live stock, pricing, and showcase availability across your store.
+              Gérez les stocks en temps réel, les prix, et la visibilité des produits sur votre boutique.
             </p>
           </div>
 
@@ -396,7 +396,7 @@ export default function AdminProductsPage() {
             className="self-start md:self-auto flex items-center gap-2 bg-[#F5D800] hover:bg-[#ffe600] text-[#06091F] px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-[#F5D800]/10 hover:shadow-[#F5D800]/25 transition-all"
           >
             <Plus className="w-4 h-4" />
-            Add New Product
+            Ajouter un Produit
           </button>
         </div>
 
@@ -411,7 +411,7 @@ export default function AdminProductsPage() {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">Total Products</span>
+              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">Total Produits</span>
               <Layers className="w-4 h-4 text-[#F5D800]" />
             </div>
             <p className="text-2xl font-black mt-1 text-white">{totalCount}</p>
@@ -426,7 +426,7 @@ export default function AdminProductsPage() {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">In Stock</span>
+              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">En Stock</span>
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
             </div>
             <p className="text-2xl font-black mt-1 text-emerald-400">{inStockCount}</p>
@@ -441,7 +441,7 @@ export default function AdminProductsPage() {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">Out of Stock</span>
+              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">Rupture de Stock</span>
               <XCircle className="w-4 h-4 text-rose-400" />
             </div>
             <p className="text-2xl font-black mt-1 text-rose-400">{outOfStockCount}</p>
@@ -456,7 +456,7 @@ export default function AdminProductsPage() {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">On Sale</span>
+              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">En Solde</span>
               <Tag className="w-4 h-4 text-amber-400" />
             </div>
             <p className="text-2xl font-black mt-1 text-amber-400">{onSaleCount}</p>
@@ -471,7 +471,7 @@ export default function AdminProductsPage() {
             }`}
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">Featured</span>
+              <span className="text-xs uppercase tracking-wider font-semibold text-white/70">En Vedette</span>
               <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
             </div>
             <p className="text-2xl font-black mt-1 text-yellow-400">{featuredCount}</p>
@@ -481,14 +481,14 @@ export default function AdminProductsPage() {
 
       <div className="px-6 lg:px-8 py-6">
         {/* Filter Controls Bar */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm mb-6 space-y-4">
+        <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs mb-6 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             {/* Search Input */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by name, category, brand, tag, slug..."
+                placeholder="Rechercher par nom, catégorie, marque, tag, slug..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="w-full pl-10 pr-9 py-2.5 border border-gray-200 rounded-xl bg-gray-50/50 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/15 focus:border-[#06091F] transition-all"
@@ -497,6 +497,7 @@ export default function AdminProductsPage() {
                 <button
                   onClick={() => setSearch("")}
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+                  title="Effacer la recherche"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -511,7 +512,7 @@ export default function AdminProductsPage() {
                   onChange={e => setSelectedCategory(e.target.value)}
                   className="appearance-none bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 py-2.5 pl-3.5 pr-8 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#06091F]/15 cursor-pointer"
                 >
-                  <option value="">All Categories ({categories.length})</option>
+                  <option value="">Toutes les catégories ({categories.length})</option>
                   {categories.map(c => (
                     <option key={c.id} value={c.id}>
                       {c.name}
@@ -524,7 +525,7 @@ export default function AdminProductsPage() {
               <button
                 onClick={fetchAll}
                 className="p-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors"
-                title="Refresh catalog"
+                title="Actualiser le catalogue"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
               </button>
@@ -534,7 +535,7 @@ export default function AdminProductsPage() {
                   onClick={clearFilters}
                   className="text-xs font-bold text-red-600 hover:text-red-700 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors flex items-center gap-1"
                 >
-                  <X className="w-3.5 h-3.5" /> Clear Filters
+                  <X className="w-3.5 h-3.5" /> Réinitialiser les filtres
                 </button>
               )}
             </div>
@@ -543,22 +544,22 @@ export default function AdminProductsPage() {
           {/* Filter Pills */}
           <div className="flex items-center gap-2 overflow-x-auto pt-2 border-t border-gray-100 no-scrollbar">
             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mr-1 flex items-center gap-1">
-              <Filter className="w-3 h-3" /> Status:
+              <Filter className="w-3 h-3" /> Filtrer par :
             </span>
 
             {[
-              { id: "all", label: "All Products", count: totalCount },
-              { id: "in_stock", label: "In Stock Only", count: inStockCount },
-              { id: "out_of_stock", label: "Out of Stock Only", count: outOfStockCount },
-              { id: "on_sale", label: "On Sale Only", count: onSaleCount },
-              { id: "featured", label: "Featured Only", count: featuredCount },
+              { id: "all", label: "Tous les Produits", count: totalCount },
+              { id: "in_stock", label: "En Stock Uniquement", count: inStockCount },
+              { id: "out_of_stock", label: "En Rupture Uniquement", count: outOfStockCount },
+              { id: "on_sale", label: "En Solde Uniquement", count: onSaleCount },
+              { id: "featured", label: "En Vedette Uniquement", count: featuredCount },
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as FilterTab)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 ${
                   activeTab === tab.id
-                    ? "bg-[#06091F] text-[#F5D800] shadow-sm"
+                    ? "bg-[#06091F] text-[#F5D800] shadow-xs"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
@@ -574,27 +575,27 @@ export default function AdminProductsPage() {
         </div>
 
         {/* Products Table Card */}
-        <div className="bg-white rounded-2xl border border-gray-200/80 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200/80 overflow-hidden shadow-xs">
           {loading ? (
             <div className="py-24 text-center">
               <Loader2 className="w-8 h-8 text-[#06091F] animate-spin mx-auto mb-3" />
-              <p className="text-sm font-semibold text-gray-500">Loading catalog items...</p>
+              <p className="text-sm font-semibold text-gray-500">Chargement des articles du catalogue...</p>
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-24 text-center px-4">
               <div className="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-3">
                 <Package className="w-7 h-7 text-gray-400" />
               </div>
-              <h3 className="text-base font-bold text-[#06091F]">No products match your filter</h3>
+              <h3 className="text-base font-bold text-[#06091F]">Aucun produit ne correspond à vos filtres</h3>
               <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-                Try searching for a different keyword or clearing your status / category filter.
+                Essayez un autre mot-clé ou réinitialisez vos filtres de recherche.
               </p>
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
                   className="mt-4 px-4 py-2 bg-[#06091F] text-white text-xs font-bold rounded-xl hover:bg-[#1C2E5E] transition-colors"
                 >
-                  Reset all filters
+                  Réinitialiser les filtres
                 </button>
               )}
             </div>
@@ -608,7 +609,7 @@ export default function AdminProductsPage() {
                       onClick={() => handleSort("name")}
                     >
                       <div className="flex items-center gap-1.5">
-                        Product
+                        Produit
                         {sortField === "name" && (sortDir === "asc" ? <ChevronUp className="w-3.5 h-3.5 text-[#06091F]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#06091F]" />)}
                       </div>
                     </th>
@@ -617,7 +618,7 @@ export default function AdminProductsPage() {
                       onClick={() => handleSort("category")}
                     >
                       <div className="flex items-center gap-1.5">
-                        Category / Brand
+                        Catégorie / Marque
                         {sortField === "category" && (sortDir === "asc" ? <ChevronUp className="w-3.5 h-3.5 text-[#06091F]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#06091F]" />)}
                       </div>
                     </th>
@@ -626,7 +627,7 @@ export default function AdminProductsPage() {
                       onClick={() => handleSort("price")}
                     >
                       <div className="flex items-center justify-end gap-1.5">
-                        Price (TND)
+                        Prix (TND)
                         {sortField === "price" && (sortDir === "asc" ? <ChevronUp className="w-3.5 h-3.5 text-[#06091F]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#06091F]" />)}
                       </div>
                     </th>
@@ -644,7 +645,7 @@ export default function AdminProductsPage() {
                       onClick={() => handleSort("status")}
                     >
                       <div className="flex items-center justify-center gap-1.5">
-                        Status / Stock Tag
+                        Statut / Disponibilité
                         {sortField === "status" && (sortDir === "asc" ? <ChevronUp className="w-3.5 h-3.5 text-[#06091F]" /> : <ChevronDown className="w-3.5 h-3.5 text-[#06091F]" />)}
                       </div>
                     </th>
@@ -684,7 +685,7 @@ export default function AdminProductsPage() {
                               {isOutOfStock && (
                                 <div className="absolute inset-0 bg-red-950/40 flex items-center justify-center">
                                   <span className="text-[8px] font-black text-white bg-red-600 px-1 py-0.2 rounded uppercase">
-                                    OOS
+                                    ÉPUISÉ
                                   </span>
                                 </div>
                               )}
@@ -694,7 +695,7 @@ export default function AdminProductsPage() {
                                 <p className="font-bold text-[#06091F] leading-snug truncate max-w-xs">{p.name}</p>
                                 {p.isFeatured && (
                                   <span className="shrink-0 inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-yellow-100 text-yellow-800 border border-yellow-300">
-                                    ★ Featured
+                                    ★ En vedette
                                   </span>
                                 )}
                               </div>
@@ -715,7 +716,7 @@ export default function AdminProductsPage() {
                         {/* Category & Brand */}
                         <td className="px-4 py-4 hidden md:table-cell">
                           <p className="font-semibold text-gray-800 text-xs">{p.category?.name || "—"}</p>
-                          <p className="text-[11px] text-gray-400 mt-0.5">{p.brand?.name || "Generic"}</p>
+                          <p className="text-[11px] text-gray-400 mt-0.5">{p.brand?.name || "Générique"}</p>
                         </td>
 
                         {/* Price */}
@@ -743,7 +744,7 @@ export default function AdminProductsPage() {
                             }`}>
                               {p.stock ?? 0}
                             </span>
-                            <span className="text-[10px] text-gray-400 font-medium">units</span>
+                            <span className="text-[10px] text-gray-400 font-medium">unités</span>
                           </div>
                         </td>
 
@@ -754,8 +755,8 @@ export default function AdminProductsPage() {
                             <button
                               onClick={(e) => toggleActiveStatus(p, e)}
                               disabled={togglingId === p.id}
-                              title={p.isActive !== false ? "Click to set Out of Stock / Inactive" : "Click to set Active"}
-                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all shadow-sm cursor-pointer ${
+                              title={p.isActive !== false ? "Cliquer pour marquer en Rupture de Stock (Inactif)" : "Cliquer pour Activer"}
+                              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all shadow-xs cursor-pointer ${
                                 p.isActive !== false
                                   ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border border-emerald-300"
                                   : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300"
@@ -766,21 +767,21 @@ export default function AdminProductsPage() {
                               ) : (
                                 <Power className={`w-3 h-3 ${p.isActive !== false ? "text-emerald-600" : "text-gray-400"}`} />
                               )}
-                              <span>{p.isActive !== false ? "Active" : "Inactive"}</span>
+                              <span>{p.isActive !== false ? "Actif" : "Inactif"}</span>
                             </button>
 
                             {/* Stock Badge */}
                             {isOutOfStock ? (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black bg-red-600 text-white uppercase tracking-wider shadow-sm">
-                                OUT OF STOCK
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black bg-red-600 text-white uppercase tracking-wider shadow-xs">
+                                RUPTURE DE STOCK
                               </span>
                             ) : isLowStock ? (
                               <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 uppercase tracking-wider">
-                                Low Stock ({p.stock})
+                                Stock Faible ({p.stock})
                               </span>
                             ) : (
                               <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                Available
+                                Disponible
                               </span>
                             )}
                           </div>
@@ -792,14 +793,14 @@ export default function AdminProductsPage() {
                             <button
                               onClick={() => openEdit(p)}
                               className="p-2 rounded-xl hover:bg-[#06091F]/10 text-gray-600 hover:text-[#06091F] transition-colors"
-                              title="Edit product"
+                              title="Modifier le produit"
                             >
                               <Pencil className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => openDelete(p.id)}
                               className="p-2 rounded-xl hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors"
-                              title="Deactivate / Delete"
+                              title="Désactiver / Supprimer"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -822,9 +823,9 @@ export default function AdminProductsPage() {
             <div className="flex items-center justify-between px-7 pt-6 pb-4 border-b border-gray-100 bg-gray-50/50">
               <div>
                 <h2 className="text-xl font-black text-[#06091F] uppercase tracking-wide" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                  {modal === "add" ? "Add New Product" : "Edit Product Details"}
+                  {modal === "add" ? "Ajouter un Nouveau Produit" : "Modifier le Produit"}
                 </h2>
-                <p className="text-xs text-gray-500">Fill in product information, pricing, tags, and stock inventory.</p>
+                <p className="text-xs text-gray-500">Renseignez les détails du produit, son tarif, ses tags et l'état des stocks.</p>
               </div>
               <button onClick={closeModal} className="p-2 rounded-xl hover:bg-gray-200 text-gray-500 transition-colors">
                 <X className="w-5 h-5" />
@@ -835,19 +836,19 @@ export default function AdminProductsPage() {
               <div className="grid grid-cols-2 gap-4">
                 {/* Product Name */}
                 <div className="col-span-2">
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Product Name *</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Nom du Produit *</label>
                   <input
                     required
                     value={form.name}
                     onChange={e => setForm((f: any) => ({ ...f, name: e.target.value, slug: slugify(e.target.value) }))}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20"
-                    placeholder="e.g. Château Saint-Maur Cru Classé Rosé"
+                    placeholder="Ex: Château Saint-Maur Cru Classé Rosé"
                   />
                 </div>
 
                 {/* Slug */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Slug URL</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Identifiant URL (Slug)</label>
                   <input
                     value={form.slug}
                     onChange={e => setForm((f: any) => ({ ...f, slug: e.target.value }))}
@@ -857,34 +858,34 @@ export default function AdminProductsPage() {
 
                 {/* Category */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Category *</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Catégorie *</label>
                   <select
                     required
                     value={form.categoryId}
                     onChange={e => setForm((f: any) => ({ ...f, categoryId: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20"
                   >
-                    <option value="">Select category...</option>
+                    <option value="">Sélectionner une catégorie...</option>
                     {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
 
                 {/* Brand */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Brand</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Marque</label>
                   <select
                     value={form.brandId}
                     onChange={e => setForm((f: any) => ({ ...f, brandId: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20"
                   >
-                    <option value="">No brand / Generic</option>
+                    <option value="">Aucune marque / Générique</option>
                     {brands.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
                 </div>
 
                 {/* Stock Quantity */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Stock Inventory (Units) *</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Quantité en Stock (Unités) *</label>
                   <input
                     type="number"
                     min="0"
@@ -897,7 +898,7 @@ export default function AdminProductsPage() {
 
                 {/* Base Price */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Base Price (TND) *</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Prix de Base (TND) *</label>
                   <input
                     type="number"
                     step="0.001"
@@ -911,21 +912,21 @@ export default function AdminProductsPage() {
 
                 {/* Sale Price */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Sale Price (TND)</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Prix Promotionnel (TND)</label>
                   <input
                     type="number"
                     step="0.001"
                     min="0"
                     value={form.salePrice ?? ""}
                     onChange={e => setForm((f: any) => ({ ...f, salePrice: e.target.value }))}
-                    placeholder="Leave empty if no discount"
+                    placeholder="Laisser vide si pas de réduction"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20"
                   />
                 </div>
 
                 {/* Loyalty Points */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Loyalty Points</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Points de Fidélité Gagnés</label>
                   <input
                     type="number"
                     min="0"
@@ -937,30 +938,30 @@ export default function AdminProductsPage() {
 
                 {/* Tags */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Tags (comma separated)</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Tags (séparés par virgule)</label>
                   <input
                     value={form.tags}
                     onChange={e => setForm((f: any) => ({ ...f, tags: e.target.value }))}
-                    placeholder="wine, champagne, prestige"
+                    placeholder="vin, champagne, rouge, reserve"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20"
                   />
                 </div>
 
                 {/* Description */}
                 <div className="col-span-2">
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Description</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Description Détaillée</label>
                   <textarea
                     rows={3}
                     value={form.description}
                     onChange={e => setForm((f: any) => ({ ...f, description: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20 resize-none"
-                    placeholder="Product tasting notes, origin, alcohol percentage, pairings..."
+                    placeholder="Notes de dégustation, cépages, degré d'alcool, conseils d'accords mets & vins..."
                   />
                 </div>
 
                 {/* Product Images */}
                 <div className="col-span-2">
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Product Images</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Photos du Produit</label>
 
                   {/* Drag-and-drop upload zone */}
                   <div
@@ -989,15 +990,15 @@ export default function AdminProductsPage() {
                     {uploading ? (
                       <>
                         <Loader2 className="w-8 h-8 text-[#06091F] animate-spin" />
-                        <p className="text-sm font-medium text-[#06091F]">Uploading image...</p>
+                        <p className="text-sm font-medium text-[#06091F]">Téléchargement de la photo...</p>
                       </>
                     ) : (
                       <>
                         <div className="w-12 h-12 rounded-xl bg-[#06091F]/5 flex items-center justify-center">
                           <ImagePlus className="w-6 h-6 text-[#06091F]/60" />
                         </div>
-                        <p className="text-sm font-bold text-gray-700">Drop images here or <span className="text-[#06091F] underline">browse files</span></p>
-                        <p className="text-xs text-gray-400">JPEG, PNG, WebP, GIF · Max 5 MB each</p>
+                        <p className="text-sm font-bold text-gray-700">Glissez vos images ici ou <span className="text-[#06091F] underline">parcourez vos fichiers</span></p>
+                        <p className="text-xs text-gray-400">JPEG, PNG, WebP, GIF · Max 5 Mo par fichier</p>
                       </>
                     )}
                   </div>
@@ -1012,7 +1013,7 @@ export default function AdminProductsPage() {
                   {form.images.filter((u: string) => u.trim()).length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-2">
                       {form.images.filter((u: string) => u.trim()).map((url: string, idx: number) => (
-                        <div key={idx} className="relative group w-20 h-20 rounded-xl overflow-hidden border border-gray-200 shadow-sm bg-gray-50">
+                        <div key={idx} className="relative group w-20 h-20 rounded-xl overflow-hidden border border-gray-200 shadow-xs bg-gray-50">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={url} alt="" className="w-full h-full object-contain p-1" />
                           <button
@@ -1029,13 +1030,13 @@ export default function AdminProductsPage() {
 
                   {/* Manual URL fallback */}
                   <div className="mt-3">
-                    <p className="text-xs text-gray-400 mb-1 flex items-center gap-1"><Upload className="w-3 h-3" /> Or paste image URLs (one per line):</p>
+                    <p className="text-xs text-gray-400 mb-1 flex items-center gap-1"><Upload className="w-3 h-3" /> Ou collez des URLs d'images (une par ligne) :</p>
                     <textarea
                       rows={2}
                       value={form.images.join("\n")}
                       onChange={e => setForm((f: any) => ({ ...f, images: e.target.value.split("\n") }))}
                       className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#06091F]/20 resize-none font-mono"
-                      placeholder="https://example.com/product-bottle.jpg"
+                      placeholder="https://example.com/bouteille.jpg"
                     />
                   </div>
                 </div>
@@ -1050,8 +1051,8 @@ export default function AdminProductsPage() {
                       className="w-4 h-4 accent-[#06091F] rounded"
                     />
                     <div>
-                      <span className="text-sm font-bold text-gray-800">Active</span>
-                      <p className="text-[11px] text-gray-400">When unchecked, product shows as Out of Stock in catalog</p>
+                      <span className="text-sm font-bold text-gray-800">Produit Actif (Disponible)</span>
+                      <p className="text-[11px] text-gray-400">Si décoché, le produit apparaîtra avec le badge "Rupture de Stock"</p>
                     </div>
                   </label>
 
@@ -1063,8 +1064,8 @@ export default function AdminProductsPage() {
                       className="w-4 h-4 accent-[#F5D800] rounded"
                     />
                     <div>
-                      <span className="text-sm font-bold text-gray-800">Featured Showcase</span>
-                      <p className="text-[11px] text-gray-400">Display prominently on homepage</p>
+                      <span className="text-sm font-bold text-gray-800">Mettre en Vedette</span>
+                      <p className="text-[11px] text-gray-400">Afficher sur la page d'accueil de la boutique</p>
                     </div>
                   </label>
                 </div>
@@ -1077,7 +1078,7 @@ export default function AdminProductsPage() {
                   onClick={closeModal}
                   className="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
                 >
-                  Cancel
+                  Annuler
                 </button>
                 <button
                   type="submit"
@@ -1085,7 +1086,7 @@ export default function AdminProductsPage() {
                   className="px-6 py-2.5 rounded-xl bg-[#06091F] text-white text-sm font-bold hover:bg-[#1C2E5E] transition-colors disabled:opacity-60 flex items-center gap-2 shadow-md"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {saving ? "Saving..." : modal === "add" ? "Create Product" : "Save Changes"}
+                  {saving ? "Enregistrement..." : modal === "add" ? "Créer le Produit" : "Enregistrer les Modifications"}
                 </button>
               </div>
             </form>
@@ -1100,22 +1101,22 @@ export default function AdminProductsPage() {
             <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center mx-auto mb-4 border border-red-100">
               <Trash2 className="w-7 h-7 text-red-500" />
             </div>
-            <h3 className="text-lg font-bold text-[#06091F] mb-1.5">Deactivate Product?</h3>
+            <h3 className="text-lg font-bold text-[#06091F] mb-1.5">Désactiver ce produit ?</h3>
             <p className="text-gray-500 text-xs leading-relaxed mb-6">
-              This product will be marked inactive and tagged as <strong>Out of Stock</strong> across the store. You can reactivate it anytime.
+              Ce produit sera marqué comme inactif et affiché avec le badge <strong>Rupture de Stock</strong> sur la boutique. Vous pourrez le réactiver à tout moment.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={closeModal}
                 className="flex-1 py-2.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                Annuler
               </button>
               <button
                 onClick={handleDelete}
                 className="flex-1 py-2.5 rounded-xl bg-red-600 text-white text-xs font-bold hover:bg-red-700 transition-colors shadow-md shadow-red-600/20"
               >
-                Deactivate
+                Désactiver
               </button>
             </div>
           </div>
