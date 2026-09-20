@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/store/cart";
 import { Star, Trophy, ShoppingCart, ArrowLeft, ShieldCheck, Sparkles, Heart } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
 export default function ProductClient({ product }: { product: any }) {
   const [selectedImage, setSelectedImage] = useState<string>(
@@ -141,11 +142,11 @@ export default function ProductClient({ product }: { product: any }) {
             <div className="mt-8 pt-6 border-t border-gray-100">
               <div className="flex items-baseline gap-2.5 mb-5">
                 <span className="text-3xl font-black text-[#06091F] tracking-tight">
-                  {currentPrice.toLocaleString('fr-FR')} TND
+                  {formatPrice(currentPrice)}
                 </span>
                 {product.salePrice !== null && product.salePrice !== undefined && (
                   <span className="text-sm text-gray-400 line-through">
-                    {Number(product.basePrice).toLocaleString('fr-FR')} TND
+                    {formatPrice(product.basePrice)}
                   </span>
                 )}
               </div>

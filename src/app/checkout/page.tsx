@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cart";
 import { ShoppingBag, User, Phone, Mail, MapPin, Building2, FileText, ArrowRight, Loader2, ShieldCheck, Tag } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
 type FormData = {
   customerName: string;
@@ -339,7 +340,7 @@ export default function CheckoutPage() {
                         <p className="text-gray-400 text-[11px] mt-0.5">Quantité : {item.quantity}</p>
                       </div>
                       <span className="font-bold text-[#06091F] shrink-0 text-xs">
-                        {(item.price * item.quantity).toLocaleString('fr-FR')} TND
+                        {formatPrice(item.price * item.quantity)}
                       </span>
                     </div>
                   ))}
@@ -374,12 +375,12 @@ export default function CheckoutPage() {
                 <div className="border-t border-gray-100 pt-4 flex flex-col gap-2.5 mb-6 text-sm">
                   <div className="flex justify-between text-gray-600">
                     <span>Sous-total</span>
-                    <span className="font-bold text-[#06091F]">{subtotal.toLocaleString('fr-FR')} TND</span>
+                    <span className="font-bold text-[#06091F]">{formatPrice(subtotal)}</span>
                   </div>
                   {discount > 0 && (
                     <div className="flex justify-between text-emerald-600 font-bold">
                       <span>Remise Promo</span>
-                      <span>-{discount.toLocaleString('fr-FR')} TND</span>
+                      <span>-{formatPrice(discount)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-gray-600">
@@ -387,12 +388,12 @@ export default function CheckoutPage() {
                     {shipping === 0 ? (
                       <span className="font-bold text-emerald-600">Gratuite</span>
                     ) : (
-                      <span className="font-bold text-[#06091F]">{shipping.toLocaleString('fr-FR')} TND</span>
+                      <span className="font-bold text-[#06091F]">{formatPrice(shipping)}</span>
                     )}
                   </div>
                   <div className="flex justify-between font-black text-[#06091F] text-xl pt-3 border-t border-gray-100 items-baseline">
                     <span>Total à Payer</span>
-                    <span>{total.toLocaleString('fr-FR')} TND</span>
+                    <span>{formatPrice(total)}</span>
                   </div>
                 </div>
 

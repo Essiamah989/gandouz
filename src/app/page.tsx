@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ShieldCheck, Truck, Clock, Star, Gift, Wine, Beer, Trophy, Calendar } from "lucide-react";
 import { getProducts, getCategories, getTestimonials } from "@/lib/db";
+import { formatPrice } from "@/lib/utils";
 
 import { getDictionary } from "@/lib/i18n";
 
@@ -16,7 +17,7 @@ export const metadata = {
 export default async function HomePage() {
   const dict = await getDictionary();
   const categories = await getCategories();
-  const featuredProducts = await getProducts({ featuredOnly: true, limit: 4 });
+  const featuredProducts = await getProducts({ featuredOnly: true, limit: 4, activeOnly: true });
   const dbTestimonials = await getTestimonials();
 
   return (
@@ -277,15 +278,15 @@ export default async function HomePage() {
                         {hasDiscount ? (
                           <div className="flex items-baseline gap-1.5">
                             <span className="text-lg font-black text-[#06091F]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                              {Number(displayPrice).toLocaleString('fr-FR')} TND
+                              {formatPrice(displayPrice)}
                             </span>
                             <span className="text-xs text-gray-400 line-through">
-                              {Number(p.basePrice).toLocaleString('fr-FR')} TND
+                              {formatPrice(p.basePrice)}
                             </span>
                           </div>
                         ) : (
                           <span className="text-lg font-black text-[#06091F]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                            {Number(displayPrice).toLocaleString('fr-FR')} TND
+                            {formatPrice(displayPrice)}
                           </span>
                         )}
                       </div>

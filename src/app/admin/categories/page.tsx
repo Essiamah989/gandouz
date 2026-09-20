@@ -1,38 +1,79 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Tag, Layers, Pencil, X, Check, AlertTriangle, Upload, Image as ImageIcon, Loader2 } from "lucide-react";
+import { Plus, Tag, Layers, Pencil, Trash2, X, Check, AlertTriangle, Upload, Image as ImageIcon, Loader2, AlertOctagon, Package } from "lucide-react";
 
-type Category = { id: string; name: string; slug: string; description?: string; image?: string };
-type Brand    = { id: string; name: string; slug: string; description?: string; logo?: string };
+type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  image?: string;
+  _count?: { products: number };
+};
+type Brand = { id: string; name: string; slug: string; description?: string; logo?: string };
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
-function ItemCard({ name, sub, image, onEdit }: { name: string; sub?: string; image?: string; onEdit: () => void }) {
+function ItemCard({
+  name,
+  sub,
+  image,
+  productCount,
+  onEdit,
+  onDelete
+}: {
+  name: string;
+  sub?: string;
+  image?: string;
+  productCount?: number;
+  onEdit: () => void;
+  onDelete?: () => void;
+}) {
   return (
     <div className="flex items-center justify-between px-5 py-4 hover:bg-gray-50/80 transition-colors">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 min-w-0">
         {image ? (
-          <img src={image} alt={name} className="w-11 h-11 rounded-xl object-contain bg-gray-50 p-1 border border-gray-200" />
+          <img src={image} alt={name} className="w-11 h-11 rounded-xl object-contain bg-gray-50 p-1 border border-gray-200 shrink-0" />
         ) : (
-          <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">
+          <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200 shrink-0">
             <ImageIcon className="w-5 h-5" />
           </div>
         )}
-        <div>
-          <p className="font-bold text-[#06091F] text-sm">{name}</p>
-          {sub && <p className="text-xs text-gray-400 font-mono mt-0.5">{sub}</p>}
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="font-bold text-[#06091F] text-sm truncate">{name}</p>
+            {productCount !== undefined && (
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                productCount > 0 ? "bg-amber-100 text-amber-900 border border-amber-200" : "bg-gray-100 text-gray-500"
+              }`}>
+                {productCount} {productCount === 1 ? "produit" : "produits"}
+              </span>
+            )}
+          </div>
+          {sub && <p className="text-xs text-gray-400 font-mono mt-0.5 truncate">{sub}</p>}
         </div>
       </div>
-      <button
-        onClick={onEdit}
-        className="p-2 rounded-xl hover:bg-[#06091F]/10 text-gray-500 hover:text-[#06091F] transition-colors"
-        title="Modifier"
-      >
-        <Pencil className="w-4 h-4" />
-      </button>
+      <div className="flex items-center gap-1 shrink-0">
+        <button
+          onClick={onEdit}
+          className="p-2 rounded-xl hover:bg-[#06091F]/10 text-gray-500 hover:text-[#06091F] transition-colors"
+          title="Modifier"
+        >
+          <Pencil className="w-4 h-4" />
+        </button>
+        {onDelete && (
+          <button
+            onClick={onDelete}
+            className="p-2 rounded-xl hover:bg-rose-50 text-gray-400 hover:text-rose-600 transition-colors"
+            title="Supprimer"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -45,13 +86,15 @@ export default function AdminCategoriesPage() {
   const [brands, setBrands]         = useState<Brand[]>([]);
   const [loading, setLoading]       = useState(true);
   const [modal, setModal]           = useState<ModalState>(EMPTY);
+  const [deleteCategoryItem, setDeleteCategoryItem] = useState<Category | null>(null);
+  const [deleting, setDeleting]     = useState(false);
   const [saving, setSaving]         = useState(false);
   const [uploading, setUploading]   = useState(false);
   const [toast, setToast]           = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
   const showToast = (type: "success" | "error", msg: string) => {
     setToast({ type, msg });
-    setTimeout(() => setToast(null), 3000);
+    setTimeout(() => setToast(null), 3500);
   };
 
   const fetchAll = useCallback(async () => {
@@ -134,6 +177,27 @@ export default function AdminCategoriesPage() {
     }
   };
 
+  const handleDeleteCategory = async () => {
+    if (!deleteCategoryItem) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/admin/categories?id=${deleteCategoryItem.id}`, {
+        method: "DELETE"
+      });
+      setDeleting(false);
+      if (res.ok) {
+        showToast("success", `La catégorie « ${deleteCategoryItem.name} » a été supprimée avec succès !`);
+        setDeleteCategoryItem(null);
+        fetchAll();
+      } else {
+        showToast("error", "Échec de la suppression de la catégorie.");
+      }
+    } catch {
+      setDeleting(false);
+      showToast("error", "Erreur réseau lors de la suppression.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       {/* Toast */}
@@ -180,15 +244,20 @@ export default function AdminCategoriesPage() {
             <div className="py-12 text-center text-gray-400 text-xs font-medium">Aucune catégorie pour le moment.</div>
           ) : (
             <div className="divide-y divide-gray-100">
-              {categories.map(c => (
-                <ItemCard
-                  key={c.id}
-                  name={c.name}
-                  sub={c.slug}
-                  image={c.image}
-                  onEdit={() => setModal({ open: true, type: "category", editId: c.id, name: c.name, slug: c.slug, description: c.description || "", logo: "", image: c.image || "" })}
-                />
-              ))}
+              {categories.map(c => {
+                const assignedProducts = c._count?.products ?? 0;
+                return (
+                  <ItemCard
+                    key={c.id}
+                    name={c.name}
+                    sub={c.slug}
+                    image={c.image}
+                    productCount={assignedProducts}
+                    onEdit={() => setModal({ open: true, type: "category", editId: c.id, name: c.name, slug: c.slug, description: c.description || "", logo: "", image: c.image || "" })}
+                    onDelete={() => setDeleteCategoryItem(c)}
+                  />
+                );
+              })}
             </div>
           )}
         </div>
@@ -233,10 +302,10 @@ export default function AdminCategoriesPage() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Add / Edit Modal */}
       {modal.open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between px-7 pt-6 pb-4 border-b border-gray-100 bg-gray-50/50">
               <h2 className="text-lg font-black text-[#06091F] uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                 {modal.editId ? "Modifier" : "Ajouter"} {modal.type === "category" ? "une Catégorie" : "une Marque"}
@@ -321,6 +390,91 @@ export default function AdminCategoriesPage() {
           </div>
         </div>
       )}
+
+      {/* Delete Category Confirmation Alert Modal */}
+      {deleteCategoryItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6 sm:p-7">
+              {/* Alert Header Icon */}
+              <div className="flex items-center gap-3.5 mb-4">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
+                  (deleteCategoryItem._count?.products ?? 0) > 0 ? "bg-amber-100 text-amber-600" : "bg-rose-100 text-rose-600"
+                }`}>
+                  {(deleteCategoryItem._count?.products ?? 0) > 0 ? (
+                    <AlertTriangle className="w-6 h-6" />
+                  ) : (
+                    <AlertOctagon className="w-6 h-6" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-[#06091F] uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                    Supprimer la Catégorie
+                  </h3>
+                  <p className="text-xs text-gray-500 font-semibold">Confirmation de suppression</p>
+                </div>
+              </div>
+
+              {/* Warning box if category has assigned products */}
+              {(deleteCategoryItem._count?.products ?? 0) > 0 ? (
+                <div className="mb-5 p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-2">
+                  <div className="flex items-center gap-2 text-amber-800 font-bold text-xs uppercase tracking-wider">
+                    <Package className="w-4 h-4 text-amber-600" />
+                    <span>Produits Assignés Détectés</span>
+                  </div>
+                  <p className="text-xs text-amber-900 leading-relaxed font-medium">
+                    ⚠️ Cette catégorie contient actuellement{" "}
+                    <span className="font-extrabold text-amber-950 bg-amber-200/80 px-1.5 py-0.5 rounded text-[13px]">
+                      {deleteCategoryItem._count?.products} produit{(deleteCategoryItem._count?.products ?? 0) > 1 ? "s" : ""}
+                    </span>{" "}
+                    assigné{(deleteCategoryItem._count?.products ?? 0) > 1 ? "s" : ""}.
+                  </p>
+                  <p className="text-[11px] text-amber-800/80 leading-relaxed">
+                    Si vous supprimez la catégorie <strong>« {deleteCategoryItem.name} »</strong>, ses produits rattachés seront également supprimés ou détachés du catalogue.
+                  </p>
+                </div>
+              ) : (
+                <div className="mb-5 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+                  <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                    Êtes-vous sûr de vouloir supprimer définitivement la catégorie <strong>« {deleteCategoryItem.name} »</strong> ?
+                  </p>
+                  <p className="text-[11px] text-gray-400 mt-1">
+                    Cette action est immédiate et irréversible.
+                  </p>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setDeleteCategoryItem(null)}
+                  disabled={deleting}
+                  className="flex-1 py-3 rounded-xl border border-gray-200 text-xs font-bold text-gray-700 hover:bg-gray-100 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteCategory}
+                  disabled={deleting}
+                  className="flex-1 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1.5"
+                >
+                  {deleting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Suppression...</span>
+                    </>
+                  ) : (
+                    <span>Supprimer la catégorie</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

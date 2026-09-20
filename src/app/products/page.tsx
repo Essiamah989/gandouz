@@ -3,6 +3,7 @@ import { Filter, Search, Star, Trophy, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getProducts, getCategories, getBrands } from "@/lib/db";
+import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Catalogue des Vins & Spiritueux - Distribution Gandouz",
@@ -28,13 +29,14 @@ export default async function ProductsPage(props: PageProps) {
   const searchQuery = searchParams.search || "";
   const activeSort = searchParams.sort || "newest";
 
-  // Récupération des données depuis la DB
+  // Récupération des données depuis la DB (produits actifs uniquement)
   const categories = await getCategories();
   const brands = await getBrands();
   let products = await getProducts({
     categorySlug: activeCategory,
     brandSlug: activeBrand,
     search: searchQuery,
+    activeOnly: true,
   });
 
   // Tri
@@ -332,11 +334,11 @@ export default async function ProductsPage(props: PageProps) {
                           <div className="flex flex-col">
                             {hasDiscount && (
                               <span className="text-[10px] text-gray-400 line-through">
-                                {Number(p.basePrice).toLocaleString('fr-FR')} TND
+                                {formatPrice(p.basePrice)}
                               </span>
                             )}
                             <span className="font-black text-[#06091F] text-sm">
-                              {Number(displayPrice).toLocaleString('fr-FR')} TND
+                              {formatPrice(displayPrice)}
                             </span>
                           </div>
                           {isOutOfStock ? (

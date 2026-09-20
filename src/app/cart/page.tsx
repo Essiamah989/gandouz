@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Trash2, Plus, Minus, ShoppingCart, ArrowRight } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
+import { formatPrice } from "@/lib/utils";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, totalPrice, totalItems } = useCartStore();
@@ -73,7 +74,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-[#06091F] text-sm leading-snug mb-1">{item.name}</h3>
-                    <p className="text-[#06091F] font-black text-base mb-3">{item.price.toLocaleString('fr-FR')} TND</p>
+                    <p className="text-[#06091F] font-black text-base mb-3">{formatPrice(item.price)}</p>
 
                     <div className="flex items-center justify-between">
                       {/* Quantity controls */}
@@ -113,7 +114,7 @@ export default function CartPage() {
 
                   <div className="text-right shrink-0 flex flex-col justify-between items-end">
                     <p className="font-black text-[#06091F] text-base">
-                      {(item.price * item.quantity).toLocaleString('fr-FR')} TND
+                      {formatPrice(item.price * item.quantity)}
                     </p>
                   </div>
                 </div>
@@ -129,24 +130,24 @@ export default function CartPage() {
                 <div className="flex flex-col gap-3 mb-6 text-sm">
                   <div className="flex justify-between text-gray-600">
                     <span>Sous-total ({totalItems()} article{totalItems() > 1 ? "s" : ""})</span>
-                    <span className="font-bold text-[#06091F]">{subtotal.toLocaleString('fr-FR')} TND</span>
+                    <span className="font-bold text-[#06091F]">{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Frais de livraison</span>
                     {shipping === 0 ? (
                       <span className="font-bold text-emerald-600">Gratuite</span>
                     ) : (
-                      <span className="font-bold text-[#06091F]">{shipping.toLocaleString('fr-FR')} TND</span>
+                      <span className="font-bold text-[#06091F]">{formatPrice(shipping)}</span>
                     )}
                   </div>
                   {shipping > 0 && (
                     <p className="text-[11px] text-gray-400">
-                      Livraison offerte dès {freeShippingThreshold} TND d'achat.
+                      Livraison offerte dès {formatPrice(freeShippingThreshold)} d'achat.
                     </p>
                   )}
                   <div className="border-t border-gray-100 pt-3 flex justify-between items-baseline">
                     <span className="font-black text-[#06091F] text-base">Total TTC</span>
-                    <span className="font-black text-[#06091F] text-2xl">{total.toLocaleString('fr-FR')} TND</span>
+                    <span className="font-black text-[#06091F] text-2xl">{formatPrice(total)}</span>
                   </div>
                 </div>
 

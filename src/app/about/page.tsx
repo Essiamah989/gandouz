@@ -85,13 +85,13 @@ export default function AboutPage() {
             <div>
               <div className="flex items-center gap-2 text-[#06091F] font-bold text-xs uppercase tracking-widest mb-1">
                 <MapPin className="w-4 h-4 text-red-500" />
-                <span>Emplacement de notre Dépôt de Distribution</span>
+                <span>Emplacement de notre Dépôt & Lieux de Distribution</span>
               </div>
               <h2 className="text-3xl lg:text-4xl font-black text-[#06091F] uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                OÙ NOUS TROUVER À TUNIS
+                RÉSEAU DE DISTRIBUTION & ACCÈS
               </h2>
               <p className="text-gray-500 text-sm mt-1">
-                Point de distribution stratégique situé entre <strong>Khéreddine, Le Kram et La Goulette</strong>.
+                Point de distribution central situé entre <strong>Khéreddine, Le Kram et La Goulette</strong> avec desserte rapide sur tout Tunis.
               </p>
             </div>
 
@@ -107,14 +107,14 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
-            {/* Map Photo Display */}
-            <div className="lg:col-span-7 relative min-h-[380px] lg:min-h-[480px] bg-gray-100 flex items-center justify-center p-3 border-b lg:border-b-0 lg:border-r border-gray-100">
-              <div className="relative w-full h-full min-h-[360px] rounded-2xl overflow-hidden shadow-inner border border-gray-200">
+            {/* Distribution List / Location Image */}
+            <div className="lg:col-span-7 relative min-h-[380px] lg:min-h-[480px] bg-gray-50 flex items-center justify-center p-4 border-b lg:border-b-0 lg:border-r border-gray-100">
+              <div className="relative w-full h-full min-h-[360px] rounded-2xl overflow-hidden shadow-sm border border-gray-200 bg-white">
                 <Image
-                  src="/store-location.jpg"
-                  alt="Plan d'accès Dépôt Distribution Gandouz - Kheredine Le Kram La Goulette"
+                  src="/distribution-list.png"
+                  alt="Plan d'accès et réseau de distribution Gandouz - Khéreddine, Le Kram, La Goulette"
                   fill
-                  className="object-contain md:object-cover"
+                  className="object-contain p-2"
                   unoptimized
                   priority
                 />
@@ -127,10 +127,10 @@ export default function AboutPage() {
                 <div>
                   <h3 className="text-xl font-bold text-[#06091F] mb-3 flex items-center gap-2">
                     <MapPin className="w-5 h-5 text-[#F5D800]" />
-                    Coordonnées & Accès
+                    Coordonnées & Accès Dépôt
                   </h3>
                   <p className="text-sm text-gray-600 leading-relaxed">
-                    Notre dépôt principal est idéalement positionné sur l'axe reliant <strong>La Goulette</strong>, <strong>Khéreddine</strong> et <strong>Le Kram</strong>, facilement accessible depuis l'Avenue Habib Bourguiba et la RR23.
+                    Notre dépôt principal est idéalement positionné sur l'axe reliant <strong>La Goulette</strong>, <strong>Khéreddine</strong> et <strong>Le Kram</strong>, facilement accessible depuis l'Avenue Habib Bourguiba et la voie rapide RR23.
                   </p>
                 </div>
 
@@ -138,7 +138,7 @@ export default function AboutPage() {
                   <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                     <MapPin className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold text-[#06091F] block text-xs uppercase tracking-wider">Adresse</span>
+                      <span className="font-bold text-[#06091F] block text-xs uppercase tracking-wider">Adresse Principale</span>
                       <span className="text-gray-600">Secteur Khéreddine / Le Kram / La Goulette, Tunis, Tunisie</span>
                     </div>
                   </div>
@@ -146,7 +146,7 @@ export default function AboutPage() {
                   <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                     <Clock className="w-4 h-4 text-[#1C2E5E] shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold text-[#06091F] block text-xs uppercase tracking-wider">Horaires d'ouverture</span>
+                      <span className="font-bold text-[#06091F] block text-xs uppercase tracking-wider">Horaires d'Ouverture</span>
                       <span className="text-gray-600">Lundi au Samedi : 09h00 – 20h00</span>
                       <span className="block text-xs text-gray-400">Dimanche : Commandes en ligne 24h/24</span>
                     </div>
@@ -155,26 +155,30 @@ export default function AboutPage() {
                   <div className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
                     <Phone className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
-                      <span className="font-bold text-[#06091F] block text-xs uppercase tracking-wider">Contact & Commandes</span>
+                      <span className="font-bold text-[#06091F] block text-xs uppercase tracking-wider">Assistance & Commandes Directes</span>
                       <span className="text-gray-600 font-semibold">+216 50 123 456 / WhatsApp disponible</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="pt-2">
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Services disponibles sur place :</span>
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Prestations & Services de Distribution :</span>
                   <div className="space-y-1.5 text-xs text-gray-600">
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Retrait rapide sur place (Click & Collect)</span>
+                      <span>Retrait immédiat au dépôt (Click & Collect)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Livraison express Grand Tunis et toute la Tunisie</span>
+                      <span>Livraison express à domicile sur le Grand Tunis et toute la Tunisie</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Paiement sécurisé à la livraison (Espèces ou Chèque)</span>
+                      <span>Paiement sécurisé à la livraison en espèces ou par chèque</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Approvisionnement événementiel et bars mobiles VIP</span>
                     </div>
                   </div>
                 </div>
@@ -184,7 +188,7 @@ export default function AboutPage() {
                 href="/contact"
                 className="w-full text-center py-3 bg-[#06091F] hover:bg-[#1C2E5E] text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
               >
-                Nous Contacter pour une Commande
+                Contacter Notre Équipe Commerciale
               </Link>
             </div>
           </div>

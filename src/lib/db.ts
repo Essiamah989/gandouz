@@ -40,14 +40,26 @@ function isRealDbAvailable(): boolean {
 export async function getCategories() {
   if (isRealDbAvailable()) {
     try {
-      return await prisma.category.findMany({
-        orderBy: { name: "asc" }
+      const cats = await prisma.category.findMany({
+        orderBy: { name: "asc" },
+        include: {
+          _count: {
+            select: { products: true }
+          }
+        }
       });
+      return cats;
     } catch (e) {
       console.warn("DB query failed, falling back to mock:", e);
     }
   }
-  return readMockDb().categories;
+  const db = readMockDb();
+  return (db.categories || []).map((cat: any) => ({
+    ...cat,
+    _count: {
+      products: (db.products || []).filter((p: any) => p.categoryId === cat.id).length
+    }
+  }));
 }
 
 export async function createCategory(data: { name: string; slug: string; description?: string; image?: string }) {
@@ -99,6 +111,32 @@ export async function updateCategory(id: string, data: { name: string; slug: str
   db.categories.push(newCat);
   writeMockDb(db);
   return newCat;
+}
+
+export async function deleteCategory(id: string) {
+  if (isRealDbAvailable()) {
+    try {
+      // Delete any associated products or foreign key references if needed
+      await prisma.product.deleteMany({
+        where: { categoryId: id }
+      });
+      return await prisma.category.delete({
+        where: { id }
+      });
+    } catch (e) {
+      console.warn("DB delete failed, falling back to mock:", e);
+    }
+  }
+  const db = readMockDb();
+  const index = db.categories.findIndex((c: any) => c.id === id);
+  if (index !== -1) {
+    const deleted = db.categories.splice(index, 1)[0];
+    // Remove or dissociate products assigned to this category
+    db.products = (db.products || []).filter((p: any) => p.categoryId !== id);
+    writeMockDb(db);
+    return deleted;
+  }
+  return null;
 }
 
 /* ==========================================================================

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCategories, createCategory, updateCategory } from "@/lib/db";
+import { getCategories, createCategory, updateCategory, deleteCategory } from "@/lib/db";
 
 export async function GET() {
   try {
@@ -36,3 +36,27 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Failed to update category" }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    let id = searchParams.get("id");
+    if (!id) {
+      try {
+        const body = await req.json();
+        id = body?.id;
+      } catch {
+        // no body
+      }
+    }
+    if (!id) {
+      return NextResponse.json({ error: "Category ID required" }, { status: 400 });
+    }
+    const deleted = await deleteCategory(id);
+    return NextResponse.json({ success: true, deleted });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "Failed to delete category" }, { status: 500 });
+  }
+}
+

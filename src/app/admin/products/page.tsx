@@ -25,6 +25,7 @@ import {
   RefreshCw,
   Power
 } from "lucide-react";
+import { formatPrice, parsePrice } from "@/lib/utils";
 
 type Product = {
   id: string;
@@ -234,8 +235,8 @@ export default function AdminProductsPage() {
     const payload = {
       ...form,
       tags: typeof form.tags === "string" ? form.tags.split(",").map((t: string) => t.trim()).filter(Boolean) : form.tags,
-      salePrice: form.salePrice === "" || form.salePrice == null ? null : Number(form.salePrice),
-      basePrice: Number(form.basePrice),
+      salePrice: form.salePrice === "" || form.salePrice == null ? null : parsePrice(form.salePrice),
+      basePrice: parsePrice(form.basePrice),
       loyaltyPoints: Number(form.loyaltyPoints || 0),
       stock: Number(form.stock || 0),
       isActive: Boolean(form.isActive),
@@ -724,15 +725,15 @@ export default function AdminProductsPage() {
                           {hasDiscount ? (
                             <div>
                               <div className="flex items-center justify-end gap-1.5">
-                                <span className="font-bold text-[#06091F]">{Number(p.salePrice).toFixed(3)} TND</span>
+                                <span className="font-bold text-[#06091F]">{formatPrice(p.salePrice)}</span>
                                 <span className="text-[10px] font-extrabold bg-red-100 text-red-700 px-1.5 py-0.2 rounded">
                                   -{discountPercent}%
                                 </span>
                               </div>
-                              <span className="block text-xs text-gray-400 line-through">{Number(p.basePrice).toFixed(3)} TND</span>
+                              <span className="block text-xs text-gray-400 line-through">{formatPrice(p.basePrice)}</span>
                             </div>
                           ) : (
-                            <span className="font-bold text-[#06091F]">{Number(p.basePrice).toFixed(3)} TND</span>
+                            <span className="font-bold text-[#06091F]">{formatPrice(p.basePrice)}</span>
                           )}
                         </td>
 
@@ -898,12 +899,12 @@ export default function AdminProductsPage() {
 
                 {/* Base Price */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Prix de Base (TND) *</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Prix de Base (DT / TND) *</label>
                   <input
-                    type="number"
-                    step="0.001"
-                    min="0"
+                    type="text"
+                    inputMode="decimal"
                     required
+                    placeholder="Ex: 12,5 ou 12.500"
                     value={form.basePrice}
                     onChange={e => setForm((f: any) => ({ ...f, basePrice: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20 font-bold"
@@ -912,14 +913,13 @@ export default function AdminProductsPage() {
 
                 {/* Sale Price */}
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Prix Promotionnel (TND)</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Prix Promotionnel (DT / TND)</label>
                   <input
-                    type="number"
-                    step="0.001"
-                    min="0"
+                    type="text"
+                    inputMode="decimal"
                     value={form.salePrice ?? ""}
                     onChange={e => setForm((f: any) => ({ ...f, salePrice: e.target.value }))}
-                    placeholder="Laisser vide si pas de réduction"
+                    placeholder="Ex: 10,5 ou laisser vide si pas de promo"
                     className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/20"
                   />
                 </div>
