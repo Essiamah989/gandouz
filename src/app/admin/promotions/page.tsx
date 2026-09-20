@@ -97,15 +97,15 @@ export default function AdminPromotionsPage() {
       )}
 
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Admin · Marketing & Fidélité</p>
-        <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           CODES PROMO & PROMOTIONS
         </h1>
         <p className="text-white/60 text-xs mt-1">Gérez vos codes de réduction, remises en pourcentage ou montants fixes</p>
       </div>
 
-      <div className="px-8 py-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-6">
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {[
@@ -113,7 +113,7 @@ export default function AdminPromotionsPage() {
             { label: "Codes Actifs", value: stats.active, color: "text-emerald-600" },
             { label: "Utilisations Totales", value: stats.used, color: "text-amber-600" },
           ].map(s => (
-            <div key={s.label} className="bg-white rounded-2xl border border-gray-200/80 shadow-xs px-6 py-5">
+            <div key={s.label} className="bg-white rounded-2xl border border-gray-200/80 shadow-xs px-5 sm:px-6 py-4 sm:py-5">
               <p className="text-xs text-gray-500 font-semibold mb-1">{s.label}</p>
               <p className={`text-3xl font-black ${s.color}`} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>{s.value}</p>
             </div>
@@ -125,7 +125,7 @@ export default function AdminPromotionsPage() {
           <button
             id="admin-add-promo-btn"
             onClick={() => setModal(true)}
-            className="flex items-center gap-2 bg-[#06091F] hover:bg-[#1C2E5E] text-[#F5D800] px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-xs"
+            className="flex items-center gap-2 bg-[#06091F] hover:bg-[#1C2E5E] text-[#F5D800] px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-xs"
           >
             <Plus className="w-4 h-4" /> Nouveau Code Promo
           </button>
@@ -141,7 +141,8 @@ export default function AdminPromotionsPage() {
               <p className="text-sm font-semibold text-gray-500">Aucun code promo créé pour le moment.</p>
             </div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[500px]">
               <thead className="bg-gray-50/80 border-b border-gray-100">
                 <tr>
                   <th className="text-left px-6 py-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Code</th>
@@ -208,6 +209,7 @@ export default function AdminPromotionsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       </div>
@@ -216,7 +218,7 @@ export default function AdminPromotionsPage() {
       {modal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 backdrop-blur-xs">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md border border-gray-100 overflow-hidden">
-            <div className="flex items-center justify-between px-7 pt-6 pb-4 border-b border-gray-100 bg-gray-50/50">
+            <div className="flex items-center justify-between px-5 sm:px-7 pt-5 sm:pt-6 pb-4 border-b border-gray-100 bg-gray-50/50">
               <h2 className="text-lg font-black text-[#06091F] uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                 Créer un Code Promo
               </h2>
@@ -224,9 +226,9 @@ export default function AdminPromotionsPage() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="px-7 py-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
+            <form onSubmit={handleSubmit} className="px-5 sm:px-7 py-5 sm:py-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Code Promo *</label>
                   <input
                     required

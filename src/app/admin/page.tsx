@@ -66,15 +66,15 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Distribution Gandouz · Administration</p>
-        <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           TABLEAU DE BORD
         </h1>
         <p className="text-white/60 text-xs mt-1">Bienvenue — Vue d'ensemble en temps réel de votre activité commerciale</p>
       </div>
 
-      <div className="px-8 py-6 space-y-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* KPIs */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {kpis.map(k => (

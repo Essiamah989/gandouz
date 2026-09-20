@@ -89,15 +89,15 @@ export default function AdminAnalyticsPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Admin · Rapports & Statistiques</p>
-        <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           ANALYTIQUES & PERFORMANCES
         </h1>
         <p className="text-white/60 text-xs mt-1">Évolution des ventes, volume des commandes et chiffre d'affaires</p>
       </div>
 
-      <div className="px-8 py-6 space-y-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {loading ? (
           <div className="py-20 text-center text-gray-400 text-xs font-medium">Chargement des statistiques...</div>
         ) : (
@@ -118,9 +118,9 @@ export default function AdminAnalyticsPage() {
                 {Object.keys(dailyRevenue).length === 0 ? (
                   <div className="h-40 flex items-center justify-center text-gray-400 text-xs font-medium">Aucune donnée pour le moment</div>
                 ) : (
-                  <div className="flex items-end gap-2 h-44 pt-4">
+                  <div className="flex items-end gap-2 h-44 pt-4 overflow-x-auto pb-2">
                     {Object.entries(dailyRevenue).slice(-10).map(([day, rev]) => (
-                      <div key={day} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+                      <div key={day} className="flex-1 min-w-[36px] flex flex-col items-center gap-1.5 h-full justify-end">
                         <span className="text-[10px] text-gray-600 font-bold">{rev.toFixed(0)}</span>
                         <div
                           className="w-full rounded-t-xl bg-gradient-to-t from-[#06091F] to-[#F5D800] transition-all shadow-xs"
@@ -172,7 +172,8 @@ export default function AdminAnalyticsPage() {
               {recentOrders.length === 0 ? (
                 <div className="py-12 text-center text-gray-400 text-xs font-medium">Aucune commande pour le moment</div>
               ) : (
-                <table className="w-full text-sm">
+                <div className="overflow-x-auto">
+                <table className="w-full text-sm min-w-[500px]">
                   <thead className="bg-gray-50/80 border-b border-gray-100">
                     <tr>
                       <th className="text-left px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">N° Commande</th>
@@ -200,6 +201,7 @@ export default function AdminAnalyticsPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               )}
             </div>
           </>

@@ -377,13 +377,13 @@ export default function AdminProductsPage() {
       )}
 
       {/* Header Banner */}
-      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <p className="text-[#F5D800] text-xs font-bold uppercase tracking-widest mb-1 flex items-center gap-1.5">
               <Package className="w-3.5 h-3.5" /> Gestion des Stocks & Catalogue
             </p>
-            <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
               CATALOGUE PRODUITS
             </h1>
             <p className="text-white/60 text-xs mt-1">
@@ -394,7 +394,7 @@ export default function AdminProductsPage() {
           <button
             onClick={openAdd}
             id="admin-add-product-btn"
-            className="self-start md:self-auto flex items-center gap-2 bg-[#F5D800] hover:bg-[#ffe600] text-[#06091F] px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-[#F5D800]/10 hover:shadow-[#F5D800]/25 transition-all"
+            className="self-start md:self-auto flex items-center gap-2 bg-[#F5D800] hover:bg-[#ffe600] text-[#06091F] px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-[#F5D800]/10 hover:shadow-[#F5D800]/25 transition-all"
           >
             <Plus className="w-4 h-4" />
             Ajouter un Produit
@@ -402,7 +402,7 @@ export default function AdminProductsPage() {
         </div>
 
         {/* KPI Summary Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 mt-6">
           <button
             onClick={() => setActiveTab("all")}
             className={`text-left p-3.5 rounded-2xl border transition-all ${
@@ -480,7 +480,7 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
-      <div className="px-6 lg:px-8 py-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-6">
         {/* Filter Controls Bar */}
         <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs mb-6 space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -819,9 +819,9 @@ export default function AdminProductsPage() {
 
       {/* Add / Edit Modal */}
       {(modal === "add" || modal === "edit") && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 overflow-y-auto py-8 px-4 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl border border-gray-100 overflow-hidden">
-            <div className="flex items-center justify-between px-7 pt-6 pb-4 border-b border-gray-100 bg-gray-50/50">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 overflow-y-auto py-4 sm:py-8 px-3 sm:px-4 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-2xl border border-gray-100 overflow-hidden my-auto">
+            <div className="flex items-center justify-between px-5 sm:px-7 pt-5 sm:pt-6 pb-4 border-b border-gray-100 bg-gray-50/50">
               <div>
                 <h2 className="text-xl font-black text-[#06091F] uppercase tracking-wide" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                   {modal === "add" ? "Ajouter un Nouveau Produit" : "Modifier le Produit"}
@@ -833,10 +833,10 @@ export default function AdminProductsPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="px-7 py-6 space-y-5">
-              <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="px-5 sm:px-7 py-5 sm:py-6 space-y-4 sm:space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
                 {/* Product Name */}
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Nom du Produit *</label>
                   <input
                     required
@@ -948,7 +948,7 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Description */}
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Description Détaillée</label>
                   <textarea
                     rows={3}
@@ -960,7 +960,7 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Product Images */}
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <label className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5 block">Photos du Produit</label>
 
                   {/* Drag-and-drop upload zone */}
@@ -997,8 +997,8 @@ export default function AdminProductsPage() {
                         <div className="w-12 h-12 rounded-xl bg-[#06091F]/5 flex items-center justify-center">
                           <ImagePlus className="w-6 h-6 text-[#06091F]/60" />
                         </div>
-                        <p className="text-sm font-bold text-gray-700">Glissez vos images ici ou <span className="text-[#06091F] underline">parcourez vos fichiers</span></p>
-                        <p className="text-xs text-gray-400">JPEG, PNG, WebP, GIF · Max 5 Mo par fichier</p>
+                        <p className="text-sm font-bold text-gray-700 text-center">Glissez vos images ici ou <span className="text-[#06091F] underline">parcourez vos fichiers</span></p>
+                        <p className="text-xs text-gray-400 text-center">JPEG, PNG, WebP, GIF · Max 5 Mo par fichier</p>
                       </>
                     )}
                   </div>
@@ -1042,7 +1042,7 @@ export default function AdminProductsPage() {
                 </div>
 
                 {/* Status switches */}
-                <div className="col-span-2 flex items-center gap-6 p-4 rounded-xl bg-gray-50 border border-gray-100">
+                <div className="col-span-1 sm:col-span-2 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 rounded-xl bg-gray-50 border border-gray-100">
                   <label className="flex items-center gap-2.5 cursor-pointer">
                     <input
                       type="checkbox"
@@ -1056,7 +1056,7 @@ export default function AdminProductsPage() {
                     </div>
                   </label>
 
-                  <label className="flex items-center gap-2.5 cursor-pointer border-l border-gray-200 pl-6">
+                  <label className="flex items-center gap-2.5 cursor-pointer sm:border-l sm:border-gray-200 sm:pl-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-200 w-full sm:w-auto">
                     <input
                       type="checkbox"
                       checked={form.isFeatured}

@@ -146,15 +146,15 @@ export default function AdminTestimonialsPage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Admin · Contenu</p>
-        <h1 className="text-4xl font-extrabold text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           TÉMOIGNAGES
         </h1>
         <p className="text-white/50 text-sm mt-1">{testimonials.length} témoignage{testimonials.length !== 1 ? "s" : ""} au total</p>
       </div>
 
-      <div className="px-8 py-6 space-y-4">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-4">
         {/* Notifications */}
         {success && (
           <div className="flex items-center gap-2 bg-green-50 text-green-700 border border-green-200 rounded-xl px-4 py-3 text-sm">
@@ -163,7 +163,7 @@ export default function AdminTestimonialsPage() {
         )}
 
         {/* Actions */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <p className="text-sm text-gray-500">Gérez les témoignages affichés sur la page d'accueil.</p>
           <button
             id="admin-testimonials-add"

@@ -209,15 +209,15 @@ export default function AdminCategoriesPage() {
       )}
 
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Admin · Organisation du Catalogue</p>
-        <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           CATÉGORIES & MARQUES
         </h1>
         <p className="text-white/60 text-xs mt-1">Structurez et organisez vos rayons de vins, spiritueux et champagnes</p>
       </div>
 
-      <div className="px-8 py-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Categories */}
         <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
           <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 bg-gray-50/50">

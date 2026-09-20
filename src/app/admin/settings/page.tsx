@@ -112,15 +112,15 @@ export default function AdminSettingsPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Admin · Paramètres Généraux</p>
-        <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           PARAMÈTRES DE LA BOUTIQUE
         </h1>
         <p className="text-white/60 text-xs mt-1">Configurez les frais de port, le programme de fidélité et la sécurité</p>
       </div>
 
-      <div className="px-8 py-8 max-w-2xl space-y-5">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-2xl space-y-5">
         {loading ? (
           <div className="py-20 text-center text-gray-400 text-xs font-medium">Chargement des paramètres...</div>
         ) : (
@@ -133,18 +133,18 @@ export default function AdminSettingsPage() {
             )}
 
             {FIELDS.map(field => (
-              <div key={field.key} className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6">
+              <div key={field.key} className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3.5 flex-1">
                     <div className="w-10 h-10 rounded-xl bg-[#06091F]/5 flex items-center justify-center shrink-0 mt-0.5">
                       <field.icon className="w-5 h-5 text-[#06091F]" />
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <label className="block text-sm font-bold text-[#06091F] mb-0.5">
                         {field.label}
                       </label>
                       <p className="text-xs text-gray-400 mb-3">{field.description}</p>
-                      <div className="relative flex items-center gap-2">
+                      <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                         <div className="relative flex-1">
                           <input
                             id={`setting-${field.key}`}
@@ -164,7 +164,7 @@ export default function AdminSettingsPage() {
                           id={`save-setting-${field.key}`}
                           onClick={() => handleSave(field.key)}
                           disabled={!isDirty(field.key) || saving === field.key}
-                          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 shadow-xs ${
+                          className={`flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 shadow-xs ${
                             saved === field.key
                               ? "bg-emerald-600 text-white"
                               : isDirty(field.key)

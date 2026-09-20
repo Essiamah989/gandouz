@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 
 import {
   Package, Search, Eye, Clock, CheckCircle, Truck, Star, XCircle,
-  ChevronDown, Phone, Mail, Printer, DollarSign, CheckSquare,
+  ChevronDown, Phone, Mail, Printer, DollarSign, CheckSquare, X
 } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
 type OrderStatus =
   | "PENDING" | "PENDING_VALIDATION" | "VALIDATED"
@@ -123,26 +124,26 @@ export default function AdminOrdersPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] print:min-h-0 print:bg-white">
       {/* Header */}
-      <div className="bg-[#06091F] px-8 py-8 border-b border-white/10 print:hidden">
+      <div className="bg-[#06091F] px-4 sm:px-6 lg:px-8 py-6 lg:py-8 border-b border-white/10 print:hidden">
         <p className="text-[#F5D800] text-xs font-semibold uppercase tracking-widest mb-1">Admin · Opérations Commerciales</p>
-        <h1 className="text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
           GESTION DES COMMANDES
         </h1>
         <p className="text-white/60 text-xs mt-1">{orders.length} commandes au total</p>
       </div>
 
-      <div className="px-8 py-6 space-y-6 print:p-0 print:space-y-0 print:m-0">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 space-y-6 print:p-0 print:space-y-0 print:m-0">
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 print:hidden">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 print:hidden">
           {[
             { label: "En Attente", value: stats.pending, color: "text-amber-600", bg: "bg-amber-50" },
             { label: "Validées", value: stats.validated, color: "text-blue-600", bg: "bg-blue-50" },
             { label: "En Préparation", value: stats.progress, color: "text-purple-600", bg: "bg-purple-50" },
             { label: "Livrées", value: stats.delivered, color: "text-emerald-600", bg: "bg-emerald-50" },
           ].map(s => (
-            <div key={s.label} className={`${s.bg} rounded-2xl px-5 py-4 border border-gray-200/80 shadow-xs`}>
-              <p className="text-xs text-gray-500 font-semibold mb-1">{s.label}</p>
-              <p className={`text-3xl font-black ${s.color}`} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+            <div key={s.label} className={`${s.bg} rounded-2xl px-4 sm:px-5 py-3.5 sm:py-4 border border-gray-200/80 shadow-xs`}>
+              <p className="text-[11px] sm:text-xs text-gray-500 font-semibold mb-1 truncate">{s.label}</p>
+              <p className={`text-2xl sm:text-3xl font-black ${s.color}`} style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
                 {s.value}
               </p>
             </div>
@@ -153,7 +154,7 @@ export default function AdminOrdersPage() {
           {/* Orders List */}
           <div className="xl:col-span-2 print:hidden">
             {/* Filters */}
-            <div className="flex gap-3 mb-4">
+            <div className="flex flex-col sm:flex-row gap-3 mb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
@@ -161,7 +162,7 @@ export default function AdminOrdersPage() {
                   type="text"
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  placeholder="N° commande, nom du client, téléphone..."
+                  placeholder="N° commande, client, tél..."
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F5D800]/40 shadow-xs"
                 />
               </div>
@@ -169,7 +170,7 @@ export default function AdminOrdersPage() {
                 <select
                   value={statusFilter}
                   onChange={e => setStatusFilter(e.target.value as OrderStatus | "ALL")}
-                  className="appearance-none pl-4 pr-8 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F5D800]/40 shadow-xs font-semibold cursor-pointer"
+                  className="w-full sm:w-auto appearance-none pl-4 pr-8 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#F5D800]/40 shadow-xs font-semibold cursor-pointer"
                 >
                   <option value="ALL">Tous les statuts</option>
                   {ALL_STATUSES.map(s => (
@@ -223,7 +224,7 @@ export default function AdminOrdersPage() {
                             <p className="text-xs text-gray-400 mt-0.5">{order.phone || order.shippingAddress?.phone} · {order.city || order.shippingAddress?.city}</p>
                           </div>
                           <div className="text-right shrink-0">
-                            <p className="font-black text-[#06091F] text-sm">{Number(order.total).toFixed(3)} TND</p>
+                            <p className="font-black text-[#06091F] text-sm">{formatPrice(order.total)}</p>
                             <p className="text-xs text-gray-400 mt-0.5">{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
                           </div>
                         </div>
@@ -298,7 +299,7 @@ export default function AdminOrdersPage() {
                             <span className="text-gray-500 font-normal"> × {getItemQty(item)}</span>
                           </span>
                           <span className="font-bold text-[#06091F] shrink-0">
-                            {(Number(getItemPrice(item)) * Number(getItemQty(item))).toFixed(3)} TND
+                            {formatPrice(Number(getItemPrice(item)) * Number(getItemQty(item)))}
                           </span>
                         </div>
                       ))}
@@ -306,21 +307,21 @@ export default function AdminOrdersPage() {
                     <div className="border-t border-gray-100 mt-3 pt-3 space-y-1.5">
                       {selected.subtotal != null && (
                         <div className="flex justify-between text-xs text-gray-500">
-                          <span>Sous-total</span><span>{Number(selected.subtotal).toFixed(3)} TND</span>
+                          <span>Sous-total</span><span>{formatPrice(selected.subtotal)}</span>
                         </div>
                       )}
                       {selected.discount != null && selected.discount > 0 && (
                         <div className="flex justify-between text-xs text-emerald-600 font-semibold">
-                          <span>Remise / Code Promo</span><span>-{Number(selected.discount).toFixed(3)} TND</span>
+                          <span>Remise / Code Promo</span><span>-{formatPrice(selected.discount)}</span>
                         </div>
                       )}
                       {selected.shipping != null && (
                         <div className="flex justify-between text-xs text-gray-500">
-                          <span>Frais de livraison</span><span>{Number(selected.shipping).toFixed(3)} TND</span>
+                          <span>Frais de livraison</span><span>{formatPrice(selected.shipping)}</span>
                         </div>
                       )}
                       <div className="flex justify-between font-black text-[#06091F] text-base pt-2 border-t border-gray-100">
-                        <span>Total TTC</span><span>{Number(selected.total).toFixed(3)} TND</span>
+                        <span>Total TTC</span><span>{formatPrice(selected.total)}</span>
                       </div>
                     </div>
                   </div>
