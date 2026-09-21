@@ -47,11 +47,14 @@ export default async function HomePage() {
         </div>
 
         {/* Desktop Carousel / Logo (100% height, 40% width) */}
-        <div className="hidden lg:block absolute top-0 right-0 h-full w-[40%] z-10">
+        <div 
+          className="hidden lg:block absolute top-0 right-0 h-full w-[40%] z-10"
+          style={{ WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%)', maskImage: 'linear-gradient(to right, transparent, black 15%)' }}
+        >
           <HeroCarousel 
             images={heroImages} 
-            className="w-full h-full rounded-none rounded-l-[3rem] border-y-0 border-r-0 border-l border-white/20 shadow-2xl" 
-            fallbackClassName="w-full h-full rounded-none rounded-l-[3rem] border-y-0 border-r-0 border-l border-white/10 shadow-2xl p-8"
+            className="w-full h-full rounded-none border-none shadow-2xl" 
+            fallbackClassName="w-full h-full rounded-none border-none shadow-2xl p-8"
           />
         </div>
 
