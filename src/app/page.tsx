@@ -1,8 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ShieldCheck, Truck, Clock, Star, Gift, Wine, Beer, Trophy, Calendar } from "lucide-react";
-import { getProducts, getCategories, getTestimonials } from "@/lib/db";
+import { getProducts, getCategories, getTestimonials, getSettings } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
+import HeroCarousel from "@/components/HeroCarousel";
 
 import { getDictionary } from "@/lib/i18n";
 
@@ -19,6 +20,16 @@ export default async function HomePage() {
   const categories = await getCategories();
   const featuredProducts = await getProducts({ featuredOnly: true, limit: 4, activeOnly: true });
   const dbTestimonials = await getTestimonials();
+  const settings = await getSettings();
+  
+  let heroImages: string[] = [];
+  try {
+    if (settings.hero_images) {
+      heroImages = JSON.parse(settings.hero_images);
+    }
+  } catch (e) {
+    console.error("Failed to parse hero images");
+  }
 
   return (
     <div className="min-h-screen bg-[#F2F2F2]">
@@ -65,17 +76,7 @@ export default async function HomePage() {
 
             {/* Hero Brand Identity */}
             <div className="flex-shrink-0 relative">
-              <div className="w-72 h-72 lg:w-96 lg:h-96 relative flex items-center justify-center bg-white/5 border border-white/10 rounded-full p-8 backdrop-blur-md shadow-2xl">
-                <div className="absolute inset-0 rounded-full bg-[#F5D800]/5 blur-3xl animate-pulse" />
-                <Image
-                  src="/logo.png"
-                  alt="Gandouz Logo"
-                  width={250}
-                  height={250}
-                  className="object-contain filter invert brightness-0 drop-shadow-[0_10px_30px_rgba(245,216,0,0.25)]"
-                  priority
-                />
-              </div>
+              <HeroCarousel images={heroImages} />
             </div>
           </div>
         </div>

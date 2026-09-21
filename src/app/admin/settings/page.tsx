@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Save, Check, AlertTriangle, Settings2, Truck, Star, MessageCircle, Store, Lock, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Save, Check, AlertTriangle, Settings2, Truck, Star, MessageCircle, Store, Lock, Eye, EyeOff, ShieldCheck, Image as ImageIcon, Upload, X } from "lucide-react";
 
 type SettingField = {
   key: string;
@@ -28,6 +28,11 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Hero Carousel state
+  const [heroImages, setHeroImages] = useState<string[]>([]);
+  const [uploadingHero, setUploadingHero] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Password state
   const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
   const [pwSaving, setPwSaving] = useState(false);
@@ -45,6 +50,13 @@ export default function AdminSettingsPage() {
         const data = await res.json();
         setSettings(data);
         setForm(data);
+        if (data.hero_images) {
+          try {
+            setHeroImages(JSON.parse(data.hero_images));
+          } catch (e) {
+            setHeroImages([]);
+          }
+        }
       }
     } catch {
       setError("Impossible de charger les paramètres.");
@@ -76,6 +88,56 @@ export default function AdminSettingsPage() {
       setSaving(null);
       setError("Erreur réseau pendant la sauvegarde.");
     }
+  };
+
+  const handleUploadHeroImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    if (heroImages.length >= 10) {
+      setError("Vous ne pouvez pas ajouter plus de 10 images.");
+      return;
+    }
+
+    setUploadingHero(true);
+    setError(null);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const { url } = await res.json();
+        const newImages = [...heroImages, url];
+        setHeroImages(newImages);
+        await fetch("/api/admin/settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "hero_images", value: JSON.stringify(newImages) }),
+        });
+      } else {
+        setError("Échec du téléchargement de l'image.");
+      }
+    } catch {
+      setError("Erreur réseau pendant le téléchargement.");
+    } finally {
+      setUploadingHero(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemoveHeroImage = async (index: number) => {
+    const newImages = [...heroImages];
+    newImages.splice(index, 1);
+    setHeroImages(newImages);
+    await fetch("/api/admin/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: "hero_images", value: JSON.stringify(newImages) }),
+    });
   };
 
   const handlePasswordChange = async () => {
@@ -186,6 +248,57 @@ export default function AdminSettingsPage() {
                 </div>
               </div>
             ))}
+
+            {/* Hero Images Uploader */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 sm:p-6">
+              <div className="flex items-start gap-3.5 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-[#06091F]/5 flex items-center justify-center shrink-0">
+                  <ImageIcon className="w-5 h-5 text-[#06091F]" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-[#06091F]">Images du Carrousel (Hero Section)</h3>
+                  <p className="text-xs text-gray-400">Téléchargez jusqu'à 10 images qui défileront sur la page d'accueil.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
+                {heroImages.map((url, i) => (
+                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 group">
+                    <img src={url} alt={`Hero ${i}`} className="w-full h-full object-cover" />
+                    <button
+                      onClick={() => handleRemoveHeroImage(i)}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+                
+                {heroImages.length < 10 && (
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingHero}
+                    className="relative aspect-square rounded-xl border-2 border-dashed border-gray-300 hover:border-[#06091F] flex flex-col items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-gray-50/50 hover:bg-gray-50"
+                  >
+                    {uploadingHero ? (
+                      <span className="text-xs font-bold text-gray-400">En cours...</span>
+                    ) : (
+                      <>
+                        <Upload className="w-5 h-5 text-gray-400" />
+                        <span className="text-xs font-bold text-gray-400 text-center px-2">Ajouter</span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/webp"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleUploadHeroImage}
+              />
+            </div>
 
             {/* Loyalty Info Card */}
             <div className="bg-gradient-to-br from-[#06091F] to-[#1C2E5E] rounded-3xl p-6 text-white shadow-md">
