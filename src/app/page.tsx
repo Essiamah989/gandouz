@@ -34,8 +34,8 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-[#F2F2F2]">
       {/* ===== HERO SECTION ===== */}
-      <section className="relative gandouz-gradient overflow-hidden py-24 lg:py-36" id="hero">
-        <div className="absolute inset-0 opacity-5">
+      <section className="relative gandouz-gradient overflow-hidden lg:h-[750px] xl:h-[850px] flex items-center" id="hero">
+        <div className="absolute inset-0 opacity-5 z-0">
           <div
             className="absolute inset-0"
             style={{
@@ -46,10 +46,19 @@ export default async function HomePage() {
           />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Desktop Carousel / Logo (100% height, 40% width) */}
+        <div className="hidden lg:block absolute top-0 right-0 h-full w-[40%] z-10">
+          <HeroCarousel 
+            images={heroImages} 
+            className="w-full h-full rounded-none rounded-l-[3rem] border-y-0 border-r-0 border-l border-white/20 shadow-2xl" 
+            fallbackClassName="w-full h-full rounded-none rounded-l-[3rem] border-y-0 border-r-0 border-l border-white/10 shadow-2xl p-8"
+          />
+        </div>
+
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-24 lg:py-0">
           <div className="flex flex-col lg:flex-row items-center gap-16">
             {/* Hero Text */}
-            <div className="flex-1 text-center lg:text-left">
+            <div className="flex-1 text-center lg:text-left lg:max-w-[55%]">
               <span className="inline-block bg-[#F5D800]/10 border border-[#F5D800]/30 text-[#F5D800] text-xs font-bold uppercase tracking-[0.25em] px-4 py-1.5 rounded-full mb-6">
                 ÉTABLI À LA GOULETTE
               </span>
@@ -59,7 +68,7 @@ export default async function HomePage() {
               >
                 {dict.home.heroTitle}
               </h1>
-              <p className="text-white/70 text-lg max-w-xl mb-10 leading-relaxed">
+              <p className="text-white/70 text-lg max-w-xl mb-10 leading-relaxed mx-auto lg:mx-0">
                 {dict.home.heroSubtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -74,8 +83,8 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Hero Brand Identity */}
-            <div className="flex-shrink-0 relative">
+            {/* Mobile Carousel / Logo */}
+            <div className="flex-shrink-0 relative lg:hidden w-full max-w-sm mx-auto mt-10">
               <HeroCarousel images={heroImages} />
             </div>
           </div>

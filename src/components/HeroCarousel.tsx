@@ -8,9 +8,11 @@ import Image from "next/image";
 
 interface HeroCarouselProps {
   images: string[];
+  className?: string;
+  fallbackClassName?: string;
 }
 
-export default function HeroCarousel({ images }: HeroCarouselProps) {
+export default function HeroCarousel({ images, className, fallbackClassName }: HeroCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000, stopOnInteraction: false })]);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -26,9 +28,12 @@ export default function HeroCarousel({ images }: HeroCarouselProps) {
     emblaApi.on("reInit", onSelect);
   }, [emblaApi, onSelect]);
 
+  const defaultClasses = "w-72 h-72 lg:w-96 lg:h-96 rounded-[3rem]";
+  const defaultFallbackClasses = "w-72 h-72 lg:w-96 lg:h-96 rounded-full p-8";
+
   if (!images || images.length === 0) {
     return (
-      <div className="w-72 h-72 lg:w-96 lg:h-96 relative flex items-center justify-center bg-white/5 border border-white/10 rounded-full p-8 backdrop-blur-md shadow-2xl">
+      <div className={`relative flex items-center justify-center bg-white/5 border border-white/10 backdrop-blur-md shadow-2xl ${fallbackClassName || defaultFallbackClasses}`}>
         <div className="absolute inset-0 rounded-full bg-[#F5D800]/5 blur-3xl animate-pulse" />
         <Image
           src="/logo.png"
@@ -43,7 +48,7 @@ export default function HeroCarousel({ images }: HeroCarouselProps) {
   }
 
   return (
-    <div className="relative w-72 h-72 lg:w-96 lg:h-96 rounded-[3rem] overflow-hidden shadow-2xl border border-white/20 backdrop-blur-xl group">
+    <div className={`relative overflow-hidden shadow-2xl border border-white/20 backdrop-blur-xl group ${className || defaultClasses}`}>
       <div className="absolute inset-0 bg-gradient-to-br from-[#06091F]/80 to-transparent z-10 opacity-30 pointer-events-none" />
       <div className="absolute inset-0 bg-[#F5D800]/5 blur-3xl z-0" />
       <div className="overflow-hidden w-full h-full relative z-10" ref={emblaRef}>
