@@ -158,7 +158,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <LogOut className="w-4 h-4" />
                 Déconnexion
               </button>
-              <p className="text-white/30 text-[11px] px-3 pt-2">Distribution Gandouz © 2026</p>
+              <p className="text-white/30 text-[11px] px-3 pt-2">Developed by MSDI Soft © 2026</p>
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <LogOut className="w-4 h-4" />
             Déconnexion
           </button>
-          <p className="text-white/20 text-xs px-3 pt-2">Distribution Gandouz © 2026</p>
+          <p className="text-white/20 text-xs px-3 pt-2">Developed by MSDI Soft © 2026</p>
         </div>
       </aside>
 

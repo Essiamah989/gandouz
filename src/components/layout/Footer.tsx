@@ -138,7 +138,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-white/50">
-            © {new Date().getFullYear()} Distribution Gandouz. Tous droits réservés.
+            © {new Date().getFullYear()} Distribution Gandouz. Tous droits réservés. · Developed by MSDI Soft © 2026
           </p>
           <p className="text-xs text-white/50">
             Paiement sécurisé à la livraison — Toutes les commandes sont traitées avec soin.

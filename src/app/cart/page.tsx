@@ -167,8 +167,11 @@ export default function CartPage() {
                   ← Continuer vos achats
                 </Link>
 
-                <div className="mt-5 p-3.5 bg-gray-50 rounded-2xl border border-gray-100">
-                  <p className="text-[11px] text-gray-500 text-center leading-relaxed">
+                <div className="mt-5 p-3.5 bg-gray-50 rounded-2xl border border-gray-100 space-y-1.5 text-center">
+                  <p className="text-[11px] text-amber-800 font-bold">
+                    🚚 Livraison disponible de 10h00 à 21h00
+                  </p>
+                  <p className="text-[11px] text-gray-500 leading-relaxed">
                     🔒 Paiement sécurisé à la livraison en espèces ou par chèque.
                   </p>
                 </div>

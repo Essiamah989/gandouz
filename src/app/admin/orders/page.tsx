@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import {
   Package, Search, Eye, Clock, CheckCircle, Truck, Star, XCircle,
-  ChevronDown, Phone, Mail, Printer, DollarSign, CheckSquare, X
+  ChevronDown, Phone, Mail, Printer, DollarSign, CheckSquare, X, Trash2, AlertTriangle
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 
@@ -62,6 +62,8 @@ export default function AdminOrdersPage() {
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "ALL">("ALL");
   const [loading, setLoading]           = useState(true);
   const [updating, setUpdating]         = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
+  const [isDeleting, setIsDeleting]     = useState(false);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -70,6 +72,27 @@ export default function AdminOrdersPage() {
       if (r.ok) setOrders(await r.json());
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/orders?orderId=${orderId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+        if (selected?.id === orderId) setSelected(null);
+        setOrderToDelete(null);
+      } else {
+        alert("Échec de la suppression de la commande.");
+      }
+    } catch (err) {
+      console.error("Delete order error:", err);
+      alert("Erreur lors de la suppression de la commande.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -223,9 +246,22 @@ export default function AdminOrdersPage() {
                             <p className="text-sm text-gray-800 font-bold">{order.customerName || order.shippingAddress?.customerName || "Client inconnu"}</p>
                             <p className="text-xs text-gray-400 mt-0.5">{order.phone || order.shippingAddress?.phone} · {order.city || order.shippingAddress?.city}</p>
                           </div>
-                          <div className="text-right shrink-0">
-                            <p className="font-black text-[#06091F] text-sm">{formatPrice(order.total)}</p>
-                            <p className="text-xs text-gray-400 mt-0.5">{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
+                          <div className="flex items-center gap-3 shrink-0">
+                            <div className="text-right">
+                              <p className="font-black text-[#06091F] text-sm">{formatPrice(order.total)}</p>
+                              <p className="text-xs text-gray-400 mt-0.5">{new Date(order.createdAt).toLocaleDateString('fr-FR')}</p>
+                            </div>
+                            <button
+                              id={`admin-delete-row-${order.id}`}
+                              title="Supprimer la commande"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOrderToDelete(order);
+                              }}
+                              className="p-2 rounded-xl text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
                           </div>
                         </div>
                       </button>
@@ -380,6 +416,15 @@ export default function AdminOrdersPage() {
                         <Printer className="w-3.5 h-3.5" /> Imprimer Bon
                       </button>
                     </div>
+
+                    <button
+                      id={`admin-delete-detail-${selected.id}`}
+                      onClick={() => setOrderToDelete(selected)}
+                      disabled={isDeleting}
+                      className="w-full py-2.5 rounded-xl text-xs font-bold border border-rose-300 bg-rose-50/60 text-rose-700 hover:bg-rose-100 transition-colors flex items-center justify-center gap-2 mt-2"
+                    >
+                      <Trash2 className="w-4 h-4 text-rose-600" /> Supprimer Définitivement
+                    </button>
                   </div>
 
                   {/* Status History */}
@@ -412,6 +457,46 @@ export default function AdminOrdersPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {orderToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 print:hidden animate-in fade-in duration-150">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-gray-100">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 mb-4">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-extrabold text-[#06091F] mb-1.5" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+              SUPPRIMER CETTE COMMANDE ?
+            </h3>
+            <p className="text-xs text-gray-600 mb-5 leading-relaxed">
+              Êtes-vous certain de vouloir supprimer la commande <strong className="text-gray-900 font-bold">#{orderToDelete.orderNumber}</strong> ({orderToDelete.customerName || orderToDelete.shippingAddress?.customerName || "Client"}) ? Cette action retirera définitivement la commande de la liste.
+            </p>
+            <div className="flex gap-2.5 justify-end">
+              <button
+                type="button"
+                onClick={() => setOrderToDelete(null)}
+                disabled={isDeleting}
+                className="px-4 py-2.5 rounded-xl text-xs font-bold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                id="confirm-delete-order-modal-btn"
+                type="button"
+                onClick={() => handleDeleteOrder(orderToDelete.id)}
+                disabled={isDeleting}
+                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white transition-colors flex items-center gap-2 shadow-xs disabled:opacity-50"
+              >
+                {isDeleting ? "Suppression en cours..." : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" /> Supprimer la Commande
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

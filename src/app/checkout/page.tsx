@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cart";
-import { ShoppingBag, User, Phone, Mail, MapPin, Building2, FileText, ArrowRight, Loader2, ShieldCheck, Tag } from "lucide-react";
+import { ShoppingBag, User, Phone, Mail, MapPin, Building2, FileText, ArrowRight, Loader2, ShieldCheck, Tag, Clock } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 
 type FormData = {
@@ -259,10 +259,32 @@ export default function CheckoutPage() {
 
               {/* Delivery Info */}
               <div className="bg-white rounded-3xl border border-gray-100 p-6 lg:p-8 shadow-xs">
-                <h2 className="text-2xl font-black text-[#06091F] mb-6 flex items-center gap-2.5 uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                  <MapPin className="w-5 h-5 text-[#F5D800]" />
-                  ADRESSE DE LIVRAISON
-                </h2>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+                  <h2 className="text-2xl font-black text-[#06091F] flex items-center gap-2.5 uppercase" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                    <MapPin className="w-5 h-5 text-[#F5D800]" />
+                    ADRESSE DE LIVRAISON
+                  </h2>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 text-xs font-bold w-fit">
+                    <Clock className="w-3.5 h-3.5 text-amber-600" />
+                    Livraison : 10h00 – 21h00
+                  </span>
+                </div>
+
+                {/* Delivery schedule notice */}
+                <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center shrink-0 text-amber-700 mt-0.5">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-amber-900 uppercase tracking-wide">
+                      Horaires de livraison
+                    </p>
+                    <p className="text-xs text-amber-800 mt-0.5 leading-relaxed">
+                      Notre service de livraison est disponible <strong>uniquement de 10h00 à 21h00</strong>. Toute commande confirmée en dehors de ces heures sera expédiée en priorité dès l'ouverture à 10h.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="flex flex-col gap-4">
                   <div>
                     <label htmlFor="checkout-address" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
@@ -415,11 +437,19 @@ export default function CheckoutPage() {
                   )}
                 </button>
 
-                <div className="mt-4 p-3.5 bg-gray-50 rounded-2xl border border-gray-100 flex items-center gap-2 justify-center">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <p className="text-[11px] text-gray-600 text-center leading-tight">
-                    Paiement à la livraison en espèces ou par chèque.
-                  </p>
+                <div className="mt-4 p-3.5 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
+                  <div className="flex items-center gap-2 justify-center text-amber-800">
+                    <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <p className="text-[11px] font-bold">
+                      Livraison uniquement de 10h00 à 21h00
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 justify-center text-gray-600 border-t border-gray-200/60 pt-2">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <p className="text-[11px] text-center leading-tight">
+                      Paiement à la livraison en espèces ou par chèque.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

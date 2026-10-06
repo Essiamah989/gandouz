@@ -8136,6 +8136,10 @@
     {
       "key": "store_name",
       "value": "Gandouz Distribution"
+    },
+    {
+      "key": "order_notification_recipients",
+      "value": "[\"mahmoudiessia989@gmail.com\",\"mahmoudiessia@gmail.com\"]"
     }
   ],
   "discountCodes": [

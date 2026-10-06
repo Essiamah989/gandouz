@@ -806,6 +806,29 @@ export async function markCashCollected(orderId: string, collected: boolean) {
   return null;
 }
 
+export async function deleteOrder(orderId: string) {
+  if (isRealDbAvailable()) {
+    try {
+      // Delete order items & status history first
+      await prisma.orderItem.deleteMany({ where: { orderId } });
+      await prisma.orderStatusHistory.deleteMany({ where: { orderId } });
+      await prisma.loyaltyTransaction.deleteMany({ where: { orderId } });
+      return await prisma.order.delete({ where: { id: orderId } });
+    } catch (e) {
+      console.warn("DB delete failed, falling back to mock:", e);
+    }
+  }
+
+  const db = readMockDb();
+  const index = db.orders.findIndex((o: any) => o.id === orderId || o.orderNumber === orderId);
+  if (index !== -1) {
+    const deleted = db.orders.splice(index, 1)[0];
+    writeMockDb(db);
+    return deleted;
+  }
+  return null;
+}
+
 /* ==========================================================================
    SETTINGS SERVICES
    ========================================================================== */

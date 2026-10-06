@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createOrder, getOrders, updateOrderStatus, markCashCollected, getOrCreateUserFromClerk } from "@/lib/db";
+import { createOrder, getOrders, updateOrderStatus, markCashCollected, deleteOrder, getOrCreateUserFromClerk } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import { sendNewOrderEmail } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,6 +47,9 @@ export async function POST(request: NextRequest) {
       pointsRedeemed: pointsRedeemed ? Number(pointsRedeemed) : 0,
       promoCode: promoCode || null
     });
+
+    // Send the notification email
+    sendNewOrderEmail({ ...order, items: orderItems });
 
     return NextResponse.json({
       success: true,
@@ -95,6 +99,35 @@ export async function PATCH(request: NextRequest) {
     });
   } catch (error) {
     console.error("Update order error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    let orderId = searchParams.get("orderId");
+
+    if (!orderId) {
+      const body = await request.json().catch(() => ({}));
+      orderId = body.orderId;
+    }
+
+    if (!orderId) {
+      return NextResponse.json({ error: "Order ID is required" }, { status: 400 });
+    }
+
+    const deleted = await deleteOrder(orderId);
+    if (!deleted) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Order deleted successfully!"
+    });
+  } catch (error) {
+    console.error("Delete order error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

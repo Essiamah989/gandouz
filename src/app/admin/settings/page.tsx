@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Save, Check, AlertTriangle, Settings2, Truck, Star, MessageCircle, Store, Lock, Eye, EyeOff, ShieldCheck, Image as ImageIcon, Upload, X } from "lucide-react";
+import { Save, Check, AlertTriangle, Settings2, Truck, Star, MessageCircle, Store, Lock, Eye, EyeOff, ShieldCheck, Image as ImageIcon, Upload, X, Mail, Plus, Trash2 } from "lucide-react";
 
 type SettingField = {
   key: string;
@@ -11,6 +11,11 @@ type SettingField = {
   type?: "text" | "number";
   suffix?: string;
 };
+
+const DEFAULT_NOTIFICATION_RECIPIENTS = [
+  "mahmoudiessia989@gmail.com",
+  "mahmoudiessia@gmail.com"
+];
 
 const FIELDS: SettingField[] = [
   { key: "store_name", label: "Nom de la boutique", description: "Affiché dans les e-mails et les reçus", icon: Store, type: "text" },
@@ -27,6 +32,13 @@ export default function AdminSettingsPage() {
   const [saved, setSaved] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Email Notification Recipients state
+  const [notificationRecipients, setNotificationRecipients] = useState<string[]>(DEFAULT_NOTIFICATION_RECIPIENTS);
+  const [newRecipientEmail, setNewRecipientEmail] = useState("");
+  const [recipientSaving, setRecipientSaving] = useState(false);
+  const [recipientError, setRecipientError] = useState<string | null>(null);
+  const [recipientSuccess, setRecipientSuccess] = useState<string | null>(null);
 
   // Hero Carousel state
   const [heroImages, setHeroImages] = useState<string[]>([]);
@@ -56,6 +68,20 @@ export default function AdminSettingsPage() {
           } catch (e) {
             setHeroImages([]);
           }
+        }
+        if (data.order_notification_recipients) {
+          try {
+            const list = JSON.parse(data.order_notification_recipients);
+            if (Array.isArray(list) && list.length > 0) {
+              setNotificationRecipients(list);
+            } else {
+              setNotificationRecipients(DEFAULT_NOTIFICATION_RECIPIENTS);
+            }
+          } catch (e) {
+            setNotificationRecipients(DEFAULT_NOTIFICATION_RECIPIENTS);
+          }
+        } else {
+          setNotificationRecipients(DEFAULT_NOTIFICATION_RECIPIENTS);
         }
       }
     } catch {
@@ -88,6 +114,56 @@ export default function AdminSettingsPage() {
       setSaving(null);
       setError("Erreur réseau pendant la sauvegarde.");
     }
+  };
+
+  const saveRecipients = async (updatedList: string[]) => {
+    setRecipientSaving(true);
+    setRecipientError(null);
+    setRecipientSuccess(null);
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          key: "order_notification_recipients",
+          value: JSON.stringify(updatedList)
+        }),
+      });
+      if (res.ok) {
+        setNotificationRecipients(updatedList);
+        setRecipientSuccess("Destinataires mis à jour avec succès !");
+        setTimeout(() => setRecipientSuccess(null), 3000);
+      } else {
+        setRecipientError("Échec de l'enregistrement des destinataires.");
+      }
+    } catch {
+      setRecipientError("Erreur réseau lors de la sauvegarde.");
+    } finally {
+      setRecipientSaving(false);
+    }
+  };
+
+  const handleAddRecipient = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const email = newRecipientEmail.trim().toLowerCase();
+    if (!email) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setRecipientError("Veuillez saisir une adresse e-mail valide.");
+      return;
+    }
+    if (notificationRecipients.map(r => r.toLowerCase()).includes(email)) {
+      setRecipientError("Cette adresse e-mail est déjà dans la liste.");
+      return;
+    }
+
+    const updated = [...notificationRecipients, email];
+    await saveRecipients(updated);
+    setNewRecipientEmail("");
+  };
+
+  const handleRemoveRecipient = async (indexToRemove: number) => {
+    const updated = notificationRecipients.filter((_, idx) => idx !== indexToRemove);
+    await saveRecipients(updated);
   };
 
   const handleUploadHeroImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,6 +374,93 @@ export default function AdminSettingsPage() {
                 ref={fileInputRef}
                 onChange={handleUploadHeroImage}
               />
+            </div>
+
+            {/* Order Email Notification Recipients Card */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 sm:p-6">
+              <div className="flex items-start gap-3.5 mb-5">
+                <div className="w-10 h-10 rounded-xl bg-[#06091F]/5 flex items-center justify-center shrink-0">
+                  <Mail className="w-5 h-5 text-[#06091F]" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-bold text-[#06091F]">E-mails de Notification des Commandes</h3>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Recevez une alerte e-mail automatique instantanée avec le récapitulatif complet à chaque commande client confirmée.
+                  </p>
+                </div>
+              </div>
+
+              {recipientSuccess && (
+                <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl px-4 py-2.5 text-xs font-bold mb-4">
+                  <Check className="w-4 h-4 shrink-0 text-emerald-600" /> {recipientSuccess}
+                </div>
+              )}
+
+              {recipientError && (
+                <div className="flex items-center gap-2 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl px-4 py-2.5 text-xs font-bold mb-4">
+                  <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" /> {recipientError}
+                </div>
+              )}
+
+              {/* Add Recipient Form */}
+              <form onSubmit={handleAddRecipient} className="flex gap-2 mb-4">
+                <div className="relative flex-1">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    id="new-recipient-email-input"
+                    type="email"
+                    placeholder="ex: contact@entreprise.com"
+                    value={newRecipientEmail}
+                    onChange={(e) => {
+                      setNewRecipientEmail(e.target.value);
+                      if (recipientError) setRecipientError(null);
+                    }}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#06091F]/15 font-semibold bg-white"
+                  />
+                </div>
+                <button
+                  id="add-recipient-email-btn"
+                  type="submit"
+                  disabled={recipientSaving || !newRecipientEmail.trim()}
+                  className="px-4 py-2.5 rounded-xl bg-[#06091F] hover:bg-[#1C2E5E] text-[#F5D800] text-xs font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50 shrink-0 shadow-xs"
+                >
+                  <Plus className="w-4 h-4" />
+                  Ajouter
+                </button>
+              </form>
+
+              {/* Recipient list */}
+              <div className="space-y-2">
+                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+                  Destinataires Actifs ({notificationRecipients.length})
+                </p>
+                {notificationRecipients.length === 0 ? (
+                  <div className="text-center py-6 border border-dashed border-gray-200 rounded-xl">
+                    <p className="text-xs text-gray-400">Aucun destinataire configuré.</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-gray-100 border border-gray-100 rounded-xl overflow-hidden bg-gray-50/50">
+                    {notificationRecipients.map((email, idx) => (
+                      <div key={idx} className="flex items-center justify-between px-3.5 py-2.5 hover:bg-white transition-colors">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                          <span className="text-xs font-semibold text-gray-800 truncate select-all">{email}</span>
+                        </div>
+                        <button
+                          type="button"
+                          id={`delete-recipient-${idx}`}
+                          title="Supprimer ce destinataire"
+                          onClick={() => handleRemoveRecipient(idx)}
+                          disabled={recipientSaving}
+                          className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors ml-2 disabled:opacity-50"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Loyalty Info Card */}
