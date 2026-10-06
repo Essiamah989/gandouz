@@ -29,19 +29,44 @@ export async function getOrderNotificationRecipients(): Promise<string[]> {
   return DEFAULT_RECIPIENTS;
 }
 
-const getTransporter = () => {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '465'),
-    secure: true,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
+export async function getEmailConfig() {
+  const settings = await getSettings();
+  const host = settings.smtp_host || process.env.SMTP_HOST || 'smtp.gmail.com';
+  const port = parseInt(settings.smtp_port || process.env.SMTP_PORT || '465');
+  const user = settings.smtp_user || process.env.SMTP_USER || '';
+  const pass = settings.smtp_pass || process.env.SMTP_PASS || '';
+  return {
+    host,
+    port,
+    user,
+    pass,
+    isConfigured: Boolean(user && pass),
+  };
+}
+
+const getTransporter = async () => {
+  const config = await getEmailConfig();
+  return {
+    transporter: nodemailer.createTransport({
+      host: config.host,
+      port: config.port,
+      secure: config.port === 465,
+      auth: config.user ? {
+        user: config.user,
+        pass: config.pass,
+      } : undefined,
+    }),
+    config,
+  };
 };
 
 export const sendNewOrderEmail = async (order: any) => {
+  const config = await getEmailConfig();
+  if (!config.isConfigured) {
+    console.warn("⚠️ [Email Notification] Missing SMTP credentials (smtp_user / smtp_pass). Please configure them in Admin Settings or .env.");
+    return;
+  }
+
   const recipients = await getOrderNotificationRecipients();
 
   if (!recipients || recipients.length === 0) {
@@ -180,7 +205,7 @@ Horaires de livraison: 10h00 - 21h00
   };
 
   try {
-    const transporter = getTransporter();
+    const { transporter } = await getTransporter();
     await transporter.sendMail(mailOptions);
     console.log(`Order notification email sent successfully to [${recipients.join(', ')}] for order #${order.orderNumber}`);
   } catch (error) {

@@ -49,7 +49,11 @@ export async function POST(request: NextRequest) {
     });
 
     // Send the notification email
-    sendNewOrderEmail({ ...order, items: orderItems });
+    try {
+      await sendNewOrderEmail({ ...order, items: orderItems });
+    } catch (emailErr) {
+      console.error("Order notification email failed to send:", emailErr);
+    }
 
     return NextResponse.json({
       success: true,

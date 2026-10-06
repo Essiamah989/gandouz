@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Save, Check, AlertTriangle, Settings2, Truck, Star, MessageCircle, Store, Lock, Eye, EyeOff, ShieldCheck, Image as ImageIcon, Upload, X, Mail, Plus, Trash2 } from "lucide-react";
+import { Save, Check, AlertTriangle, Settings2, Truck, Star, MessageCircle, Store, Lock, Eye, EyeOff, ShieldCheck, Image as ImageIcon, Upload, X, Mail, Plus, Trash2, Send, Key, HelpCircle } from "lucide-react";
 
 type SettingField = {
   key: string;
@@ -40,6 +40,16 @@ export default function AdminSettingsPage() {
   const [recipientError, setRecipientError] = useState<string | null>(null);
   const [recipientSuccess, setRecipientSuccess] = useState<string | null>(null);
 
+  // SMTP credentials state
+  const [smtpUser, setSmtpUser] = useState("");
+  const [smtpPass, setSmtpPass] = useState("");
+  const [showSmtpPass, setShowSmtpPass] = useState(false);
+  const [savingSmtp, setSavingSmtp] = useState(false);
+  const [smtpSaved, setSmtpSaved] = useState(false);
+  const [testingEmail, setTestingEmail] = useState(false);
+  const [testResult, setTestResult] = useState<{ success: boolean; message?: string; error?: string } | null>(null);
+  const [showSmtpHelp, setShowSmtpHelp] = useState(false);
+
   // Hero Carousel state
   const [heroImages, setHeroImages] = useState<string[]>([]);
   const [uploadingHero, setUploadingHero] = useState(false);
@@ -62,6 +72,8 @@ export default function AdminSettingsPage() {
         const data = await res.json();
         setSettings(data);
         setForm(data);
+        if (data.smtp_user) setSmtpUser(data.smtp_user);
+        if (data.smtp_pass) setSmtpPass(data.smtp_pass);
         if (data.hero_images) {
           try {
             setHeroImages(JSON.parse(data.hero_images));
@@ -164,6 +176,61 @@ export default function AdminSettingsPage() {
   const handleRemoveRecipient = async (indexToRemove: number) => {
     const updated = notificationRecipients.filter((_, idx) => idx !== indexToRemove);
     await saveRecipients(updated);
+  };
+
+  const handleSaveSmtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setSavingSmtp(true);
+    setTestResult(null);
+    try {
+      await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "smtp_user", value: smtpUser.trim() }),
+      });
+      await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "smtp_pass", value: smtpPass.trim() }),
+      });
+      setSmtpSaved(true);
+      setTimeout(() => setSmtpSaved(false), 3000);
+    } catch {
+      alert("Erreur lors de l'enregistrement des identifiants SMTP.");
+    } finally {
+      setSavingSmtp(false);
+    }
+  };
+
+  const handleTestEmail = async () => {
+    setTestingEmail(true);
+    setTestResult(null);
+    try {
+      if (smtpUser || smtpPass) {
+        await fetch("/api/admin/settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "smtp_user", value: smtpUser.trim() }),
+        });
+        await fetch("/api/admin/settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key: "smtp_pass", value: smtpPass.trim() }),
+        });
+      }
+
+      const res = await fetch("/api/admin/email-test", { method: "POST" });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setTestResult({ success: true, message: data.message });
+      } else {
+        setTestResult({ success: false, error: data.error || "Échec de l'envoi du test." });
+      }
+    } catch {
+      setTestResult({ success: false, error: "Erreur réseau lors du test d'envoi." });
+    } finally {
+      setTestingEmail(false);
+    }
   };
 
   const handleUploadHeroImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -458,6 +525,117 @@ export default function AdminSettingsPage() {
                         </button>
                       </div>
                     ))}
+                  </div>
+                )}
+              </div>
+
+              {/* SMTP Sender Configuration Section */}
+              <div className="border-t border-gray-100 pt-5 mt-6">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h4 className="text-xs font-bold text-[#06091F] uppercase tracking-wider flex items-center gap-1.5">
+                      <Key className="w-3.5 h-3.5 text-[#06091F]" />
+                      Compte Expéditeur SMTP (Envoi d'e-mails)
+                    </h4>
+                    <p className="text-[11px] text-gray-400 mt-0.5">
+                      Renseignez votre compte Gmail ou SMTP pour expédier les notifications
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowSmtpHelp(v => !v)}
+                    className="text-[11px] text-blue-600 hover:text-blue-800 font-semibold flex items-center gap-1"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                    {showSmtpHelp ? "Masquer l'aide" : "Comment configurer ?"}
+                  </button>
+                </div>
+
+                {showSmtpHelp && (
+                  <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3.5 mb-4 text-xs text-amber-900 leading-relaxed">
+                    <p className="font-bold mb-1">Configuration rapide avec Gmail en 3 étapes :</p>
+                    <ol className="list-decimal list-inside space-y-1 text-[11px] text-amber-800">
+                      <li>Activez la <strong>Validation en deux étapes</strong> sur votre compte Google.</li>
+                      <li>Rendez-vous sur <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer" className="underline font-bold text-amber-900">myaccount.google.com/apppasswords</a>.</li>
+                      <li>Créez un mot de passe nommé <strong>Gandouz</strong> et copiez les 16 caractères générés dans le champ ci-dessous.</li>
+                    </ol>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-600 mb-1">Adresse Gmail expéditrice</label>
+                    <input
+                      id="smtp-user-input"
+                      type="email"
+                      placeholder="votre-boutique@gmail.com"
+                      value={smtpUser}
+                      onChange={(e) => setSmtpUser(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#06091F]/15 font-semibold bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-gray-600 mb-1">Mot de passe d'application (16 caractères)</label>
+                    <div className="relative">
+                      <input
+                        id="smtp-pass-input"
+                        type={showSmtpPass ? "text" : "password"}
+                        placeholder="••••••••••••••••"
+                        value={smtpPass}
+                        onChange={(e) => setSmtpPass(e.target.value)}
+                        className="w-full px-3.5 py-2 pr-9 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#06091F]/15 font-semibold bg-white"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowSmtpPass(v => !v)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showSmtpPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleSaveSmtp}
+                    disabled={savingSmtp || (!smtpUser && !smtpPass)}
+                    className="px-4 py-2 rounded-xl bg-[#06091F] hover:bg-[#1C2E5E] text-[#F5D800] text-xs font-bold transition-colors disabled:opacity-50 flex items-center justify-center gap-1.5 shadow-xs"
+                  >
+                    {smtpSaved ? (
+                      <><Check className="w-3.5 h-3.5 text-emerald-400" /> Identifiants Enregistrés</>
+                    ) : savingSmtp ? (
+                      "Enregistrement..."
+                    ) : (
+                      <><Save className="w-3.5 h-3.5" /> Enregistrer les Identifiants</>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    id="test-email-notification-btn"
+                    onClick={handleTestEmail}
+                    disabled={testingEmail}
+                    className="px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  >
+                    <Send className="w-3.5 h-3.5 text-blue-600" />
+                    {testingEmail ? "Envoi du test en cours..." : "Tester l'envoi d'un e-mail"}
+                  </button>
+                </div>
+
+                {testResult && (
+                  <div className={`mt-3 p-3 rounded-xl border text-xs font-semibold flex items-start gap-2 ${
+                    testResult.success 
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-200" 
+                      : "bg-rose-50 text-rose-700 border-rose-200"
+                  }`}>
+                    {testResult.success ? (
+                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    ) : (
+                      <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                    )}
+                    <span className="leading-relaxed">{testResult.message || testResult.error}</span>
                   </div>
                 )}
               </div>
