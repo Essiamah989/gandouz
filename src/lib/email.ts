@@ -74,6 +74,34 @@ export const sendNewOrderEmail = async (order: any) => {
     return;
   }
 
+  const customerName =
+    order.customerName ||
+    order.shippingAddress?.customerName ||
+    (order.user ? `${order.user.firstName || ''} ${order.user.lastName || ''}`.trim() : "") ||
+    "Client inconnu";
+
+  const phone =
+    order.phone ||
+    order.shippingAddress?.phone ||
+    order.user?.phone ||
+    "Non renseigné";
+
+  const email =
+    order.email ||
+    order.guestEmail ||
+    order.user?.email ||
+    "Non renseigné";
+
+  const address =
+    order.address ||
+    order.shippingAddress?.address ||
+    "Non renseignée";
+
+  const city =
+    order.city ||
+    order.shippingAddress?.city ||
+    "Non renseignée";
+
   const itemsListText = (order.items || []).map((item: any) => 
     `- ${item.productName || item.name} (x${item.qty || item.quantity || 1}) : ${Number(item.total || item.unitPrice || item.price || 0).toFixed(3)} TND`
   ).join('\n');
@@ -93,18 +121,20 @@ export const sendNewOrderEmail = async (order: any) => {
     </tr>
   `).join('');
 
+  const senderEmail = config.user || process.env.SMTP_USER || 'orders@gandouz.com';
+
   const mailOptions = {
-    from: process.env.SMTP_USER ? `"Distribution Gandouz" <${process.env.SMTP_USER}>` : '"Distribution Gandouz" <orders@gandouz.com>',
+    from: `"Distribution Gandouz" <${senderEmail}>`,
     to: recipients.join(', '),
-    subject: `🔔 Nouvelle Commande #${order.orderNumber || 'Reçue'} - ${order.customerName}`,
+    subject: `🔔 Nouvelle Commande #${order.orderNumber || 'Reçue'} - ${customerName}`,
     text: `
 Nouvelle commande reçue sur Distribution Gandouz !
 
 Numéro de commande: ${order.orderNumber || 'N/A'}
-Client: ${order.customerName}
-Téléphone: ${order.phone}
-Email: ${order.email}
-Adresse de livraison: ${order.address}, ${order.city}
+Client: ${customerName}
+Téléphone: ${phone}
+Email: ${email}
+Adresse de livraison: ${address}, ${city}
 Note: ${order.notes || 'Aucune'}
 
 Articles:
@@ -133,19 +163,19 @@ Horaires de livraison: 10h00 - 21h00
         <table style="width: 100%; font-size: 13px; margin-bottom: 20px; line-height: 1.6;">
           <tr>
             <td style="color: #64748b; width: 35%;">Client:</td>
-            <td style="color: #0f172a; font-weight: bold;">${order.customerName}</td>
+            <td style="color: #0f172a; font-weight: bold;">${customerName}</td>
           </tr>
           <tr>
             <td style="color: #64748b;">Téléphone:</td>
-            <td style="color: #0f172a; font-weight: bold;"><a href="tel:${order.phone}" style="color: #1c2e5e; text-decoration: none;">${order.phone}</a></td>
+            <td style="color: #0f172a; font-weight: bold;"><a href="tel:${phone}" style="color: #1c2e5e; text-decoration: none;">${phone}</a></td>
           </tr>
           <tr>
             <td style="color: #64748b;">Email:</td>
-            <td style="color: #0f172a;">${order.email}</td>
+            <td style="color: #0f172a;">${email}</td>
           </tr>
           <tr>
             <td style="color: #64748b;">Adresse:</td>
-            <td style="color: #0f172a;">${order.address}, ${order.city}</td>
+            <td style="color: #0f172a;">${address}, ${city}</td>
           </tr>
           ${order.notes ? `
           <tr>

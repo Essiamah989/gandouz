@@ -50,7 +50,16 @@ export async function POST(request: NextRequest) {
 
     // Send the notification email
     try {
-      await sendNewOrderEmail({ ...order, items: orderItems });
+      await sendNewOrderEmail({
+        ...order,
+        customerName,
+        email,
+        phone,
+        address,
+        city,
+        notes,
+        items: orderItems
+      });
     } catch (emailErr) {
       console.error("Order notification email failed to send:", emailErr);
     }
